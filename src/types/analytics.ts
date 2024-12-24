@@ -1,4 +1,5 @@
 import type { DashboardMetrics } from "./dashboard";
+export type { DashboardMetrics };
 import type { ActivityType } from "./activity";
 
 export interface ActivityItem {
@@ -6,12 +7,12 @@ export interface ActivityItem {
   type: ActivityType;
   title: string;
   description: string;
-  timestamp: string;
+  snapshotDate: string;
   metadata?: Record<string, string | number | boolean | null>;
 }
 
 export interface MetricSnapshot {
-  timestamp: string;
+  snapshotDate: string;
   metrics: {
     applications: number;
     interviews: number;

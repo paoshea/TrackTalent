@@ -1,4 +1,3 @@
-import React from "react";
 import { useApplications } from "../../hooks/useApplications";
 import { ApplicationCard } from "./ApplicationCard";
 import { LoadingState } from "../shared/LoadingState";

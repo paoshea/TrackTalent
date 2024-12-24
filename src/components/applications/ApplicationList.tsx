@@ -1,4 +1,3 @@
-import React from "react";
 import { ApplicationStatus } from "./ApplicationStatus";
 import { useApplications } from "../../hooks/useApplications";
 

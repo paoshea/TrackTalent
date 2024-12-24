@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Calendar } from "lucide-react";
 import { ApplicationsChart } from "./ApplicationsChart";
 import { ResponseRateChart } from "./ResponseRateChart";
@@ -27,7 +27,7 @@ export function AnalyticsDashboard() {
   }
 
   const filteredSnapshots = snapshots.filter((snapshot) => {
-    const date = new Date(snapshot.snapshot_date);
+    const date = new Date(snapshot.snapshotDate);
     const cutoff = new Date();
     cutoff.setDate(cutoff.getDate() - dateRange);
     return date >= cutoff;
@@ -53,7 +53,20 @@ export function AnalyticsDashboard() {
         </div>
       </div>
 
-      <QuickStats stats={metrics} />
+      <QuickStats 
+        metrics={{
+          activeJobs: metrics.jobs.active,
+          totalCandidates: metrics.totalCandidates,
+          scheduledInterviews: metrics.interviews.scheduled,
+          successfulHires: metrics.interviews.byOutcome.offered,
+          trends: {
+            jobs: metrics.activeJobsChange,
+            candidates: metrics.candidatesChange,
+            interviews: metrics.interviews.trend,
+            hires: metrics.placementRateChange
+          }
+        }} 
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <ApplicationsChart data={filteredSnapshots} />

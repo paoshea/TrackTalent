@@ -1,5 +1,6 @@
 import { useAuth } from "./useAuth";
 import type { UserRole } from "../types/auth";
+export type { UserRole };
 
 interface UseUserRoleResult {
   role: UserRole;

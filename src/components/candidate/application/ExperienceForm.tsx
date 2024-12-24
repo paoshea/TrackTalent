@@ -1,5 +1,4 @@
-import { PlusCircle as Plus, Trash2 } from "lucide-react";
-import { Button } from "../../shared/Button";
+import { PlusCircle as Plus } from "lucide-react";
 import type { Experience } from "../../../types/candidate";
 import type { ApplicationData } from "../../../hooks/useApplicationSubmit";
 import { ExperienceCard } from "../../../components/candidate/application/ExperienceCard";

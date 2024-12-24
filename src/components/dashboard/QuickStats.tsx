@@ -7,7 +7,7 @@ import {
   TrendingDown,
 } from "lucide-react";
 
-interface DashboardMetrics {
+interface QuickStatsMetrics {
   activeJobs: number;
   totalCandidates: number;
   scheduledInterviews: number;
@@ -21,39 +21,39 @@ interface DashboardMetrics {
 }
 
 interface QuickStatsProps {
-  metrics: DashboardMetrics;
+  metrics: QuickStatsMetrics;
   className?: string;
 }
 
 const stats = [
   {
     name: "Active Jobs",
-    value: (m: DashboardMetrics) => m.activeJobs,
-    trend: (m: DashboardMetrics) => m.trends.jobs,
+    value: (m: QuickStatsMetrics) => m.activeJobs,
+    trend: (m: QuickStatsMetrics) => m.trends.jobs,
     icon: Briefcase,
     color: "text-blue-600",
     bgColor: "bg-blue-100",
   },
   {
     name: "Total Candidates",
-    value: (m: DashboardMetrics) => m.totalCandidates,
-    trend: (m: DashboardMetrics) => m.trends.candidates,
+    value: (m: QuickStatsMetrics) => m.totalCandidates,
+    trend: (m: QuickStatsMetrics) => m.trends.candidates,
     icon: Users,
     color: "text-indigo-600",
     bgColor: "bg-indigo-100",
   },
   {
     name: "Scheduled Interviews",
-    value: (m: DashboardMetrics) => m.scheduledInterviews,
-    trend: (m: DashboardMetrics) => m.trends.interviews,
+    value: (m: QuickStatsMetrics) => m.scheduledInterviews,
+    trend: (m: QuickStatsMetrics) => m.trends.interviews,
     icon: Calendar,
     color: "text-purple-600",
     bgColor: "bg-purple-100",
   },
   {
     name: "Successful Hires",
-    value: (m: DashboardMetrics) => m.successfulHires,
-    trend: (m: DashboardMetrics) => m.trends.hires,
+    value: (m: QuickStatsMetrics) => m.successfulHires,
+    trend: (m: QuickStatsMetrics) => m.trends.hires,
     icon: CheckCircle,
     color: "text-green-600",
     bgColor: "bg-green-100",

@@ -1,23 +1,27 @@
 import { formatDistanceToNow } from "date-fns";
-import type { DashboardMetrics } from "../../types/dashboard";
+import type { DashboardMetrics, Activity } from "../../types/dashboard";
 
 interface ActivityLogProps {
   activities: NonNullable<DashboardMetrics["recentActivities"]>;
 }
 
 export function ActivityLog({ activities }: ActivityLogProps) {
-  const getActivityIcon = (type: string) => {
+  const getActivityIcon = (type: Activity['type']) => {
     switch (type) {
-      case "application":
+      case "application_received":
         return "📝";
-      case "interview":
+      case "interview_scheduled":
+      case "interview_completed":
         return "🗣️";
-      case "offer":
+      case "offer_sent":
+      case "offer_accepted":
         return "📋";
-      case "login":
-        return "🔑";
-      case "signup":
-        return "👤";
+      case "candidate_hired":
+        return "🎉";
+      case "job_posted":
+        return "📢";
+      case "status_update":
+        return "📌";
       default:
         return "📌";
     }
@@ -34,7 +38,7 @@ export function ActivityLog({ activities }: ActivityLogProps) {
       ) : (
         <div className="flow-root">
           <ul className="-mb-8">
-            {activities.map((activity, index) => (
+            {activities.map((activity: Activity, index: number) => (
               <li key={activity.id}>
                 <div className="relative pb-8">
                   {index !== activities.length - 1 && (
@@ -53,7 +57,7 @@ export function ActivityLog({ activities }: ActivityLogProps) {
                       <div>
                         <div className="text-sm">
                           <span className="font-medium text-gray-900">
-                            {activity.userName}
+                            {activity.user.name}
                           </span>{" "}
                           <span className="text-gray-500">
                             {activity.action}
@@ -73,10 +77,12 @@ export function ActivityLog({ activities }: ActivityLogProps) {
                           <div className="mt-2 text-sm text-gray-700">
                             <ul className="list-disc pl-5 space-y-1">
                               {Object.entries(activity.metadata).map(
-                                ([key, value]) => (
+                                ([key, value]: [string, unknown]) => (
                                   <li key={key}>
                                     <span className="font-medium">{key}:</span>{" "}
-                                    {value}
+                                    {Array.isArray(value)
+                                      ? value.length
+                                      : String(value)}
                                   </li>
                                 ),
                               )}

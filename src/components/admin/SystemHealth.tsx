@@ -1,4 +1,4 @@
-import type { DashboardMetrics } from "../../types/dashboard";
+import type { DashboardMetrics, SystemAlert } from "../../types/dashboard";
 
 interface SystemHealthProps {
   uptime: number;
@@ -7,9 +7,9 @@ interface SystemHealthProps {
 
 export function SystemHealth({ uptime, issues = [] }: SystemHealthProps) {
   const getStatusColor = () => {
-    if (issues.some((issue) => issue.priority === "high"))
+    if (issues.some((issue: SystemAlert) => issue.priority === "high"))
       return "text-red-500";
-    if (issues.some((issue) => issue.priority === "medium"))
+    if (issues.some((issue: SystemAlert) => issue.priority === "medium"))
       return "text-yellow-500";
     return "text-green-500";
   };
@@ -33,7 +33,7 @@ export function SystemHealth({ uptime, issues = [] }: SystemHealthProps) {
           <p className={`mt-1 text-2xl font-semibold ${getStatusColor()}`}>
             {issues.length === 0
               ? "Healthy"
-              : issues.some((issue) => issue.priority === "high")
+              : issues.some((issue: SystemAlert) => issue.priority === "high")
                 ? "Critical"
                 : "Warning"}
           </p>
@@ -46,7 +46,7 @@ export function SystemHealth({ uptime, issues = [] }: SystemHealthProps) {
               Active Issues
             </h3>
             <div className="space-y-2">
-              {issues.map((issue, index) => (
+              {issues.map((issue: SystemAlert, index: number) => (
                 <div
                   key={index}
                   className={`p-3 rounded-md ${
@@ -58,7 +58,7 @@ export function SystemHealth({ uptime, issues = [] }: SystemHealthProps) {
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="font-medium">{issue.message}</span>
+                    <span className="font-medium">{issue.title}</span>
                     <span className="text-sm capitalize">{issue.priority}</span>
                   </div>
                 </div>

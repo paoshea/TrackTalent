@@ -1,4 +1,3 @@
-import React from "react";
 import {
   LineChart,
   Line,
@@ -26,7 +25,7 @@ export function MetricsTimeline({
   height = 300,
 }: Props) {
   const chartData = data.map((snapshot) => ({
-    date: new Date(snapshot.snapshot_date).toLocaleDateString(),
+    date: new Date(snapshot.snapshotDate).toLocaleDateString(),
     value: snapshot.metrics[metric] || 0,
   }));
 

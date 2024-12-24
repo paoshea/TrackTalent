@@ -6,8 +6,37 @@ export interface ActivityUser {
   avatar?: string;
 }
 
+export interface SystemAlert {
+  id: string;
+  title: string;
+  description: string;
+  priority: "low" | "medium" | "high";
+  timestamp: string;
+  resolved: boolean;
+  category: "performance" | "security" | "system" | "other";
+}
+
+export interface UserGrowthMetrics {
+  total: number;
+  trend: number;
+  byPeriod: {
+    daily: number;
+    weekly: number;
+    monthly: number;
+  };
+  byType: {
+    candidates: number;
+    employers: number;
+  };
+  retention: number;
+  churnRate: number;
+}
+
 export interface DashboardMetrics {
   messages: number;
+  recentActivities: Activity[];
+  systemAlerts: SystemAlert[];
+  userGrowth: UserGrowthMetrics;
   jobs: {
     total: number;
     active: number;

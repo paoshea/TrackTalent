@@ -1,9 +1,12 @@
-import React from "react";
-import { CalendarClock } from "lucide-react";
-import type { ApplicationEvent } from "../../types/applications";
+import { Clock, CalendarClock } from "lucide-react";
+import type { ApplicationEvent, ApplicationEventType } from "../../types/applications";
+
+interface TimelineEvent extends ApplicationEvent {
+  type: ApplicationEventType;
+}
 
 interface Props {
-  events: ApplicationEvent[];
+  events: TimelineEvent[];
 }
 
 export function ApplicationTimeline({ events }: Props) {
@@ -25,7 +28,7 @@ export function ApplicationTimeline({ events }: Props) {
                     <p className="text-sm text-gray-500">{event.description}</p>
                   </div>
                   <div className="whitespace-nowrap text-right text-sm text-gray-500">
-                    {new Date(event.date).toLocaleDateString()}
+                    {new Date(event.timestamp).toLocaleDateString()}
                   </div>
                 </div>
               </div>

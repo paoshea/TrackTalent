@@ -54,19 +54,19 @@ export function UserMetrics({
             <h3 className="text-sm font-medium text-gray-500">Growth Rate</h3>
             <div className="mt-1 flex items-baseline">
               <p className="text-2xl font-semibold text-gray-900">
-                {userGrowth.value}%
+                {userGrowth.trend}%
               </p>
               <span
                 className={`ml-2 flex items-center text-sm ${
-                  userGrowth.isPositive ? "text-green-600" : "text-red-600"
+                  userGrowth.trend >= 0 ? "text-green-600" : "text-red-600"
                 }`}
               >
-                {userGrowth.isPositive ? (
+                {userGrowth.trend >= 0 ? (
                   <ArrowUpIcon className="h-4 w-4 mr-1" />
                 ) : (
                   <ArrowDownIcon className="h-4 w-4 mr-1" />
                 )}
-                {userGrowth.isPositive ? "Increase" : "Decrease"}
+                {userGrowth.trend >= 0 ? "Increase" : "Decrease"}
               </span>
             </div>
           </div>

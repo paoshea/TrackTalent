@@ -1,4 +1,3 @@
-import React from "react";
 import {
   AreaChart,
   Area,
@@ -17,7 +16,7 @@ interface Props {
 
 export function ApplicationsChart({ data, height = 300 }: Props) {
   const chartData = data.map((snapshot) => ({
-    date: new Date(snapshot.snapshot_date).toLocaleDateString(),
+    date: new Date(snapshot.snapshotDate).toLocaleDateString(),
     applications: snapshot.metrics.applications || 0,
     interviews: snapshot.metrics.interviews || 0,
   }));

@@ -1,4 +1,12 @@
-import type { JobFormData } from "./jobs";
+t tag var import type { JobFormData } from "./jobs";
+import type { ApplicationData } from "./applications";
+
+export interface ApplicationFormStep {
+  id: keyof ApplicationData;
+  label: string;
+  description?: string;
+  isOptional?: boolean;
+}
 
 export type JobFormErrors = Partial<Record<keyof JobFormData, string>>;
 

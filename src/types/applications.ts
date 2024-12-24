@@ -1,5 +1,25 @@
 import type { JobFormData } from "./jobs";
 
+export type ApplicationEventType =
+  | "application_created"
+  | "status_updated"
+  | "interview_scheduled"
+  | "interview_completed"
+  | "offer_extended"
+  | "offer_accepted"
+  | "offer_declined"
+  | "application_withdrawn"
+  | "note_added"
+  | "document_uploaded";
+
+export interface ApplicationEvent {
+  id: string;
+  type: ApplicationEventType;
+  description: string;
+  timestamp: string;
+  metadata?: Record<string, unknown>;
+}
+
 export type ApplicationStatus =
   | "draft"
   | "submitted"
@@ -77,7 +97,25 @@ export interface Application {
   updatedAt: string;
 }
 
+export interface PersonalInfo {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone?: string;
+  address?: {
+    street?: string;
+    city?: string;
+    state?: string;
+    zipCode?: string;
+    country?: string;
+  };
+  linkedIn?: string;
+  portfolio?: string;
+  summary?: string;
+}
+
 export interface ApplicationData {
+  personalInfo?: PersonalInfo;
   jobId: string;
   resume: File;
   coverLetter?: string;
