@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
-import type { JobFilters, JobType } from "../../types/jobs";
+import type { JobSearchOptions, JobType } from "../../types/jobs";
 
 interface JobSearchFiltersProps {
-  filters: JobFilters;
-  onChange: (filters: JobFilters) => void;
+  filters: JobSearchOptions['filters'];
+  onChange: (filters: JobSearchOptions['filters']) => void;
   className?: string;
 }
 
@@ -56,15 +56,15 @@ export function JobSearchFilters({
   onChange,
   className = "",
 }: JobSearchFiltersProps) {
-  const [localFilters, setLocalFilters] = useState(filters);
+  const [localFilters, setLocalFilters] = useState<NonNullable<JobSearchOptions['filters']>>({});
 
   useEffect(() => {
-    setLocalFilters(filters);
+    setLocalFilters(filters || {});
   }, [filters]);
 
   const handleChange = (
-    field: keyof JobFilters,
-    value: JobFilters[keyof JobFilters],
+    field: keyof NonNullable<JobSearchOptions['filters']>,
+    value: NonNullable<JobSearchOptions['filters']>[keyof NonNullable<JobSearchOptions['filters']>],
   ) => {
     const newFilters = { ...localFilters, [field]: value };
     setLocalFilters(newFilters);
@@ -74,13 +74,13 @@ export function JobSearchFilters({
   const handleSkillToggle = (skill: string) => {
     const currentSkills = localFilters.skills || [];
     const newSkills = currentSkills.includes(skill)
-      ? currentSkills.filter((s) => s !== skill)
+      ? currentSkills.filter((s: string) => s !== skill)
       : [...currentSkills, skill];
     handleChange("skills", newSkills);
   };
 
   const clearFilters = () => {
-    const emptyFilters: JobFilters = {};
+    const emptyFilters: JobSearchOptions['filters'] = {};
     setLocalFilters(emptyFilters);
     onChange(emptyFilters);
   };
@@ -116,11 +116,17 @@ export function JobSearchFilters({
               {jobTypes.map((type) => (
                 <button
                   key={type.value}
-                  onClick={() => handleChange("type", type.value)}
+                  onClick={() => {
+                    const currentTypes = localFilters.type || [];
+                    const newTypes = currentTypes.includes(type.value)
+                      ? currentTypes.filter(t => t !== type.value)
+                      : [...currentTypes, type.value];
+                    handleChange("type", newTypes);
+                  }}
                   className={`
                     px-3 py-2 text-sm font-medium rounded-md
                     ${
-                      localFilters.type === type.value
+                      (localFilters.type || []).includes(type.value)
                         ? "bg-indigo-100 text-indigo-700"
                         : "bg-white text-gray-700 hover:bg-gray-50"
                     }
@@ -139,9 +145,9 @@ export function JobSearchFilters({
               Department
             </label>
             <select
-              value={localFilters.department || ""}
+              value={(localFilters.department || [])[0] || ""}
               onChange={(e) =>
-                handleChange("department", e.target.value || undefined)
+                handleChange("department", e.target.value ? [e.target.value] : [])
               }
               className="
                 mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 
@@ -164,9 +170,9 @@ export function JobSearchFilters({
               Location
             </label>
             <select
-              value={localFilters.location || ""}
+              value={(localFilters.location || [])[0] || ""}
               onChange={(e) =>
-                handleChange("location", e.target.value || undefined)
+                handleChange("location", e.target.value ? [e.target.value] : [])
               }
               className="
                 mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 
@@ -193,12 +199,12 @@ export function JobSearchFilters({
                 <input
                   type="number"
                   placeholder="Min"
-                  value={localFilters.minSalary || ""}
+                  value={localFilters.salary?.min ?? ""}
                   onChange={(e) =>
-                    handleChange(
-                      "minSalary",
-                      e.target.value ? Number(e.target.value) : undefined,
-                    )
+                    handleChange("salary", {
+                      ...localFilters.salary,
+                      min: e.target.value ? Number(e.target.value) : undefined,
+                    })
                   }
                   className="
                     block w-full border-gray-300 rounded-md shadow-sm
@@ -210,12 +216,12 @@ export function JobSearchFilters({
                 <input
                   type="number"
                   placeholder="Max"
-                  value={localFilters.maxSalary || ""}
+                  value={localFilters.salary?.max ?? ""}
                   onChange={(e) =>
-                    handleChange(
-                      "maxSalary",
-                      e.target.value ? Number(e.target.value) : undefined,
-                    )
+                    handleChange("salary", {
+                      ...localFilters.salary,
+                      max: e.target.value ? Number(e.target.value) : undefined,
+                    })
                   }
                   className="
                     block w-full border-gray-300 rounded-md shadow-sm

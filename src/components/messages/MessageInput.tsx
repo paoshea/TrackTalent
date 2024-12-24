@@ -2,7 +2,7 @@ import { useState, useCallback, KeyboardEvent } from "react";
 import type { MessageInputProps } from "../../types/messages";
 
 export function MessageInput({
-  onSubmit,
+  onSend,
   placeholder = "Type a message...",
   disabled = false,
   maxLength,
@@ -13,12 +13,12 @@ export function MessageInput({
     if (!content.trim() || disabled) return;
 
     try {
-      await onSubmit(content);
+      await onSend(content);
       setContent("");
     } catch (error) {
       console.error("Failed to send message:", error);
     }
-  }, [content, disabled, onSubmit]);
+  }, [content, disabled, onSend]);
 
   const handleKeyPress = useCallback(
     (e: KeyboardEvent<HTMLTextAreaElement>) => {

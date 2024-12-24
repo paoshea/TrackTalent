@@ -9,16 +9,14 @@ interface ConversationPreviewProps {
 export function ConversationPreview({
   conversation,
 }: ConversationPreviewProps) {
-  const lastMessage = conversation.messages[conversation.messages.length - 1];
-  const unreadCount = conversation.messages.filter(
-    (m) => !m.read && m.senderId !== "user",
-  ).length;
+  const lastMessage = conversation.lastMessage;
+  if (!lastMessage) return null;
 
   return (
     <Link
       to={`/messages/${conversation.id}`}
       className="block hover:bg-gray-50"
-      aria-label={`Conversation with ${conversation.company}${unreadCount > 0 ? `, ${unreadCount} unread messages` : ""}`}
+      aria-label={`Conversation with ${conversation.company}${conversation.unreadCount > 0 ? `, ${conversation.unreadCount} unread messages` : ""}`}
     >
       <div className="px-4 py-4 sm:px-6">
         <div className="flex items-center justify-between">
@@ -46,17 +44,17 @@ export function ConversationPreview({
             <div className="flex flex-col items-end">
               <p
                 className="text-xs text-gray-500"
-                aria-label={`Sent ${formatDistanceToNow(new Date(lastMessage.timestamp))} ago`}
+                aria-label={`Sent ${formatDistanceToNow(new Date(lastMessage.createdAt))} ago`}
               >
-                {formatDistanceToNow(new Date(lastMessage.timestamp))}
+                {formatDistanceToNow(new Date(lastMessage.createdAt))}
               </p>
-              {unreadCount > 0 && (
+              {conversation.unreadCount > 0 && (
                 <span
                   className="mt-1 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800"
                   role="status"
-                  aria-label={`${unreadCount} unread messages`}
+                  aria-label={`${conversation.unreadCount} unread messages`}
                 >
-                  {unreadCount}
+                  {conversation.unreadCount}
                 </span>
               )}
             </div>

@@ -1,10 +1,10 @@
 import { useEffect, useRef, useCallback } from "react";
 import { JobCard } from "./JobCard";
 import { LoadingState } from "../shared/LoadingState";
-import type { JobFormData } from "../../types/jobs";
+import type { Job } from "../../types/jobs";
 
 interface JobListProps {
-  jobs: JobFormData[];
+  jobs: Job[];
   isLoading: boolean;
   hasMore: boolean;
   onLoadMore: () => void;
@@ -66,12 +66,12 @@ export function JobList({
       {jobs.map((job, index) => {
         if (jobs.length === index + 1) {
           return (
-            <div key={job.id} ref={lastJobElementRef}>
+            <div key={job.id.toString()} ref={lastJobElementRef}>
               <JobCard job={job} />
             </div>
           );
         } else {
-          return <JobCard key={job.id} job={job} />;
+          return <JobCard key={job.id.toString()} job={job} />;
         }
       })}
       {isLoading && (

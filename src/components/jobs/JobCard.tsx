@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 import { MapPin, Building, Clock, DollarSign } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import type { JobFormData } from "../../types/jobs";
+import type { Job } from "../../types/jobs";
 
 interface JobCardProps {
-  job: JobFormData;
+  job: Job;
   className?: string;
 }
 
@@ -14,11 +14,11 @@ export function JobCard({ job, className = "" }: JobCardProps) {
       <div className="p-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            {job.company.logo ? (
+            {job.company?.logo ? (
               <img
                 className="h-10 w-10 rounded-full"
                 src={job.company.logo}
-                alt={job.company.name}
+                alt={job.company.name || 'Company logo'}
               />
             ) : (
               <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
@@ -64,8 +64,9 @@ export function JobCard({ job, className = "" }: JobCardProps) {
             </div>
             <div className="flex items-center">
               <DollarSign className="flex-shrink-0 mr-1.5 h-4 w-4" />
-              {job.salaryRange.min.toLocaleString()} -{" "}
-              {job.salaryRange.max.toLocaleString()} {job.salaryRange.currency}
+              {job.compensation.salary.min.toLocaleString()} -{" "}
+              {job.compensation.salary.max.toLocaleString()}{" "}
+              {job.compensation.salary.currency}
             </div>
             <div className="flex items-center">
               <Clock className="flex-shrink-0 mr-1.5 h-4 w-4" />

@@ -3,7 +3,7 @@ import { Search, Filter } from "lucide-react";
 import { JobSearchFilters } from "./JobSearchFilters";
 import { useJobSearch } from "../../hooks/useJobSearch";
 import { JobList } from "./JobList";
-import type { JobFilters } from "../../types/jobs";
+import type { JobSearchOptions, JobSearchResult, Job } from "../../types/jobs";
 
 interface JobSearchProps {
   className?: string;
@@ -12,9 +12,34 @@ interface JobSearchProps {
 export function JobSearch({ className = "" }: JobSearchProps) {
   const [query, setQuery] = useState("");
   const [showFilters, setShowFilters] = useState(false);
-  const [filters, setFilters] = useState<JobFilters>({});
+  const [filters, setFilters] = useState<JobSearchOptions['filters']>({});
 
-  const { jobs, isLoading, error, hasMore, loadMore } = useJobSearch({
+  const transformToJob = (result: JobSearchResult): Job => ({
+    id: result.id,
+    title: result.title,
+    description: result.description,
+    requirements: result.requirements,
+    location: result.location,
+    type: result.type as Job['type'],
+    compensation: result.compensation,
+    skills: result.skills,
+    benefits: result.benefits,
+    department: result.department,
+    experienceLevel: 'mid', // Default value since JobSearchResult doesn't have this
+    remote: result.remote,
+    companyId: '', // Required by Job type
+    company: {
+      id: '',
+      name: result.company
+    },
+    status: 'published',
+    applicantCount: 0,
+    createdAt: result.createdAt,
+    updatedAt: result.updatedAt,
+    salaryRange: result.compensation.salary
+  });
+
+  const { results, isLoading, error, totalCount } = useJobSearch({
     query,
     filters,
     limit: 10,
@@ -27,7 +52,7 @@ export function JobSearch({ className = "" }: JobSearchProps) {
     setQuery(searchInput.value);
   };
 
-  const handleFilterChange = (newFilters: JobFilters) => {
+  const handleFilterChange = (newFilters: JobSearchOptions['filters']) => {
     setFilters(newFilters);
     setShowFilters(false);
   };
@@ -101,10 +126,14 @@ export function JobSearch({ className = "" }: JobSearchProps) {
           </div>
         ) : (
           <JobList
-            jobs={jobs}
+            jobs={results.map(transformToJob)}
             isLoading={isLoading}
-            hasMore={hasMore}
-            onLoadMore={loadMore}
+            hasMore={totalCount > results.length}
+            onLoadMore={() => {
+              // Load more functionality would be implemented here
+              // For now, we'll just log that it was called
+              console.log('Load more jobs requested');
+            }}
           />
         )}
       </div>

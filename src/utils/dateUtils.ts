@@ -1,15 +1,17 @@
 import {
-  formatDistanceToNow,
+  formatDistanceToNow as fnsFormatDistanceToNow,
   formatDistance,
   parseISO,
   format,
   isValid,
 } from "date-fns";
 
+export { fnsFormatDistanceToNow as formatDistanceToNow };
+
 export function formatTimeAgo(date: string | Date): string {
   const parsedDate = typeof date === "string" ? parseISO(date) : date;
   if (!isValid(parsedDate)) return "Invalid date";
-  return formatDistanceToNow(parsedDate, { addSuffix: true });
+  return fnsFormatDistanceToNow(parsedDate, { addSuffix: true });
 }
 
 export function formatDateRange(start: Date, end: Date): string {
@@ -46,7 +48,7 @@ export function getRelativeTimeString(date: string | Date): string {
   const diffInHours = Math.abs(now.getTime() - parsedDate.getTime()) / 36e5;
 
   if (diffInHours < 24) {
-    return formatDistanceToNow(parsedDate, { addSuffix: true });
+    return fnsFormatDistanceToNow(parsedDate, { addSuffix: true });
   } else if (diffInHours < 48) {
     return format(parsedDate, "'Yesterday at' h:mm a");
   } else {

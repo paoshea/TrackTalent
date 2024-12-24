@@ -1,9 +1,18 @@
-import { useMessages } from "../../hooks/useMessages";
+import { useConversations } from "../../hooks/useConversations";
+import type { Conversation } from "../../types/messages";
 import { MessagePreview } from "./MessagePreview";
 import { LoadingSpinner } from "../shared/LoadingSpinner";
 
 export function MessageList() {
-  const { conversations, isLoading } = useMessages();
+  const { conversations, isLoading, error } = useConversations();
+
+  if (error) {
+    return (
+      <div className="p-4 text-center text-red-500" role="alert">
+        Error loading messages: {error}
+      </div>
+    );
+  }
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -25,7 +34,7 @@ export function MessageList() {
           className="divide-y divide-gray-200"
           aria-label="Message list"
         >
-          {conversations.map((conversation) => (
+          {conversations.map((conversation: Conversation) => (
             <li key={conversation.id}>
               <MessagePreview conversation={conversation} />
             </li>

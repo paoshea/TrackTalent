@@ -1,72 +1,82 @@
 import { useState, useEffect } from "react";
-import type { Conversation, Message } from "../types/messages";
-
-const mockMessages: Message[] = [
-  {
-    id: "1",
-    conversationId: "1",
-    content:
-      "Thank you for your application. We would like to schedule an interview.",
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    senderId: "company-1",
-    recipientId: "user-1",
-    isRead: false,
-  },
-  {
-    id: "2",
-    conversationId: "2",
-    content: "Your technical assessment results are ready.",
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    senderId: "company-2",
-    recipientId: "user-1",
-    isRead: false,
-  },
-];
-
-const mockConversations: Conversation[] = [
-  {
-    id: "1",
-    participants: ["user-1", "company-1"],
-    lastMessage: mockMessages[0],
-    unreadCount: 1,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: "2",
-    participants: ["user-1", "company-2"],
-    lastMessage: mockMessages[1],
-    unreadCount: 1,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-];
+import type { Conversation, Message, DatabaseMessage } from "../types/messages";
+import { convertDatabaseMessage } from "../types/messages";
+import { supabase } from "../lib/supabase";
 
 export function useConversations() {
   const [conversations, setConversations] = useState<Conversation[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Simulate API call
     const fetchConversations = async () => {
+      setIsLoading(true);
+      setError(null);
+
       try {
-        // In a real app, this would be an API call
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        setConversations(mockConversations);
+        // First get all conversations
+        const { data: conversationsData, error: conversationsError } = await supabase
+          .from("conversations")
+          .select(`
+            *,
+            messages:messages(*)
+          `)
+          .order("updated_at", { ascending: false });
+
+        if (conversationsError) throw conversationsError;
+
+        // Transform the data
+        const formattedConversations: Conversation[] = conversationsData.map((conv) => ({
+          id: conv.id,
+          participants: conv.participants,
+          messages: (conv.messages as DatabaseMessage[]).map(convertDatabaseMessage),
+          lastMessage: conv.messages.length > 0 
+            ? convertDatabaseMessage(conv.messages[conv.messages.length - 1] as DatabaseMessage)
+            : undefined,
+          unreadCount: (conv.messages as DatabaseMessage[])
+            .filter(m => !m.is_read && m.recipient_id === "user").length,
+          createdAt: conv.created_at,
+          updatedAt: conv.updated_at,
+          company: conv.company_name,
+          companyId: conv.company_id
+        }));
+
+        setConversations(formattedConversations);
       } catch (err) {
         setError(
-          err instanceof Error ? err.message : "Failed to fetch conversations",
+          err instanceof Error ? err.message : "Failed to fetch conversations"
         );
       } finally {
         setIsLoading(false);
       }
     };
 
+    const subscription = supabase
+      .channel("conversations")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "conversations",
+        },
+        () => {
+          // Refetch conversations when there are changes
+          fetchConversations();
+        }
+      )
+      .subscribe();
+
     fetchConversations();
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
-  return { conversations, isLoading, error };
+  return {
+    conversations,
+    isLoading,
+    error,
+  };
 }

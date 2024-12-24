@@ -7,7 +7,8 @@ interface MessagePreviewProps {
 }
 
 export function MessagePreview({ conversation }: MessagePreviewProps) {
-  const lastMessage = conversation.messages[conversation.messages.length - 1];
+  const lastMessage = conversation.lastMessage;
+  if (!lastMessage) return null;
 
   return (
     <Link
@@ -40,9 +41,9 @@ export function MessagePreview({ conversation }: MessagePreviewProps) {
           <div className="text-right">
             <p
               className="text-xs text-gray-500"
-              aria-label={`Sent ${formatDistanceToNow(new Date(lastMessage.timestamp))}`}
+              aria-label={`Sent ${formatDistanceToNow(new Date(lastMessage.createdAt))}`}
             >
-              {formatDistanceToNow(new Date(lastMessage.timestamp))}
+              {formatDistanceToNow(new Date(lastMessage.createdAt))}
             </p>
           </div>
         </div>

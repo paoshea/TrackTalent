@@ -56,7 +56,7 @@ export function RealtimeChat({ conversationId }: RealtimeChatProps) {
         <div ref={messagesEndRef} />
       </div>
       <div className="sticky bottom-0 bg-white border-t border-gray-200">
-        <MessageInput onSend={sendMessage} aria-label="Type a message" />
+        <MessageInput onSend={sendMessage} placeholder="Type a message" />
       </div>
     </div>
   );
