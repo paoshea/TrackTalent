@@ -53,7 +53,7 @@ export function AnalyticsDashboard() {
         </div>
       </div>
 
-      <QuickStats 
+      <QuickStats
         metrics={{
           activeJobs: metrics.jobs.active,
           totalCandidates: metrics.totalCandidates,
@@ -63,9 +63,9 @@ export function AnalyticsDashboard() {
             jobs: metrics.activeJobsChange,
             candidates: metrics.candidatesChange,
             interviews: metrics.interviews.trend,
-            hires: metrics.placementRateChange
-          }
-        }} 
+            hires: metrics.placementRateChange,
+          },
+        }}
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

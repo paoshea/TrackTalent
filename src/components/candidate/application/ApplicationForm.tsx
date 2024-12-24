@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { useApplicationSubmit } from "../../../hooks/useApplicationSubmit";
 import {
-  useFormValidation,
-  type ValidationRule,
-} from "../../../hooks/useFormValidation";
+  useFormValidations,
+  type ValidationRules,
+} from "../../../hooks/useFormValidations";
 import type { ApplicationData } from "../../../hooks/useApplicationSubmit";
-import type { Skill } from "../../../types/candidate";
 
 interface ApplicationFormProps {
   jobId: string;
@@ -16,39 +15,55 @@ interface ApplicationFormProps {
 
 type SubmitState = "idle" | "submitting" | "success" | "error";
 
-const validationRules = {
+const validationRules: ValidationRules<ApplicationData> = {
   jobId: {
     required: true,
-    validate: (value: string) => {
+    validate: (value: unknown) => {
+      if (typeof value !== "string") return "Job ID must be a string";
       return !value ? "Job ID is required" : "";
-    }
-  } satisfies ValidationRule<string>,
+    },
+  },
 
   coverLetter: {
     required: true,
-    validate: (value: string) => {
+    validate: (value: unknown) => {
+      if (typeof value !== "string") return "Cover letter must be a string";
       return !value ? "Cover letter is required" : "";
-    }
-  } satisfies ValidationRule<string>,
+    },
+  },
 
   resumeUrl: {
     required: true,
-    validate: (value: string) => {
+    validate: (value: unknown) => {
+      if (typeof value !== "string") return "Resume URL must be a string";
       return !value ? "Resume is required" : "";
-    }
-  } satisfies ValidationRule<string>,
+    },
+  },
 
   questions: {
-    validate: (_value?: Record<string, string>) => {
+    validate: (_value: unknown) => {
       return ""; // Optional field
-    }
-  } satisfies ValidationRule<Record<string, string> | undefined>,
+    },
+  },
 
   skills: {
-    validate: (_value?: string[]) => {
+    validate: (_value: unknown) => {
       return ""; // Optional field
-    }
-  } satisfies ValidationRule<string[] | undefined>
+    },
+  },
+
+  experience: {
+    validate: (value: unknown) => {
+      if (!value) return "";
+      if (typeof value !== "object" || value === null)
+        return "Experience must be an object";
+      const exp = value as { years?: number };
+      if (typeof exp.years === "number" && exp.years < 0) {
+        return "Years of experience cannot be negative";
+      }
+      return "";
+    },
+  },
 };
 
 export function ApplicationForm({
@@ -66,7 +81,7 @@ export function ApplicationForm({
     experience: {
       years: 0,
       relevantAreas: [],
-      highlights: []
+      highlights: [],
     },
     education: [],
   });
@@ -83,7 +98,7 @@ export function ApplicationForm({
   });
 
   const { errors, validateField, validateForm } =
-    useFormValidation<ApplicationData>(validationRules);
+    useFormValidations<ApplicationData>(validationRules);
 
   const submitApplication = async () => {
     if (isSubmitting) return;
@@ -110,7 +125,7 @@ export function ApplicationForm({
       ...prev,
       [field]: value,
     }));
-    validateField(field, value);
+    validateField(field.toString(), value, formData);
   };
 
   return (

@@ -6,7 +6,7 @@ interface ActivityLogProps {
 }
 
 export function ActivityLog({ activities }: ActivityLogProps) {
-  const getActivityIcon = (type: Activity['type']) => {
+  const getActivityIcon = (type: Activity["type"]) => {
     switch (type) {
       case "application_received":
         return "📝";

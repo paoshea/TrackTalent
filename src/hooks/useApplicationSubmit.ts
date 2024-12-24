@@ -3,7 +3,7 @@ import { supabase } from "../lib/supabase";
 import { useAuth } from "./useAuth";
 import type { Experience } from "../types/candidate";
 
-export interface ApplicationData {
+export interface ApplicationData extends Record<string, unknown> {
   jobId: string;
   coverLetter: string;
   resumeUrl: string;

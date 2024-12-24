@@ -15,7 +15,10 @@ interface Props {
 
 export function ResponseRateChart({ metrics, height = 300 }: Props) {
   const data = [
-    { name: "Responded", value: metrics.applications.total - metrics.applications.pending },
+    {
+      name: "Responded",
+      value: metrics.applications.total - metrics.applications.pending,
+    },
     { name: "Pending", value: metrics.applications.pending },
   ];
 

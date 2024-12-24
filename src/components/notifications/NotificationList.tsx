@@ -5,7 +5,9 @@ import { LoadingState } from "../shared/LoadingState";
 
 export function NotificationList() {
   const { user } = useAuth();
-  const { notifications, markAsRead, isLoading } = useNotifications(user?.id || "");
+  const { notifications, markAsRead, isLoading } = useNotifications(
+    user?.id || "",
+  );
 
   if (isLoading) {
     return <LoadingState />;

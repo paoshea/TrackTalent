@@ -1,4 +1,10 @@
-import { AlertCircle, CheckCircle, Info, AlertTriangle, LucideIcon } from "lucide-react";
+import {
+  AlertCircle,
+  CheckCircle,
+  Info,
+  AlertTriangle,
+  LucideIcon,
+} from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import type { Notification, NotificationType } from "../../types/notifications";
 

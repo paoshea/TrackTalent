@@ -88,9 +88,9 @@ export function useActivityInteractions({
   };
 
   const share = async (users: string[]) => {
-    await handleInteraction("share", { 
+    await handleInteraction("share", {
       content: `Shared with ${users.length} users`,
-      attachments: [] 
+      attachments: [],
     });
   };
 

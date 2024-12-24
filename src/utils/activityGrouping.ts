@@ -125,21 +125,24 @@ export function getActivityDateRanges(activities: Activity[]): {
   };
 }
 
-function countInteractionsByType(interactions: ActivityInteraction[] | undefined, type: ActivityInteraction['type']): number {
-  return interactions?.filter(i => i.type === type).length || 0;
+function countInteractionsByType(
+  interactions: ActivityInteraction[] | undefined,
+  type: ActivityInteraction["type"],
+): number {
+  return interactions?.filter((i) => i.type === type).length || 0;
 }
 
 export function sortActivitiesByEngagement(activities: Activity[]): Activity[] {
   return [...activities].sort((a, b) => {
     const aEngagement =
-      countInteractionsByType(a.interactions, 'like') +
-      countInteractionsByType(a.interactions, 'comment') * 2 +
-      countInteractionsByType(a.interactions, 'share') * 3;
+      countInteractionsByType(a.interactions, "like") +
+      countInteractionsByType(a.interactions, "comment") * 2 +
+      countInteractionsByType(a.interactions, "share") * 3;
 
     const bEngagement =
-      countInteractionsByType(b.interactions, 'like') +
-      countInteractionsByType(b.interactions, 'comment') * 2 +
-      countInteractionsByType(b.interactions, 'share') * 3;
+      countInteractionsByType(b.interactions, "like") +
+      countInteractionsByType(b.interactions, "comment") * 2 +
+      countInteractionsByType(b.interactions, "share") * 3;
 
     return bEngagement - aEngagement;
   });

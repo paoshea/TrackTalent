@@ -110,10 +110,7 @@ export function useSkillAssessment(_userId: string) {
     );
   };
 
-  const addSkill = async (
-    categoryId: string,
-    skill: Omit<Skill, "id">,
-  ) => {
+  const addSkill = async (categoryId: string, skill: Omit<Skill, "id">) => {
     try {
       // In a real app, this would make an API call
       const newSkill: Skill = {
@@ -146,7 +143,9 @@ export function useSkillAssessment(_userId: string) {
           category.id === categoryId
             ? {
                 ...category,
-                skills: category.skills.filter((skill: Skill) => skill.id !== skillId),
+                skills: category.skills.filter(
+                  (skill: Skill) => skill.id !== skillId,
+                ),
               }
             : category,
         ),

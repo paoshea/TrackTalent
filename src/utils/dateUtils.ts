@@ -43,7 +43,7 @@ export function formatTime(date: string | Date): string {
 export function getRelativeTimeString(date: string | Date): string {
   const parsedDate = typeof date === "string" ? parseISO(date) : date;
   if (!isValid(parsedDate)) return "Invalid date";
-  
+
   const now = new Date();
   const diffInHours = Math.abs(now.getTime() - parsedDate.getTime()) / 36e5;
 

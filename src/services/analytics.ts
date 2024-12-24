@@ -1,6 +1,10 @@
 import { supabase } from "../lib/supabase";
 import type { Database } from "../types/database";
 import type { StatusMetrics } from "../types/status";
+import {
+  mapDatabaseActivities,
+  mapToActivities,
+} from "../utils/activityMapper";
 import type {
   AnalyticsData,
   AnalyticsFilter,
@@ -11,7 +15,7 @@ import type {
   EngagementStats,
 } from "../types/analytics";
 
-type DbResult<T> = T extends keyof Database["public"]["Tables"] 
+type DbResult<T> = T extends keyof Database["public"]["Tables"]
   ? Database["public"]["Tables"][T]["Row"]
   : never;
 
@@ -32,11 +36,13 @@ export async function getAnalytics(
     if (error) throw error;
     if (!data) throw new Error("No analytics data found");
 
+    const mappedActivities = mapDatabaseActivities(data.activities || []);
+
     // Transform raw database metrics into DashboardMetrics shape
     return {
       metrics: {
         messages: data.messages || 0,
-        recentActivities: data.activities || [],
+        recentActivities: mapToActivities(mappedActivities),
         systemAlerts: [],
         userGrowth: {
           total: data.connections || 0,
@@ -44,24 +50,24 @@ export async function getAnalytics(
           byPeriod: {
             daily: data.trends.daily[0] || 0,
             weekly: data.trends.weekly[0] || 0,
-            monthly: data.trends.monthly[0] || 0
+            monthly: data.trends.monthly[0] || 0,
           },
           byType: {
             candidates: Math.floor((data.connections || 0) * 0.8), // Example: 80% candidates
-            employers: Math.floor((data.connections || 0) * 0.2)  // Example: 20% employers
+            employers: Math.floor((data.connections || 0) * 0.2), // Example: 20% employers
           },
           retention: 85, // Example: 85% retention
-          churnRate: 15  // Example: 15% churn
+          churnRate: 15, // Example: 15% churn
         },
         jobs: {
           total: data.trends.daily[0] || 0,
           active: data.trends.daily[0] || 0,
-          trend: data.comparisons.previousPeriod
+          trend: data.comparisons.previousPeriod,
         },
         applications: {
           total: data.applications || 0,
           pending: Math.floor(data.applications * 0.3), // Example: 30% pending
-          trend: data.comparisons.previousPeriod
+          trend: data.comparisons.previousPeriod,
         },
         interviews: {
           total: data.interviews || 0,
@@ -72,11 +78,11 @@ export async function getAnalytics(
             rejected: Math.floor(data.interviews * 0.3), // Example: 30% rejected
             pending: Math.floor(data.interviews * 0.5), // Example: 50% pending
           },
-          trend: data.comparisons.previousPeriod
+          trend: data.comparisons.previousPeriod,
         },
         timeToHire: {
           average: 14, // Example: 14 days
-          trend: data.comparisons.previousPeriod
+          trend: data.comparisons.previousPeriod,
         },
         activeJobsChange: data.comparisons.previousPeriod,
         totalCandidates: data.connections || 0,
@@ -91,7 +97,7 @@ export async function getAnalytics(
         matchScore: Math.floor(Math.random() * 40 + 60), // Example: Random score between 60-100
         profileViews: Math.floor(data.trends.daily[0] * 0.5) || 0, // Example: 50% of job views
       },
-      activities: data.activities,
+      activities: mappedActivities,
       trends: data.trends,
       comparisons: data.comparisons,
     };
@@ -102,7 +108,7 @@ export async function getAnalytics(
 }
 
 export async function getMetricSnapshots(
-  filter?: AnalyticsFilter
+  filter?: AnalyticsFilter,
 ): Promise<MetricSnapshot[]> {
   try {
     let query = supabase
@@ -127,12 +133,10 @@ export async function getMetricSnapshots(
 }
 
 export async function getEngagementStats(
-  filter?: AnalyticsFilter
+  filter?: AnalyticsFilter,
 ): Promise<EngagementStats> {
   try {
-    let query = supabase
-      .from("engagement_stats")
-      .select("*");
+    let query = supabase.from("engagement_stats").select("*");
 
     if (filter?.dateRange) {
       query = query
@@ -159,23 +163,23 @@ export async function getEngagementStats(
 }
 
 export async function calculateMetrics(
-  snapshots: MetricSnapshot[]
+  snapshots: MetricSnapshot[],
 ): Promise<Record<string, number>> {
   try {
     const metrics: Record<string, number> = {};
     const metricKeys = new Set<string>();
 
     // Collect all possible metric keys
-    snapshots.forEach(snapshot => {
-      Object.keys(snapshot.metrics).forEach(key => metricKeys.add(key));
+    snapshots.forEach((snapshot) => {
+      Object.keys(snapshot.metrics).forEach((key) => metricKeys.add(key));
     });
 
     // Calculate averages for each metric
-    metricKeys.forEach(key => {
+    metricKeys.forEach((key) => {
       const values = snapshots
-        .map(s => s.metrics[key])
-        .filter(v => typeof v === 'number');
-      
+        .map((s) => s.metrics[key])
+        .filter((v) => typeof v === "number");
+
       if (values.length > 0) {
         metrics[key] = values.reduce((a, b) => a + b, 0) / values.length;
       }
@@ -207,7 +211,7 @@ export async function getActivities(
 
     if (error) throw error;
 
-    return (data || []) as ActivityItem[];
+    return mapDatabaseActivities(data || []);
   } catch (error) {
     console.error("Error fetching activities:", error);
     throw new Error("Failed to fetch activities");

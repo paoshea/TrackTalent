@@ -53,11 +53,8 @@ export function PreferencesSetup({
   data,
   onUpdate,
   isSubmitting,
-  preferences: userPreferences,
-  onPreferencesUpdate,
   selectedPreferences,
   onToggle,
-  isLoading
 }: PreferencesSetupProps) {
   return (
     <div className="space-y-6" role="group" aria-label="Work preferences">
@@ -68,12 +65,14 @@ export function PreferencesSetup({
             type="button"
             onClick={() => {
               onToggle(id);
-              onPreferencesUpdate({
-                ...userPreferences,
-                [id]: !selectedPreferences.includes(id)
+              onUpdate({
+                preferences: {
+                  ...data.preferences,
+                  [id]: !selectedPreferences.includes(id),
+                },
               });
             }}
-            disabled={isSubmitting || isLoading}
+            disabled={isSubmitting}
             aria-pressed={selectedPreferences.includes(id)}
             className={`
               p-4 rounded-lg border-2 text-left transition-all relative

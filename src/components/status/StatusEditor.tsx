@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { RichTextEditor } from "../shared/RichTextEditor";
+import { RichTextEditor } from "./RichTextEditor";
 import { Upload, FileText } from "lucide-react";
 import { Button } from "../shared/Button";
 import { MediaUploader } from "./MediaUploader";
@@ -49,7 +49,7 @@ export function StatusEditor({
   return (
     <div className="bg-white shadow rounded-lg p-4 space-y-4">
       <RichTextEditor
-        value={content}
+        content={content}
         onChange={setContent}
         placeholder={placeholder}
         disabled={isSubmitting}

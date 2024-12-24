@@ -41,10 +41,10 @@ export function useRecentActivity(): UseRecentActivityResult {
             user: {
               id: "1",
               name: "HR Team",
-              avatar: "/avatars/hr-team.png"
+              avatar: "/avatars/hr-team.png",
             },
             action: "posted",
-            target: "Senior Software Engineer position"
+            target: "Senior Software Engineer position",
           },
           {
             id: "2",
@@ -56,15 +56,17 @@ export function useRecentActivity(): UseRecentActivityResult {
             metadata: {
               candidateName: "John Doe",
               jobTitle: "Senior Software Engineer",
-              interviewDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
+              interviewDate: new Date(
+                Date.now() + 2 * 24 * 60 * 60 * 1000,
+              ).toISOString(),
             },
             user: {
               id: "2",
               name: "Hiring Manager",
-              avatar: "/avatars/hiring-manager.png"
+              avatar: "/avatars/hiring-manager.png",
             },
             action: "scheduled",
-            target: "Interview with John Doe"
+            target: "Interview with John Doe",
           },
           {
             id: "3",
@@ -72,7 +74,9 @@ export function useRecentActivity(): UseRecentActivityResult {
             title: "Offer Accepted",
             description: "Jane Smith has accepted the offer",
             icon: CheckCircle,
-            timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+            timestamp: new Date(
+              Date.now() - 2 * 24 * 60 * 60 * 1000,
+            ).toISOString(),
             metadata: {
               candidateName: "Jane Smith",
               jobTitle: "Product Manager",
@@ -80,10 +84,10 @@ export function useRecentActivity(): UseRecentActivityResult {
             user: {
               id: "3",
               name: "Jane Smith",
-              avatar: "/avatars/jane-smith.png"
+              avatar: "/avatars/jane-smith.png",
             },
             action: "accepted",
-            target: "Product Manager offer"
+            target: "Product Manager offer",
           },
           {
             id: "4",
@@ -91,7 +95,9 @@ export function useRecentActivity(): UseRecentActivityResult {
             title: "Application Status Updated",
             description: "Application moved to technical review",
             icon: MessageSquare,
-            timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+            timestamp: new Date(
+              Date.now() - 3 * 24 * 60 * 60 * 1000,
+            ).toISOString(),
             metadata: {
               candidateName: "Mike Johnson",
               jobTitle: "Frontend Developer",
@@ -99,17 +105,19 @@ export function useRecentActivity(): UseRecentActivityResult {
             user: {
               id: "4",
               name: "Technical Team",
-              avatar: "/avatars/tech-team.png"
+              avatar: "/avatars/tech-team.png",
             },
             action: "updated",
-            target: "Mike Johnson's application"
+            target: "Mike Johnson's application",
           },
         ];
 
         setActivities(mockActivities);
         setHasMore(false);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to load activities");
+        setError(
+          err instanceof Error ? err.message : "Failed to load activities",
+        );
       } finally {
         setIsLoading(false);
       }

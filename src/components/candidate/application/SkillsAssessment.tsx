@@ -3,7 +3,10 @@ import { SkillRating } from "./skills/SkillRating";
 import { FormField } from "../../shared/FormField";
 import type { ApplicationData } from "../../../hooks/useApplicationSubmit";
 import type { SkillRatingState } from "../../../types/skills";
-import { formatSkillForSubmission, parseSkillFromString } from "../../../types/skills";
+import {
+  formatSkillForSubmission,
+  parseSkillFromString,
+} from "../../../types/skills";
 
 interface SkillsAssessmentProps {
   data: Partial<ApplicationData>;
@@ -25,7 +28,7 @@ export function SkillsAssessment({
         ...(data.skills || []),
         formatSkillForSubmission({
           name: "",
-          rating: 1,
+          level: "beginner",
           yearsOfExperience: 0,
         }),
       ],
@@ -41,13 +44,11 @@ export function SkillsAssessment({
   };
 
   const updateSkill = (index: number, updates: Partial<SkillRatingState>) => {
-    const updatedSkills = [...skillStates];
-    updatedSkills[index] = {
-      ...updatedSkills[index],
-      ...updates,
-    };
-    onChange({ 
-      skills: updatedSkills.map(formatSkillForSubmission)
+    const updatedSkills = skillStates.map((skill, i) =>
+      i === index ? { ...skill, ...updates } : skill,
+    );
+    onChange({
+      skills: updatedSkills.map(formatSkillForSubmission),
     });
   };
 
@@ -88,7 +89,7 @@ export function SkillsAssessment({
           <div className="space-y-4">
             <SkillRating
               skill={skill}
-              onChange={(rating) => updateSkill(index, { rating })}
+              onChange={(level) => updateSkill(index, { level })}
             />
 
             <FormField

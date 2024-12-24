@@ -12,7 +12,7 @@ export function useStatusInteractions(statusId: string) {
         type: "like",
         targetId: statusId,
         targetType: "status",
-        userId: "current-user"
+        userId: "current-user",
       });
     } catch (error) {
       console.error("Failed to like status:", error);

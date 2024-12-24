@@ -37,16 +37,20 @@ export function useAnalytics() {
         // Create filter for last 30 days
         const filter: AnalyticsFilter = {
           dateRange: {
-            start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+            start: new Date(
+              Date.now() - 30 * 24 * 60 * 60 * 1000,
+            ).toISOString(),
             end: new Date().toISOString(),
           },
         };
 
-        const [analyticsData, engagementData, snapshotData] = await Promise.all([
-          getAnalytics(filter),
-          getEngagementStats(filter),
-          getMetricSnapshots(filter),
-        ]);
+        const [analyticsData, engagementData, snapshotData] = await Promise.all(
+          [
+            getAnalytics(filter),
+            getEngagementStats(filter),
+            getMetricSnapshots(filter),
+          ],
+        );
 
         setData({
           analytics: analyticsData,
@@ -65,7 +69,7 @@ export function useAnalytics() {
   }, [user]);
 
   return {
-    metrics: data.analytics?.metrics || {} as DashboardMetrics,
+    metrics: data.analytics?.metrics || ({} as DashboardMetrics),
     activities: data.analytics?.activities || [],
     snapshots: data.snapshots,
     engagement: data.engagement,

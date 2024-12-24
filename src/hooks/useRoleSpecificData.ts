@@ -99,24 +99,24 @@ function getMockDataForRole(role: UserRole): RoleData[UserRole] {
             byPeriod: {
               daily: 10,
               weekly: 50,
-              monthly: 200
+              monthly: 200,
             },
             byType: {
               candidates: 800,
-              employers: 200
+              employers: 200,
             },
             retention: 85,
-            churnRate: 15
+            churnRate: 15,
           },
           jobs: {
             total: 100,
             active: 45,
-            trend: 10
+            trend: 10,
           },
           applications: {
             total: 12,
             pending: 5,
-            trend: 8
+            trend: 8,
           },
           interviews: {
             total: 2,
@@ -125,13 +125,13 @@ function getMockDataForRole(role: UserRole): RoleData[UserRole] {
             byOutcome: {
               offered: 0,
               rejected: 0,
-              pending: 1
+              pending: 1,
             },
-            trend: 5
+            trend: 5,
           },
           timeToHire: {
             average: 15,
-            trend: -2
+            trend: -2,
           },
           activeJobsChange: 5,
           totalCandidates: 500,
@@ -144,7 +144,7 @@ function getMockDataForRole(role: UserRole): RoleData[UserRole] {
           jobViews: 45,
           savedJobs: 5,
           matchScore: 85,
-          profileViews: 15
+          profileViews: 15,
         },
         recentApplications: [
           {
@@ -178,24 +178,24 @@ function getMockDataForRole(role: UserRole): RoleData[UserRole] {
             byPeriod: {
               daily: 10,
               weekly: 50,
-              monthly: 200
+              monthly: 200,
             },
             byType: {
               candidates: 800,
-              employers: 200
+              employers: 200,
             },
             retention: 85,
-            churnRate: 15
+            churnRate: 15,
           },
           jobs: {
             total: 150,
             active: 45,
-            trend: 15
+            trend: 15,
           },
           applications: {
             total: 45,
             pending: 20,
-            trend: 12
+            trend: 12,
           },
           interviews: {
             total: 8,
@@ -204,13 +204,13 @@ function getMockDataForRole(role: UserRole): RoleData[UserRole] {
             byOutcome: {
               offered: 1,
               rejected: 1,
-              pending: 1
+              pending: 1,
             },
-            trend: 8
+            trend: 8,
           },
           timeToHire: {
             average: 18,
-            trend: -1
+            trend: -1,
           },
           activeJobsChange: 8,
           totalCandidates: 800,
@@ -223,7 +223,7 @@ function getMockDataForRole(role: UserRole): RoleData[UserRole] {
           jobViews: 250,
           savedJobs: 15,
           matchScore: 90,
-          profileViews: 180
+          profileViews: 180,
         },
         activeJobs: [
           {
@@ -256,24 +256,24 @@ function getMockDataForRole(role: UserRole): RoleData[UserRole] {
             byPeriod: {
               daily: 50,
               weekly: 250,
-              monthly: 1000
+              monthly: 1000,
             },
             byType: {
               candidates: 4000,
-              employers: 1000
+              employers: 1000,
             },
             retention: 90,
-            churnRate: 10
+            churnRate: 10,
           },
           jobs: {
             total: 1000,
             active: 450,
-            trend: 25
+            trend: 25,
           },
           applications: {
             total: 890,
             pending: 200,
-            trend: 15
+            trend: 15,
           },
           interviews: {
             total: 156,
@@ -282,13 +282,13 @@ function getMockDataForRole(role: UserRole): RoleData[UserRole] {
             byOutcome: {
               offered: 45,
               rejected: 20,
-              pending: 11
+              pending: 11,
             },
-            trend: 12
+            trend: 12,
           },
           timeToHire: {
             average: 16,
-            trend: -3
+            trend: -3,
           },
           activeJobsChange: 25,
           totalCandidates: 4000,
@@ -301,7 +301,7 @@ function getMockDataForRole(role: UserRole): RoleData[UserRole] {
           jobViews: 15000,
           savedJobs: 2500,
           matchScore: 92,
-          profileViews: 8000
+          profileViews: 8000,
         },
         systemHealth: {
           status: "healthy",

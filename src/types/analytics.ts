@@ -1,6 +1,5 @@
-import type { DashboardMetrics } from "./dashboard";
+import type { DashboardMetrics, ActivityType } from "./dashboard";
 export type { DashboardMetrics };
-import type { ActivityType } from "./activity";
 
 export interface ActivityItem {
   id: string;

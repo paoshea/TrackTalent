@@ -144,7 +144,7 @@ export function StatusComments({
       {/* Comment Form */}
       <form onSubmit={handleSubmit} className="mb-6">
         <RichTextEditor
-          value={newComment}
+          content={newComment}
           onChange={setNewComment}
           placeholder="Write a comment..."
           maxLength={1000}

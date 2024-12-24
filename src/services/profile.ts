@@ -63,11 +63,9 @@ function transformUserToProfile(user: User): Profile {
     skills: (user.skills || []).map((skillName) => ({
       id: `${user.id}-${skillName}`,
       name: skillName,
-      categoryId: "default",
-      rating: 0,
+      category: "default",
       level: "beginner",
       endorsements: 0,
-      verified: false,
       yearsOfExperience: 0,
     })),
     experience_years: 0,

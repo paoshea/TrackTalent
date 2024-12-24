@@ -1,5 +1,5 @@
 import { formatTimeAgo } from "../../utils/dateUtils";
-import type { Status, StatusType } from "../../types/status";
+import type { StatusType } from "../../types/status";
 import { useStatusUpdates } from "../../hooks/useStatusUpdates";
 import { LoadingState } from "../shared/LoadingState";
 
@@ -89,21 +89,20 @@ export function StatusUpdates({ userId, limit }: StatusUpdatesProps) {
                     <span
                       className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(update.type)}`}
                     >
-                      {update.type.charAt(0).toUpperCase() + update.type.slice(1)}
+                      {update.type.charAt(0).toUpperCase() +
+                        update.type.slice(1)}
                     </span>
                   </div>
-                  <p className="mt-2 text-sm text-gray-900">{update.content.text}</p>
+                  <p className="mt-2 text-sm text-gray-900">
+                    {update.content.text}
+                  </p>
                   {update.metadata && (
                     <div className="mt-2 text-sm text-gray-500">
                       {update.metadata.jobTitle && (
-                        <p>
-                          Job: {update.metadata.jobTitle}
-                        </p>
+                        <p>Job: {update.metadata.jobTitle}</p>
                       )}
                       {update.metadata.candidateName && (
-                        <p>
-                          Candidate: {update.metadata.candidateName}
-                        </p>
+                        <p>Candidate: {update.metadata.candidateName}</p>
                       )}
                       {update.metadata.interviewDate && (
                         <p>

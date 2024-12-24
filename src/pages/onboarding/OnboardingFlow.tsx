@@ -35,6 +35,10 @@ const StepComponents: Record<
   "preferences-setup": PreferencesSetup,
   "team-setup": TeamSetup,
   "company-info": CompanyInfo,
+  profile: ProfileSetup,
+  company: CompanyInfo,
+  preferences: PreferencesSetup,
+  team: TeamSetup,
 };
 
 export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {

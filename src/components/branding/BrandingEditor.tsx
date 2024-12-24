@@ -7,25 +7,27 @@ export function BrandingEditor() {
 
   const handleLogoUpload = async (file: File) => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
 
-      const fileExt = file.name.split('.').pop();
+      const fileExt = file.name.split(".").pop();
       const filePath = `${user.user_metadata.company_id}/logo.${fileExt}`;
 
       const { error: uploadError } = await supabase.storage
-        .from('company-assets')
+        .from("company-assets")
         .upload(filePath, file, { upsert: true });
 
       if (uploadError) throw uploadError;
 
-      const { data: { publicUrl } } = supabase.storage
-        .from('company-assets')
-        .getPublicUrl(filePath);
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from("company-assets").getPublicUrl(filePath);
 
       await updateTheme({ logo: publicUrl });
     } catch (err) {
-      console.error('Failed to upload logo:', err);
+      console.error("Failed to upload logo:", err);
     }
   };
 
@@ -40,7 +42,9 @@ export function BrandingEditor() {
           </label>
           <SketchPicker
             color={theme.primaryColor}
-            onChange={(color: ColorResult) => updateTheme({ primaryColor: color.hex })}
+            onChange={(color: ColorResult) =>
+              updateTheme({ primaryColor: color.hex })
+            }
           />
         </div>
 
@@ -50,7 +54,9 @@ export function BrandingEditor() {
           </label>
           <SketchPicker
             color={theme.secondaryColor}
-            onChange={(color: ColorResult) => updateTheme({ secondaryColor: color.hex })}
+            onChange={(color: ColorResult) =>
+              updateTheme({ secondaryColor: color.hex })
+            }
           />
         </div>
       </div>
@@ -78,16 +84,10 @@ export function BrandingEditor() {
         </div>
       </div>
 
-      {error && (
-        <div className="mt-4 text-sm text-red-600">
-          {error}
-        </div>
-      )}
+      {error && <div className="mt-4 text-sm text-red-600">{error}</div>}
 
       {isLoading && (
-        <div className="mt-4 text-sm text-gray-500">
-          Saving changes...
-        </div>
+        <div className="mt-4 text-sm text-gray-500">Saving changes...</div>
       )}
     </div>
   );

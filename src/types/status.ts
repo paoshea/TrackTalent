@@ -1,4 +1,4 @@
-export type StatusType = 
+export type StatusType =
   | "update"
   | "achievement"
   | "milestone"
@@ -20,10 +20,33 @@ export interface CreateStatusParams {
   metadata?: Status["metadata"];
 }
 
+export interface MediaAttachment {
+  id: string;
+  type: "image" | "video" | "file";
+  url: string;
+  name: string;
+  size?: number;
+  mimeType?: string;
+  thumbnailUrl?: string;
+}
+
+export interface RichTextEditorProps {
+  content: string;
+  onChange: (content: string) => void;
+  onMentionSearch?: (query: string) => Promise<MentionSuggestion[]>;
+  onHashtagSearch?: (query: string) => Promise<string[]>;
+  placeholder?: string;
+  disabled?: boolean;
+  maxLength?: number;
+  mentions?: StatusMention[];
+  hashtags?: StatusHashtag[];
+}
+
 export interface MentionSuggestion {
   id: string;
   type: "user" | "company" | "job";
   name: string;
+  avatar?: string;
   avatarUrl?: string;
   subtitle?: string;
 }
@@ -48,6 +71,7 @@ export type StatusContent = {
     url: string;
     title?: string;
   }>;
+  media?: MediaAttachment[];
   visibility?: "public" | "team" | "private";
 };
 

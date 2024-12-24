@@ -8,19 +8,16 @@ interface ExperienceFormProps {
   onChange: (data: Partial<ApplicationData>) => void;
 }
 
-export function ExperienceForm({
-  data,
-  onChange,
-}: ExperienceFormProps) {
+export function ExperienceForm({ data, onChange }: ExperienceFormProps) {
   const experiences = data.experience?.relevantAreas || [];
 
   const addExperience = () => {
     const currentExperience = data.experience || {
       years: 0,
       relevantAreas: [],
-      highlights: []
+      highlights: [],
     };
-    
+
     onChange({
       experience: {
         ...currentExperience,
@@ -34,7 +31,7 @@ export function ExperienceForm({
             current: false,
             description: "",
             skills: [],
-            achievements: []
+            achievements: [],
           },
         ],
       },
@@ -45,25 +42,24 @@ export function ExperienceForm({
     const currentExperience = data.experience || {
       years: 0,
       relevantAreas: [],
-      highlights: []
+      highlights: [],
     };
 
     onChange({
       experience: {
         ...currentExperience,
-        relevantAreas: currentExperience.relevantAreas.filter((_: Experience, i: number) => i !== index),
+        relevantAreas: currentExperience.relevantAreas.filter(
+          (_: Experience, i: number) => i !== index,
+        ),
       },
     });
   };
 
-  const updateExperience = (
-    index: number,
-    updates: Partial<Experience>
-  ) => {
+  const updateExperience = (index: number, updates: Partial<Experience>) => {
     const currentExperience = data.experience || {
       years: 0,
       relevantAreas: [],
-      highlights: []
+      highlights: [],
     };
 
     const updatedAreas = [...currentExperience.relevantAreas];
@@ -89,7 +85,9 @@ export function ExperienceForm({
           canDelete={index > 0}
           onDelete={() => removeExperience(index)}
           experience={exp}
-          onUpdate={(updates: Partial<Experience>) => updateExperience(index, updates)}
+          onUpdate={(updates: Partial<Experience>) =>
+            updateExperience(index, updates)
+          }
           isFirst={index === 0}
         />
       ))}

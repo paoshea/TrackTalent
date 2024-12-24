@@ -5,7 +5,7 @@ interface JobListItemProps {
   job: Job;
 }
 
-const statusColors: Record<Job['status'], string> = {
+const statusColors: Record<Job["status"], string> = {
   draft: "bg-gray-100 text-gray-800",
   published: "bg-blue-100 text-blue-800",
   closed: "bg-gray-100 text-gray-800",

@@ -22,7 +22,9 @@ export function ExperienceCard({
     <div className="bg-white shadow rounded-lg p-6">
       <div className="flex justify-between items-start">
         <h3 className="text-lg font-medium text-gray-900">
-          {isFirst ? "Current/Most Recent Position" : `Previous Position ${index}`}
+          {isFirst
+            ? "Current/Most Recent Position"
+            : `Previous Position ${index}`}
         </h3>
         {canDelete && (
           <button

@@ -1,9 +1,18 @@
+export interface ButtonStyle {
+  borderRadius?: string;
+  padding?: string;
+  fontWeight?: string;
+}
+
 export interface BrandingTheme {
   primaryColor: string;
   secondaryColor: string;
+  textColor: string;
+  backgroundColor: string;
+  borderColor: string;
   logo?: string;
   fontFamily?: string;
-  buttonStyle?: 'rounded' | 'square';
+  buttonStyle?: ButtonStyle;
   customCss?: string;
 }
 

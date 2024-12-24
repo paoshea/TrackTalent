@@ -1,9 +1,9 @@
 import { skillLevels } from "../../../../types/skills";
-import type { SkillRatingState } from "../../../../types/skills";
+import type { SkillLevel, SkillRatingState } from "../../../../types/skills";
 
 interface SkillRatingProps {
   skill: SkillRatingState;
-  onChange: (rating: number) => void;
+  onChange: (level: SkillLevel) => void;
 }
 
 export function SkillRating({ skill, onChange }: SkillRatingProps) {
@@ -16,7 +16,7 @@ export function SkillRating({ skill, onChange }: SkillRatingProps) {
           {skill.name}
         </label>
         <span className="text-sm text-gray-500" aria-live="polite">
-          {skillLevels[skill.rating - 1]}
+          {skill.level}
         </span>
       </div>
       <input
@@ -24,13 +24,16 @@ export function SkillRating({ skill, onChange }: SkillRatingProps) {
         type="range"
         min="1"
         max="5"
-        value={skill.rating}
-        onChange={(e) => onChange(parseInt(e.target.value, 10))}
+        value={skillLevels.indexOf(skill.level) + 1}
+        onChange={(e) => {
+          const index = parseInt(e.target.value, 10) - 1;
+          onChange(skillLevels[index]);
+        }}
         className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
         aria-valuemin={1}
         aria-valuemax={5}
-        aria-valuenow={skill.rating}
-        aria-valuetext={skillLevels[skill.rating - 1]}
+        aria-valuenow={skillLevels.indexOf(skill.level) + 1}
+        aria-valuetext={skill.level}
       />
     </div>
   );

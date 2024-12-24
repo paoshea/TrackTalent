@@ -8,7 +8,22 @@ export interface Database {
           interviews: number;
           connections: number;
           messages: number;
-          activities: any[];
+          activities: Array<{
+            id: string;
+            type:
+              | "job_posted"
+              | "application_received"
+              | "interview_scheduled"
+              | "interview_completed"
+              | "offer_sent"
+              | "offer_accepted"
+              | "candidate_hired"
+              | "status_update";
+            title: string;
+            description: string;
+            snapshotDate: string;
+            metadata?: Record<string, string | number | boolean | null>;
+          }>;
           trends: {
             daily: number[];
             weekly: number[];
@@ -27,7 +42,22 @@ export interface Database {
           interviews: number;
           connections: number;
           messages: number;
-          activities?: any[];
+          activities?: Array<{
+            id: string;
+            type:
+              | "job_posted"
+              | "application_received"
+              | "interview_scheduled"
+              | "interview_completed"
+              | "offer_sent"
+              | "offer_accepted"
+              | "candidate_hired"
+              | "status_update";
+            title: string;
+            description: string;
+            snapshotDate: string;
+            metadata?: Record<string, string | number | boolean | null>;
+          }>;
           trends?: {
             daily: number[];
             weekly: number[];
@@ -46,7 +76,22 @@ export interface Database {
           interviews?: number;
           connections?: number;
           messages?: number;
-          activities?: any[];
+          activities?: Array<{
+            id: string;
+            type:
+              | "job_posted"
+              | "application_received"
+              | "interview_scheduled"
+              | "interview_completed"
+              | "offer_sent"
+              | "offer_accepted"
+              | "candidate_hired"
+              | "status_update";
+            title: string;
+            description: string;
+            snapshotDate: string;
+            metadata?: Record<string, string | number | boolean | null>;
+          }>;
           trends?: {
             daily: number[];
             weekly: number[];

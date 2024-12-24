@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNotifications } from "../../hooks/useNotifications";
 import { useAuth } from "../../hooks/useAuth";
 import { NotificationItem } from "./NotificationItem";
-import { LoadingState } from "../shared/LoadingState";
 import type { NotificationType } from "../../types/notifications";
 
 export function NotificationCenter() {
@@ -14,31 +13,8 @@ export function NotificationCenter() {
 
   const { notifications, markAsRead, markAllAsRead } = useNotifications(
     user?.id || "",
-    filter
+    filter,
   );
-
-  const getNotificationIcon = (type: NotificationType): string => {
-    switch (type) {
-      case "interview_scheduled":
-        return "🗓️";
-      case "message_received":
-        return "✉️";
-      case "application_status":
-        return "📋";
-      case "job_match":
-        return "🎯";
-      case "profile_view":
-        return "👀";
-      case "skill_endorsed":
-        return "⭐";
-      case "job_alert":
-        return "🔔";
-      case "system_alert":
-        return "ℹ️";
-      default:
-        return "📢";
-    }
-  };
 
   if (!user) {
     return null;

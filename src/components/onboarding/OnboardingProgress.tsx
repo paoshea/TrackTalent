@@ -1,5 +1,8 @@
 import { useMemo } from "react";
-import type { OnboardingStepType, OnboardingProgressProps } from "../../types/onboarding";
+import type {
+  OnboardingStepType,
+  OnboardingProgressProps,
+} from "../../types/onboarding";
 
 export function OnboardingProgress({
   currentStep,

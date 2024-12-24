@@ -3,8 +3,8 @@ import { X } from "lucide-react";
 import type { JobSearchOptions, JobType } from "../../types/jobs";
 
 interface JobSearchFiltersProps {
-  filters: JobSearchOptions['filters'];
-  onChange: (filters: JobSearchOptions['filters']) => void;
+  filters: JobSearchOptions["filters"];
+  onChange: (filters: JobSearchOptions["filters"]) => void;
   className?: string;
 }
 
@@ -56,15 +56,19 @@ export function JobSearchFilters({
   onChange,
   className = "",
 }: JobSearchFiltersProps) {
-  const [localFilters, setLocalFilters] = useState<NonNullable<JobSearchOptions['filters']>>({});
+  const [localFilters, setLocalFilters] = useState<
+    NonNullable<JobSearchOptions["filters"]>
+  >({});
 
   useEffect(() => {
     setLocalFilters(filters || {});
   }, [filters]);
 
   const handleChange = (
-    field: keyof NonNullable<JobSearchOptions['filters']>,
-    value: NonNullable<JobSearchOptions['filters']>[keyof NonNullable<JobSearchOptions['filters']>],
+    field: keyof NonNullable<JobSearchOptions["filters"]>,
+    value: NonNullable<JobSearchOptions["filters"]>[keyof NonNullable<
+      JobSearchOptions["filters"]
+    >],
   ) => {
     const newFilters = { ...localFilters, [field]: value };
     setLocalFilters(newFilters);
@@ -80,7 +84,7 @@ export function JobSearchFilters({
   };
 
   const clearFilters = () => {
-    const emptyFilters: JobSearchOptions['filters'] = {};
+    const emptyFilters: JobSearchOptions["filters"] = {};
     setLocalFilters(emptyFilters);
     onChange(emptyFilters);
   };
@@ -119,7 +123,7 @@ export function JobSearchFilters({
                   onClick={() => {
                     const currentTypes = localFilters.type || [];
                     const newTypes = currentTypes.includes(type.value)
-                      ? currentTypes.filter(t => t !== type.value)
+                      ? currentTypes.filter((t) => t !== type.value)
                       : [...currentTypes, type.value];
                     handleChange("type", newTypes);
                   }}
@@ -147,7 +151,10 @@ export function JobSearchFilters({
             <select
               value={(localFilters.department || [])[0] || ""}
               onChange={(e) =>
-                handleChange("department", e.target.value ? [e.target.value] : [])
+                handleChange(
+                  "department",
+                  e.target.value ? [e.target.value] : [],
+                )
               }
               className="
                 mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 

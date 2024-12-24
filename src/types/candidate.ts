@@ -35,7 +35,7 @@ export interface Education {
   achievements: string[];
 }
 
-export type ApplicationFormStep = 
+export type ApplicationFormStep =
   | "personal-info"
   | "experience"
   | "skills"

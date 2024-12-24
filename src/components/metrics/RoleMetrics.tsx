@@ -1,5 +1,5 @@
 import { useRoleSpecificData } from "../../hooks/useRoleSpecificData";
-import { MetricCard, type MetricCardProps } from "./MetricCard";
+import { MetricCard } from "./MetricCard";
 import { Users, Briefcase, Clock, TrendingUp, LucideIcon } from "lucide-react";
 import type { DashboardMetrics } from "../../types/dashboard";
 

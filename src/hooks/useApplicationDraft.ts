@@ -21,7 +21,7 @@ export function useApplicationDraft(applicationId: string) {
       saveApplicationDraft(applicationId, data);
       setDraft(data);
     },
-    [applicationId]
+    [applicationId],
   );
 
   const clearDraft = useCallback(() => {

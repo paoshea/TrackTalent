@@ -141,7 +141,7 @@ export function ApplicationDetails() {
                                 {event.description}
                               </div>
                               <p className="mt-0.5 text-sm text-gray-500">
-                                {formatDate(event.date)}
+                                {formatDate(event.timestamp)}
                               </p>
                             </div>
                           </div>

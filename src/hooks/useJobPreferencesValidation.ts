@@ -1,112 +1,44 @@
-import {
-  useFormValidation,
-  type NestedValidationRules,
-} from "./useFormValidation";
-import type { JobFormData } from "../types/jobs";
+import { useFormValidations, type ValidationRules } from "./useFormValidations";
+import type { JobSalary, RemoteType } from "../types/jobs";
 
+/**
+ * Custom hook for validating job preferences form data.
+ * Uses useFormValidations because it deals with nested objects
+ * like compensation and remote work settings.
+ */
 export function useJobPreferencesValidation() {
-  const rules: NestedValidationRules<JobFormData> = {
-    title: {
+  // Only include nested fields that require validation
+  type NestedFields = {
+    compensation: { salary: JobSalary };
+    remote: { allowed: boolean; type?: RemoteType };
+  };
+
+  const rules: ValidationRules<NestedFields> = {
+    "compensation.salary": {
       required: true,
-      validate: (value: string) => {
-        if (value.length < 3) return "Title must be at least 3 characters";
-        if (value.length > 100) return "Title must be less than 100 characters";
+      validate: (value: JobSalary) => {
+        if (!value) return "Salary is required";
+        if (value.min < 0) return "Minimum salary cannot be negative";
+        if (value.max < 0) return "Maximum salary cannot be negative";
+        if (value.min > value.max)
+          return "Minimum salary must be less than maximum";
+        if (!value.currency) return "Currency is required";
+        if (!value.period) return "Period is required";
         return "";
       },
     },
-    description: {
+    "remote.allowed": {
       required: true,
-      validate: (value: string) => {
-        if (value.length < 50)
-          return "Description must be at least 50 characters";
-        if (value.length > 5000)
-          return "Description must be less than 5000 characters";
+    },
+    "remote.type": {
+      validate: (value: RemoteType | undefined, data) => {
+        if (data?.remote?.allowed && !value) {
+          return "Remote type is required when remote is allowed";
+        }
         return "";
-      },
-    },
-    department: {
-      required: true,
-    },
-    location: {
-      required: true,
-    },
-    type: {
-      required: true,
-    },
-    requirements: {
-      required: true,
-      validate: (value: string[]) => {
-        if (!value.length) return "At least one requirement is required";
-        return "";
-      },
-    },
-    skills: {
-      required: true,
-      validate: (value: string[]) => {
-        if (!value.length) return "At least one skill is required";
-        return "";
-      },
-    },
-    benefits: {
-      required: true,
-      validate: (value: string[]) => {
-        if (!value.length) return "At least one benefit is required";
-        return "";
-      },
-    },
-    compensation: {
-      salary: {
-        min: {
-          required: true,
-          validate: (value: number, data?: JobFormData) => {
-            if (value < 0) return "Minimum salary cannot be negative";
-            if (
-              data?.compensation?.salary?.max &&
-              value > data.compensation.salary.max
-            ) {
-              return "Minimum salary must be less than maximum";
-            }
-            return "";
-          },
-        },
-        max: {
-          required: true,
-          validate: (value: number, data?: JobFormData) => {
-            if (value < 0) return "Maximum salary cannot be negative";
-            if (
-              data?.compensation?.salary?.min &&
-              value < data.compensation.salary.min
-            ) {
-              return "Maximum salary must be greater than minimum";
-            }
-            return "";
-          },
-        },
-        currency: {
-          required: true,
-        },
-        period: {
-          required: true,
-        },
-      },
-    },
-    experienceLevel: {
-      required: true,
-    },
-    remote: {
-      allowed: {
-        required: true,
-      },
-      type: {
-        validate: (value: string | undefined, data?: JobFormData) => {
-          if (data?.remote?.allowed && !value) {
-            return "Remote type is required when remote is allowed";
-          }
-          return "";
-        },
       },
     },
   };
 
-  return useFormValidation<JobFormData>(rules);
+  return useFormValidations<NestedFields>(rules);
 }

@@ -8,8 +8,16 @@ interface Props {
 }
 
 export function ProtectedRoute({ children, roles }: Props) {
-  const userRole = useUserRole();
+  const { role: userRole, isLoading, error } = useUserRole();
   const isAuthenticated = true; // TODO: Replace with actual auth check
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <Navigate to="/error" replace />;
+  }
 
   if (!isAuthenticated) {
     return <Navigate to="/signin" replace />;

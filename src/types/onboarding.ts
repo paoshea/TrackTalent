@@ -69,8 +69,10 @@ export interface ProfileSetupProps extends OnboardingStepProps {
 }
 
 export interface PreferencesSetupProps extends OnboardingStepProps {
-  preferences: OnboardingData['preferences'];
-  onPreferencesUpdate: (preferences: Partial<OnboardingData['preferences']>) => void;
+  preferences: OnboardingData["preferences"];
+  onPreferencesUpdate: (
+    preferences: Partial<OnboardingData["preferences"]>,
+  ) => void;
   selectedPreferences: string[];
   onToggle: (preference: string) => void;
   isLoading: boolean;

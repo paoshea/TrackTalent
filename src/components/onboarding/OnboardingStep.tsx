@@ -1,5 +1,8 @@
 import type { ReactNode } from "react";
-import type { OnboardingStepProps, OnboardingStep as OnboardingStepType } from "../../types/onboarding";
+import type {
+  OnboardingStepProps,
+  OnboardingStep as OnboardingStepType,
+} from "../../types/onboarding";
 
 interface ExtendedOnboardingStepProps
   extends Omit<OnboardingStepProps, "onNext"> {

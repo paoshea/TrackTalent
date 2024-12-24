@@ -29,7 +29,7 @@ export interface MessageInputProps {
 }
 
 // Internal type for database operations
-export interface DatabaseMessage {
+export interface DatabaseMessage extends Record<string, unknown> {
   id: string;
   conversation_id: string;
   sender_id: string;
@@ -50,6 +50,6 @@ export function convertDatabaseMessage(dbMessage: DatabaseMessage): Message {
     content: dbMessage.content,
     createdAt: dbMessage.created_at,
     updatedAt: dbMessage.updated_at,
-    isRead: dbMessage.is_read
+    isRead: dbMessage.is_read,
   };
 }

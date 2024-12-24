@@ -15,7 +15,7 @@ const initialFormData: JobFormData = {
       max: 0,
       currency: "USD",
       period: "yearly",
-    }
+    },
   },
   benefits: [],
   department: "",
@@ -71,7 +71,8 @@ export function JobFormProvider({ children, onSubmit }: JobFormProviderProps) {
     }
 
     if (formData.compensation.salary.max < formData.compensation.salary.min) {
-      newErrors.compensation = "Maximum salary cannot be less than minimum salary";
+      newErrors.compensation =
+        "Maximum salary cannot be less than minimum salary";
     }
 
     setErrors(newErrors);

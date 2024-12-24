@@ -1,68 +1,69 @@
 import { useState, useCallback } from "react";
 
+/**
+ * Simple form validation hook for basic form fields.
+ * Use this hook when you need to validate simple form fields without nested objects.
+ * For complex nested object validation, use useFormValidations instead.
+ */
+
 export interface ValidationRule<T, D = unknown> {
   required?: boolean;
   validate?: (value: T, data?: D) => string;
 }
 
-type DeepValidationRule<T, P> = T extends Array<infer U>
-  ? ValidationRule<T, P>
-  : T extends Record<string, any>
-  ? { [K in keyof T]: DeepValidationRule<T[K], P> }
-  : ValidationRule<T, P>;
-
-export type NestedValidationRules<T> = {
-  [K in keyof T]: T[K] extends Array<any>
-    ? ValidationRule<T[K], T>
-    : T[K] extends Record<string, any>
-    ? DeepValidationRule<T[K], T>
-    : ValidationRule<T[K], T>;
+export type ValidationRules<T extends Record<string, unknown>> = {
+  [K in keyof T]: ValidationRule<T[K], T>;
 };
 
-type ValidationErrors<T> = Partial<Record<keyof T, string>>;
+type ValidationErrors = Record<string, string>;
 
-function isValidationRule<T, D>(
-  rule: ValidationRule<T, D> | Record<string, any>
-): rule is ValidationRule<T, D> {
-  return 'required' in rule || 'validate' in rule;
+function validateField<T extends Record<string, unknown>, K extends keyof T>(
+  field: K,
+  value: T[K],
+  rule: ValidationRule<T[K], T>,
+  data?: T,
+): string | null {
+  // Handle required check
+  if (rule.required) {
+    if (Array.isArray(value) && value.length === 0) {
+      return `${String(field)} is required`;
+    }
+    if (!value) {
+      return `${String(field)} is required`;
+    }
+  }
+
+  // Handle validation
+  if (rule.validate) {
+    return rule.validate(value, data) || null;
+  }
+
+  return null;
 }
 
-export function useFormValidation<T extends Record<string, any>>(rules: NestedValidationRules<T>) {
-  const [errors, setErrors] = useState<ValidationErrors<T>>({});
+export function useFormValidation<T extends Record<string, unknown>>(
+  rules: ValidationRules<T>,
+) {
+  const [errors, setErrors] = useState<ValidationErrors>({});
 
-  const validateField = useCallback(
+  const validateSingleField = useCallback(
     <K extends keyof T>(field: K, value: T[K], data?: T) => {
       const rule = rules[field];
-      if (!rule || typeof rule !== 'object') return null;
+      const error = validateField(field, value, rule, data);
 
-      if (isValidationRule(rule)) {
-        if (rule.required && (!value || (Array.isArray(value) && !value.length))) {
-          const error = `${String(field)} is required`;
-          setErrors((prev) => ({
-            ...prev,
-            [field]: error,
-          }));
-          return error;
-        }
-
-        if (rule.validate) {
-          const error = rule.validate(value, data);
-          if (error) {
-            setErrors((prev) => ({
-              ...prev,
-              [field]: error,
-            }));
-          } else {
-            setErrors((prev) => {
-              const newErrors = { ...prev };
-              delete newErrors[field];
-              return newErrors;
-            });
-          }
-          return error;
-        }
+      if (error) {
+        setErrors((prev) => ({
+          ...prev,
+          [field as string]: error,
+        }));
+        return error;
       }
 
+      setErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors[field as string];
+        return newErrors;
+      });
       return null;
     },
     [rules],
@@ -70,66 +71,22 @@ export function useFormValidation<T extends Record<string, any>>(rules: NestedVa
 
   const validateForm = useCallback(
     (data: T) => {
-      const newErrors: ValidationErrors<T> = {};
+      const newErrors: ValidationErrors = {};
       let hasErrors = false;
 
-      const validateNestedRules = (
-        nestedRules: DeepValidationRule<any, T> | ValidationRule<any, T>,
-        nestedData: any,
-        prefix = ""
-      ): boolean => {
-        let hasNestedErrors = false;
-
-        if (!nestedRules || typeof nestedRules !== 'object') {
-          return false;
-        }
-
-        if (isValidationRule(nestedRules)) {
-          if (nestedRules.required && (!nestedData || (Array.isArray(nestedData) && !nestedData.length))) {
-            newErrors[prefix as keyof T] = `${prefix} is required`;
-            return true;
-          }
-
-          if (nestedRules.validate) {
-            const error = nestedRules.validate(nestedData, data);
-            if (error) {
-              newErrors[prefix as keyof T] = error;
-              return true;
-            }
-          }
-          return false;
-        }
-
-        // This is a nested object
-        Object.entries(nestedRules).forEach(([key, rule]) => {
-          const fullKey = prefix ? `${prefix}.${key}` : key;
-          const value = nestedData?.[key];
-
-          const nestedHasErrors = validateNestedRules(
-            rule as DeepValidationRule<any, T> | ValidationRule<any, T>,
-            value,
-            fullKey
-          );
-          if (nestedHasErrors) {
-            hasNestedErrors = true;
-          }
-        });
-
-        return hasNestedErrors;
-      };
-
-      Object.entries(rules).forEach(([field, rule]) => {
-        const value = data[field];
-        const hasFieldErrors = validateNestedRules(rule, value, field);
-        if (hasFieldErrors) {
+      Object.keys(rules).forEach((field) => {
+        const key = field as keyof T;
+        const error = validateSingleField(key, data[key], data);
+        if (error) {
           hasErrors = true;
+          newErrors[field] = error;
         }
       });
 
       setErrors(newErrors);
       return hasErrors ? newErrors : {};
     },
-    [rules],
+    [rules, validateSingleField],
   );
 
   const clearErrors = useCallback(() => {
@@ -138,7 +95,7 @@ export function useFormValidation<T extends Record<string, any>>(rules: NestedVa
 
   return {
     errors,
-    validateField,
+    validateField: validateSingleField,
     validateForm,
     clearErrors,
   };

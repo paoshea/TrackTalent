@@ -105,10 +105,12 @@ export function useJobSearch(options: JobSearchOptions = {}) {
           responsibilities: job.responsibilities,
           skills: job.skills,
           compensation: {
-            min: job.salary_min,
-            max: job.salary_max,
-            currency: job.salary_currency,
-            period: job.salary_period,
+            salary: {
+              min: job.salary_min,
+              max: job.salary_max,
+              currency: job.salary_currency,
+              period: job.salary_period,
+            },
           },
           benefits: job.benefits,
           department: job.department,

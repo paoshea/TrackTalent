@@ -5,23 +5,12 @@ import { MessageInput } from "./MessageInput";
 import { MessageBubble } from "./MessageBubble";
 import { supabase } from "../../lib/supabase";
 import type { Message, DatabaseMessage } from "../../types/messages";
+import { convertDatabaseMessage } from "../../types/messages";
 
 interface MessageThreadProps {
   conversationId: string;
   recipientId: string;
   initialMessages?: Message[];
-}
-
-function formatDatabaseMessage(msg: DatabaseMessage): Message {
-  return {
-    ...msg,
-    conversationId: msg.conversation_id,
-    senderId: msg.sender_id,
-    recipientId: msg.recipient_id,
-    createdAt: msg.created_at,
-    updatedAt: msg.updated_at,
-    isRead: msg.is_read,
-  };
 }
 
 export function MessageThread({
@@ -54,7 +43,9 @@ export function MessageThread({
 
       if (fetchError) throw fetchError;
 
-      const formattedMessages = data.map(formatDatabaseMessage);
+      const formattedMessages = (data as DatabaseMessage[]).map(
+        convertDatabaseMessage,
+      );
       setMessages(formattedMessages);
       scrollToBottom();
     } catch (err) {
@@ -85,7 +76,7 @@ export function MessageThread({
 
         if (sendError) throw sendError;
 
-        const formattedMessage = formatDatabaseMessage(
+        const formattedMessage = convertDatabaseMessage(
           newMessage as DatabaseMessage,
         );
         setMessages((prev) => [...prev, formattedMessage]);
@@ -110,7 +101,9 @@ export function MessageThread({
     },
     onInsert: useCallback(
       (payload: DatabaseMessage) => {
-        const formattedMessage = formatDatabaseMessage(payload);
+        const formattedMessage = convertDatabaseMessage(
+          payload as DatabaseMessage,
+        );
         setMessages((prev) => [...prev, formattedMessage]);
         scrollToBottom();
       },
@@ -142,7 +135,7 @@ export function MessageThread({
       </div>
 
       <div className="border-t p-4">
-        <MessageInput onSubmit={sendMessage} placeholder="Type a message..." />
+        <MessageInput onSend={sendMessage} placeholder="Type a message..." />
       </div>
     </div>
   );

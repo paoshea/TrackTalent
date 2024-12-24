@@ -4,7 +4,10 @@ import type { JobFormData, JobSalary } from "../../../types/jobs";
 
 interface JobCompensationProps {
   data: JobFormData;
-  onChange: <K extends keyof JobFormData>(field: K, value: JobFormData[K]) => void;
+  onChange: <K extends keyof JobFormData>(
+    field: K,
+    value: JobFormData[K],
+  ) => void;
   errors: Record<string, string>;
 }
 

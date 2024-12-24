@@ -8,9 +8,7 @@ interface ActiveJobsListProps {
 export function ActiveJobsList({ jobs }: ActiveJobsListProps) {
   if (!jobs.length) {
     return (
-      <div className="text-center text-gray-500">
-        No active jobs to display
-      </div>
+      <div className="text-center text-gray-500">No active jobs to display</div>
     );
   }
 
@@ -34,7 +32,8 @@ export function ActiveJobsList({ jobs }: ActiveJobsListProps) {
                   </div>
                   <div className="ml-2 flex-shrink-0 flex">
                     <p className="text-sm text-gray-500">
-                      {job.applicantCount} applicant{job.applicantCount !== 1 && "s"}
+                      {job.applicantCount} applicant
+                      {job.applicantCount !== 1 && "s"}
                     </p>
                   </div>
                 </div>

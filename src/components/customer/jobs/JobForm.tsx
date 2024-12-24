@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { useFormValidation, type ValidationRule } from "../../../hooks/useFormValidation";
+import { useJobForm } from "../../../hooks/useJobForm";
+import { useJobPreferencesValidation } from "../../../hooks/useJobPreferencesValidation";
 import type { JobFormData } from "../../../types/jobs";
 import { JobBasicInfo } from "./JobBasicInfo";
 import { JobRequirements } from "./JobRequirements";
@@ -11,113 +12,19 @@ interface JobFormProps {
   isSubmitting?: boolean;
 }
 
-const validationRules = {
-  title: {
-    required: true,
-    validate: (value: string) => {
-      if (value.length < 3) return "Title must be at least 3 characters";
-      if (value.length > 100) return "Title must be less than 100 characters";
-      return "";
-    },
-  } as ValidationRule<string, JobFormData>,
-
-  description: {
-    required: true,
-    validate: (value: string) => {
-      if (value.length < 50) return "Description must be at least 50 characters";
-      if (value.length > 5000) return "Description must be less than 5000 characters";
-      return "";
-    },
-  } as ValidationRule<string, JobFormData>,
-
-  department: {
-    required: true,
-    validate: (value: string) => {
-      return !value ? "Department is required" : "";
-    },
-  } as ValidationRule<string, JobFormData>,
-
-  location: {
-    required: true,
-    validate: (value: string) => {
-      return !value ? "Location is required" : "";
-    },
-  } as ValidationRule<string, JobFormData>,
-
-  type: {
-    required: true,
-    validate: (value: JobFormData["type"]) => {
-      return !value ? "Job type is required" : "";
-    },
-  } as ValidationRule<JobFormData["type"], JobFormData>,
-
-  requirements: {
-    required: true,
-    validate: (value: string[]) => {
-      return value.length === 0 ? "At least one requirement is required" : "";
-    },
-  } as ValidationRule<string[], JobFormData>,
-
-  skills: {
-    required: true,
-    validate: (value: string[]) => {
-      return value.length === 0 ? "At least one skill is required" : "";
-    },
-  } as ValidationRule<string[], JobFormData>,
-
-  experienceLevel: {
-    required: true,
-    validate: (value: JobFormData["experienceLevel"]) => {
-      return !value ? "Experience level is required" : "";
-    },
-  } as ValidationRule<JobFormData["experienceLevel"], JobFormData>,
-
-
-  "compensation.salary.min": {
-    required: true,
-    validate: (value: number) => {
-      return value <= 0 ? "Minimum salary must be greater than 0" : "";
-    },
-  } as ValidationRule<number, JobFormData>,
-
-  "compensation.salary.max": {
-    required: true,
-    validate: (value: number, data?: JobFormData) => {
-      if (value <= 0) return "Maximum salary must be greater than 0";
-      if (data?.compensation.salary.min && value < data.compensation.salary.min) {
-        return "Maximum salary must be greater than minimum";
-      }
-      return "";
-    },
-  } as ValidationRule<number, JobFormData>,
-
-  "compensation.salary.currency": {
-    required: true,
-    validate: (value: string) => {
-      return !value ? "Currency is required" : "";
-    },
-  } as ValidationRule<string, JobFormData>,
-
-  "compensation.salary.period": {
-    required: true,
-    validate: (value: string) => {
-      return !value ? "Salary period is required" : "";
-    },
-  } as ValidationRule<string, JobFormData>,
-
-  benefits: {
-    required: false,
-    validate: (_value: string[]) => "",
-  } as ValidationRule<string[], JobFormData>,
-
-
-  "remote.allowed": {
-    required: true,
-    validate: (value: boolean) => {
-      return typeof value !== 'boolean' ? "Remote work preference must be specified" : "";
-    },
-  } as ValidationRule<boolean, JobFormData>,
-};
+// Type for simple fields (no nesting)
+type SimpleFields = Pick<
+  JobFormData,
+  | "title"
+  | "description"
+  | "department"
+  | "location"
+  | "type"
+  | "requirements"
+  | "skills"
+  | "benefits"
+  | "experienceLevel"
+>;
 
 export function JobForm({ initialData, onSubmit, isSubmitting }: JobFormProps) {
   const [formData, setFormData] = useState<JobFormData>({
@@ -143,12 +50,31 @@ export function JobForm({ initialData, onSubmit, isSubmitting }: JobFormProps) {
     },
   });
 
-  const { errors, validateField, validateForm } = useFormValidation<JobFormData>(validationRules);
+  const {
+    errors: simpleErrors,
+    validateField: validateSimpleField,
+    validateForm: validateSimpleForm,
+  } = useJobForm();
+
+  const {
+    errors: nestedErrors,
+    validateField: validateNestedField,
+    validateForm: validateNestedForm,
+  } = useJobPreferencesValidation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const validationErrors = validateForm(formData);
-    if (Object.keys(validationErrors).length > 0) return;
+    const simpleValidationErrors = validateSimpleForm(formData);
+    const nestedValidationErrors = validateNestedForm({
+      compensation: formData.compensation,
+      remote: formData.remote,
+    });
+
+    if (
+      Object.keys(simpleValidationErrors).length > 0 ||
+      Object.keys(nestedValidationErrors).length > 0
+    )
+      return;
 
     await onSubmit(formData);
   };
@@ -158,7 +84,58 @@ export function JobForm({ initialData, onSubmit, isSubmitting }: JobFormProps) {
     value: JobFormData[K],
   ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
-    validateField(field, value);
+
+    // Handle simple field validation
+    if (
+      [
+        "title",
+        "description",
+        "department",
+        "location",
+        "type",
+        "requirements",
+        "skills",
+        "benefits",
+        "experienceLevel",
+      ].includes(field as string)
+    ) {
+      validateSimpleField(
+        field as keyof SimpleFields,
+        value as SimpleFields[keyof SimpleFields],
+      );
+    }
+
+    // Handle nested field validation
+    if (field === "compensation") {
+      validateNestedField(
+        "compensation.salary",
+        (value as JobFormData["compensation"]).salary,
+      );
+    } else if (field === "remote") {
+      validateNestedField(
+        "remote.allowed",
+        (value as JobFormData["remote"]).allowed,
+      );
+      validateNestedField("remote.type", (value as JobFormData["remote"]).type);
+    }
+  };
+
+  // Combine errors from both validation systems
+  const errors: Record<string, string> = {
+    ...Object.entries(simpleErrors).reduce(
+      (acc, [key, value]) => ({
+        ...acc,
+        [key]: value || "",
+      }),
+      {} as Record<string, string>,
+    ),
+    ...Object.entries(nestedErrors).reduce(
+      (acc, [key, value]) => ({
+        ...acc,
+        [key]: value || "",
+      }),
+      {} as Record<string, string>,
+    ),
   };
 
   return (
@@ -166,19 +143,19 @@ export function JobForm({ initialData, onSubmit, isSubmitting }: JobFormProps) {
       <JobBasicInfo
         data={formData}
         onChange={handleFieldChange}
-        errors={errors as Record<string, string>}
+        errors={errors}
       />
 
       <JobRequirements
         data={formData}
         onChange={handleFieldChange}
-        errors={errors as Record<string, string>}
+        errors={errors}
       />
 
       <JobCompensationComponent
         data={formData}
         onChange={handleFieldChange}
-        errors={errors as Record<string, string>}
+        errors={errors}
       />
 
       <div className="flex justify-end space-x-4">

@@ -2,7 +2,6 @@ import React from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { useDashboardMetrics } from "../../hooks/useDashboardMetrics";
 import { useActivityFeed } from "../../hooks/useActivityFeed";
-import type { Activity } from "../../types/activity";
 import { Users, Briefcase, CheckCircle, TrendingUp } from "lucide-react";
 
 const navigationItems = [
@@ -96,9 +95,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                   {activities.map((activity) => (
                     <li key={activity.id} className="px-4 py-4">
                       <div className="flex items-center space-x-4">
-                        <div className="flex-shrink-0">
-                          {activity.icon}
-                        </div>
+                        <div className="flex-shrink-0">{activity.icon}</div>
                         <div>
                           <p className="text-sm font-medium text-gray-900">
                             {activity.message}

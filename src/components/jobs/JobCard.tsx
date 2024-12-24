@@ -18,7 +18,7 @@ export function JobCard({ job, className = "" }: JobCardProps) {
               <img
                 className="h-10 w-10 rounded-full"
                 src={job.company.logo}
-                alt={job.company.name || 'Company logo'}
+                alt={job.company.name || "Company logo"}
               />
             ) : (
               <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">

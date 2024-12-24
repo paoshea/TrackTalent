@@ -1,6 +1,14 @@
 import { useState, useEffect, useCallback } from "react";
 import type { Conversation, Message } from "../types/messages";
 
+/**
+ * Hook for managing a single conversation's state and interactions.
+ * Used for individual chat views where users can send messages and mark them as read.
+ * For a list of all conversations, see useConversations.
+ *
+ * @param conversationId - The ID of the conversation to manage
+ * @returns Conversation state and methods for interacting with it
+ */
 export function useConversation(conversationId: string) {
   const [conversation, setConversation] = useState<Conversation | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -20,7 +28,8 @@ export function useConversation(conversationId: string) {
           {
             id: "1",
             conversationId,
-            content: "Thank you for your application. We would like to schedule an interview.",
+            content:
+              "Thank you for your application. We would like to schedule an interview.",
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
             senderId: "company",
@@ -57,7 +66,7 @@ export function useConversation(conversationId: string) {
           : null,
       );
     },
-    [conversation],
+    [conversation, conversationId],
   );
 
   const markAsRead = useCallback(() => {

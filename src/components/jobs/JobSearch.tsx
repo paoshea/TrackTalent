@@ -12,7 +12,7 @@ interface JobSearchProps {
 export function JobSearch({ className = "" }: JobSearchProps) {
   const [query, setQuery] = useState("");
   const [showFilters, setShowFilters] = useState(false);
-  const [filters, setFilters] = useState<JobSearchOptions['filters']>({});
+  const [filters, setFilters] = useState<JobSearchOptions["filters"]>({});
 
   const transformToJob = (result: JobSearchResult): Job => ({
     id: result.id,
@@ -20,23 +20,23 @@ export function JobSearch({ className = "" }: JobSearchProps) {
     description: result.description,
     requirements: result.requirements,
     location: result.location,
-    type: result.type as Job['type'],
+    type: result.type as Job["type"],
     compensation: result.compensation,
     skills: result.skills,
     benefits: result.benefits,
     department: result.department,
-    experienceLevel: 'mid', // Default value since JobSearchResult doesn't have this
+    experienceLevel: "mid", // Default value since JobSearchResult doesn't have this
     remote: result.remote,
-    companyId: '', // Required by Job type
+    companyId: "", // Required by Job type
     company: {
-      id: '',
-      name: result.company
+      id: "",
+      name: result.company,
     },
-    status: 'published',
+    status: "published",
     applicantCount: 0,
     createdAt: result.createdAt,
     updatedAt: result.updatedAt,
-    salaryRange: result.compensation.salary
+    salaryRange: result.compensation.salary,
   });
 
   const { results, isLoading, error, totalCount } = useJobSearch({
@@ -52,7 +52,7 @@ export function JobSearch({ className = "" }: JobSearchProps) {
     setQuery(searchInput.value);
   };
 
-  const handleFilterChange = (newFilters: JobSearchOptions['filters']) => {
+  const handleFilterChange = (newFilters: JobSearchOptions["filters"]) => {
     setFilters(newFilters);
     setShowFilters(false);
   };
@@ -132,7 +132,7 @@ export function JobSearch({ className = "" }: JobSearchProps) {
             onLoadMore={() => {
               // Load more functionality would be implemented here
               // For now, we'll just log that it was called
-              console.log('Load more jobs requested');
+              console.log("Load more jobs requested");
             }}
           />
         )}
