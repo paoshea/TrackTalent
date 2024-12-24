@@ -1,4 +1,3 @@
-import React from "react";
 import {
   PieChart,
   Pie,
@@ -16,8 +15,8 @@ interface Props {
 
 export function ResponseRateChart({ metrics, height = 300 }: Props) {
   const data = [
-    { name: "Responded", value: metrics.response_rate },
-    { name: "Pending", value: 100 - metrics.response_rate },
+    { name: "Responded", value: metrics.applications.total - metrics.applications.pending },
+    { name: "Pending", value: metrics.applications.pending },
   ];
 
   const COLORS = ["#4F46E5", "#E5E7EB"];

@@ -30,7 +30,11 @@ export type OnboardingStepType =
   | "profile-setup"
   | "preferences-setup"
   | "team-setup"
-  | "company-info";
+  | "company-info"
+  | "profile"
+  | "company"
+  | "preferences"
+  | "team";
 
 export interface OnboardingStep {
   id: OnboardingStepType;
@@ -59,11 +63,17 @@ export interface ProfileData {
 export interface ProfileSetupProps extends OnboardingStepProps {
   profile: ProfileData;
   onProfileUpdate: (profile: Partial<ProfileData>) => void;
+  onSubmit: (data: ProfileData) => void;
+  isLoading: boolean;
+  initialData?: ProfileData;
 }
 
 export interface PreferencesSetupProps extends OnboardingStepProps {
   preferences: OnboardingData['preferences'];
   onPreferencesUpdate: (preferences: Partial<OnboardingData['preferences']>) => void;
+  selectedPreferences: string[];
+  onToggle: (preference: string) => void;
+  isLoading: boolean;
 }
 
 export interface OnboardingData {

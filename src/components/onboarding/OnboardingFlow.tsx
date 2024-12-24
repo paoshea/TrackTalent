@@ -9,25 +9,25 @@ interface OnboardingFlowProps {
 
 const steps: OnboardingStep[] = [
   {
-    id: "profile",
+    id: "profile-setup",
     title: "Profile Setup",
     description: "Set up your personal profile",
     isComplete: false,
   },
   {
-    id: "company",
+    id: "company-info",
     title: "Company Information",
     description: "Tell us about your company",
     isComplete: false,
   },
   {
-    id: "preferences",
+    id: "preferences-setup",
     title: "Job Preferences",
     description: "Define your hiring preferences",
     isComplete: false,
   },
   {
-    id: "team",
+    id: "team-setup",
     title: "Team Setup",
     description: "Add your team members",
     isOptional: true,
@@ -93,7 +93,7 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
 
       <div className="bg-white shadow rounded-lg">
         <StepContent
-          step={stepsState[currentStepIndex]}
+          step={stepsState[currentStepIndex].id}
           onNext={handleNext}
           onBack={handleBack}
           onSkip={handleSkip}

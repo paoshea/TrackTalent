@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "./useAuth";
-import { getDashboardMetrics } from "../services/analytics";
+import { getAnalytics } from "../services/analytics";
 import type { DashboardMetrics } from "../types/dashboard";
 
 export interface UseDashboardMetricsResult {
@@ -23,8 +23,13 @@ export function useDashboardMetrics(): UseDashboardMetricsResult {
     setError(null);
 
     try {
-      const data = await getDashboardMetrics(user.id);
-      setMetrics(data);
+      const data = await getAnalytics({
+        dateRange: {
+          start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+          end: new Date().toISOString()
+        }
+      });
+      setMetrics(data.metrics);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to fetch metrics");
     } finally {

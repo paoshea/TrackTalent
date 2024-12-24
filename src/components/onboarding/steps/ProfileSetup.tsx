@@ -3,6 +3,11 @@ import { FormField } from "../../shared/FormField";
 import type { ProfileData, ProfileSetupProps } from "../../../types/onboarding";
 
 export function ProfileSetup({
+  data,
+  onUpdate,
+  isSubmitting,
+  profile,
+  onProfileUpdate,
   onSubmit,
   isLoading,
   initialData,
@@ -21,8 +26,10 @@ export function ProfileSetup({
     },
   });
 
-  const handleFormSubmit = handleSubmit(async (data: ProfileData) => {
-    await onSubmit(data);
+  const handleFormSubmit = handleSubmit(async (formData: ProfileData) => {
+    onProfileUpdate(formData);
+    onUpdate({ profile: formData });
+    await onSubmit(formData);
   });
 
   return (
@@ -32,7 +39,7 @@ export function ProfileSetup({
           type="text"
           {...register("firstName", { required: "First name is required" })}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-          disabled={isLoading}
+          disabled={isLoading || isSubmitting}
         />
       </FormField>
 
@@ -41,7 +48,7 @@ export function ProfileSetup({
           type="text"
           {...register("lastName", { required: "Last name is required" })}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-          disabled={isLoading}
+          disabled={isLoading || isSubmitting}
         />
       </FormField>
 
@@ -56,7 +63,7 @@ export function ProfileSetup({
             },
           })}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-          disabled={isLoading}
+          disabled={isLoading || isSubmitting}
         />
       </FormField>
 
@@ -71,7 +78,7 @@ export function ProfileSetup({
             },
           })}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-          disabled={isLoading}
+          disabled={isLoading || isSubmitting}
         />
       </FormField>
 
@@ -80,17 +87,17 @@ export function ProfileSetup({
           type="text"
           {...register("location", { required: "Location is required" })}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-          disabled={isLoading}
+          disabled={isLoading || isSubmitting}
         />
       </FormField>
 
       <div className="flex justify-end">
         <button
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || isSubmitting}
           className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {isLoading ? "Saving..." : "Save Profile"}
+          {isLoading || isSubmitting ? "Saving..." : "Save Profile"}
         </button>
       </div>
     </form>

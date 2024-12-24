@@ -68,12 +68,7 @@ export interface Application {
       weaknesses: string[];
     };
   }>;
-  timeline?: Array<{
-    id: string;
-    type: string;
-    description: string;
-    date: string;
-  }>;
+  timeline?: ApplicationEvent[];
   offer?: {
     salary: {
       amount: number;
