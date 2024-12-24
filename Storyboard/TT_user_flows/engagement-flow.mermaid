@@ -1,0 +1,18 @@
+graph TD
+    A[New Contact Entry] --> B{Contact Type}
+    B --> |Employer| C[Company Profile Creation]
+    B --> |Candidate| D[Candidate Profile Creation]
+    C --> E[Initial Assessment]
+    D --> F[Skills Assessment]
+    E --> G[Engagement Plan]
+    F --> H[Match Analysis]
+    G --> I[Regular Touchpoints]
+    H --> J[Placement Attempt]
+    I --> K{Response Quality}
+    J --> L{Placement Success}
+    K --> |High| M[Relationship Upgrade]
+    K --> |Low| N[Re-engagement Strategy]
+    L --> |Success| O[Success Documentation]
+    L --> |Not Placed| P[Referral Process]
+    O --> Q[Relationship Strengthening]
+    P --> R[New Opportunity Search]

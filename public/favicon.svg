@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Background shape - represents a path/track -->
+  <path 
+    d="M 10 70 Q 50 30 90 70" 
+    fill="none" 
+    stroke="#2563eb" 
+    stroke-width="4"
+    stroke-dasharray="1 8"
+  />
+  
+  <!-- Star symbol - represents talent -->
+  <g transform="translate(40,40) scale(0.4)">
+    <path 
+      d="M 50 0 L 61 35 L 98 35 L 68 57 L 79 92 L 50 70 L 21 92 L 32 57 L 2 35 L 39 35 Z" 
+      fill="#fbbf24"
+    />
+  </g>
+  
+  <!-- Ascending dots - represent progression/tracking -->
+  <circle cx="25" cy="60" r="3" fill="#2563eb"/>
+  <circle cx="50" cy="50" r="3" fill="#2563eb"/>
+  <circle cx="75" cy="40" r="3" fill="#2563eb"/>
+</svg>
