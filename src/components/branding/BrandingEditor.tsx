@@ -1,5 +1,4 @@
-import React from "react";
-import { SketchPicker } from "react-color";
+import { SketchPicker, ColorResult } from "react-color";
 import { useBrandingMutation } from "../../hooks/useBrandingMutation";
 
 export function BrandingEditor() {
@@ -16,7 +15,7 @@ export function BrandingEditor() {
           </label>
           <SketchPicker
             color={theme.primaryColor}
-            onChange={(color) => updateTheme({ primaryColor: color.hex })}
+            onChange={(color: ColorResult) => updateTheme({ primaryColor: color.hex })}
           />
         </div>
 
@@ -26,7 +25,7 @@ export function BrandingEditor() {
           </label>
           <SketchPicker
             color={theme.secondaryColor}
-            onChange={(color) => updateTheme({ secondaryColor: color.hex })}
+            onChange={(color: ColorResult) => updateTheme({ secondaryColor: color.hex })}
           />
         </div>
       </div>

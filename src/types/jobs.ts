@@ -1,3 +1,5 @@
+export type JobType = "full-time" | "part-time" | "contract" | "internship";
+
 export type RemoteType = "fully" | "hybrid" | "occasional";
 
 export type SalaryPeriod = "hourly" | "monthly" | "yearly";
@@ -36,14 +38,25 @@ export type JobFormErrors = {
   [K in keyof JobFormData]?: string;
 };
 
+export interface Company {
+  id: string;
+  name: string;
+  logo?: string;
+}
+
 export interface Job extends JobFormData {
   id: string;
   companyId: string;
+  company: Company;
   status: "draft" | "published" | "closed";
   applicantCount: number;
   createdAt: string;
   updatedAt: string;
+  publishedAt?: string;
+  salaryRange: JobSalary;
 }
+
+export type JobFilters = JobFilter;
 
 export interface UseCustomerJobsOptions {
   status?: string[];

@@ -1,12 +1,12 @@
-import type { Skill } from "../../../../types/candidate";
+import { skillLevels } from "../../../../types/skills";
+import type { SkillRatingState } from "../../../../types/skills";
 
 interface SkillRatingProps {
-  skill: Skill;
+  skill: SkillRatingState;
   onChange: (rating: number) => void;
 }
 
 export function SkillRating({ skill, onChange }: SkillRatingProps) {
-  const ratings = ["Beginner", "Basic", "Intermediate", "Advanced", "Expert"];
   const ratingId = `skill-rating-${skill.name.toLowerCase().replace(/\s+/g, "-")}`;
 
   return (
@@ -16,7 +16,7 @@ export function SkillRating({ skill, onChange }: SkillRatingProps) {
           {skill.name}
         </label>
         <span className="text-sm text-gray-500" aria-live="polite">
-          {ratings[skill.rating - 1]}
+          {skillLevels[skill.rating - 1]}
         </span>
       </div>
       <input
@@ -30,7 +30,7 @@ export function SkillRating({ skill, onChange }: SkillRatingProps) {
         aria-valuemin={1}
         aria-valuemax={5}
         aria-valuenow={skill.rating}
-        aria-valuetext={ratings[skill.rating - 1]}
+        aria-valuetext={skillLevels[skill.rating - 1]}
       />
     </div>
   );

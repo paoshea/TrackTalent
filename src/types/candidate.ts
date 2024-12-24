@@ -35,11 +35,70 @@ export interface Education {
   achievements: string[];
 }
 
+export type ApplicationFormStep = 
+  | "personal-info"
+  | "experience"
+  | "skills"
+  | "questions"
+  | "review";
+
+export interface ApplicationData {
+  jobId: string;
+  coverLetter: string;
+  resumeUrl: string;
+  portfolioUrl?: string;
+  linkedinUrl?: string;
+  githubUrl?: string;
+  websiteUrl?: string;
+  references?: {
+    name: string;
+    position: string;
+    company: string;
+    email: string;
+    phone?: string;
+    relationship: string;
+  }[];
+  additionalInfo?: string;
+  availability?: {
+    startDate: string;
+    noticePeriod?: string;
+    preferredSchedule?: string[];
+  };
+  expectedSalary?: {
+    amount: number;
+    currency: string;
+    frequency: "yearly" | "monthly" | "hourly";
+  };
+  questions?: Record<string, string>;
+  skills: string[];
+  experience?: {
+    years: number;
+    relevantAreas: Experience[];
+    highlights: string[];
+  };
+  education?: {
+    level: string;
+    field: string;
+    institution: string;
+    graduationYear: number;
+    gpa?: number;
+  }[];
+  certifications?: {
+    name: string;
+    issuer: string;
+    issueDate: string;
+    expiryDate?: string;
+    credentialId?: string;
+    credentialUrl?: string;
+  }[];
+}
+
 export interface Skill {
   name: string;
   level: "beginner" | "intermediate" | "advanced" | "expert";
   yearsOfExperience: number;
   endorsements: number;
+  rating: number; // 1-5 rating for skill assessment
 }
 
 export interface CandidateProfile {

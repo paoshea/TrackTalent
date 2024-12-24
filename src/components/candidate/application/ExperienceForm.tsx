@@ -1,7 +1,8 @@
-import React from "react";
-import { Plus } from "lucide-react";
-import { ExperienceCard } from "./experience/ExperienceCard";
-import type { ApplicationData, Experience } from "../../../types/candidate";
+import { PlusCircle as Plus, Trash2 } from "lucide-react";
+import { Button } from "../../shared/Button";
+import type { Experience } from "../../../types/candidate";
+import type { ApplicationData } from "../../../hooks/useApplicationSubmit";
+import { ExperienceCard } from "../../../components/candidate/application/ExperienceCard";
 
 interface ExperienceFormProps {
   data: Partial<ApplicationData>;
@@ -14,48 +15,84 @@ export function ExperienceForm({
   onChange,
   errors,
 }: ExperienceFormProps) {
-  const experiences = data.experiences || [];
+  const experiences = data.experience?.relevantAreas || [];
 
   const addExperience = () => {
+    const currentExperience = data.experience || {
+      years: 0,
+      relevantAreas: [],
+      highlights: []
+    };
+    
     onChange({
-      experiences: [
-        ...experiences,
-        {
-          company: "",
-          title: "",
-          startDate: "",
-          current: false,
-          description: "",
-        },
-      ],
+      experience: {
+        ...currentExperience,
+        relevantAreas: [
+          ...currentExperience.relevantAreas,
+          {
+            id: crypto.randomUUID(),
+            company: "",
+            position: "",
+            startDate: "",
+            current: false,
+            description: "",
+            skills: [],
+            achievements: []
+          },
+        ],
+      },
     });
   };
 
   const removeExperience = (index: number) => {
+    const currentExperience = data.experience || {
+      years: 0,
+      relevantAreas: [],
+      highlights: []
+    };
+
     onChange({
-      experiences: experiences.filter((_, i) => i !== index),
+      experience: {
+        ...currentExperience,
+        relevantAreas: currentExperience.relevantAreas.filter((_: Experience, i: number) => i !== index),
+      },
     });
   };
 
-  const updateExperience = (index: number, updates: Partial<Experience>) => {
-    const updatedExperiences = [...experiences];
-    updatedExperiences[index] = {
-      ...updatedExperiences[index],
+  const updateExperience = (
+    index: number,
+    updates: Partial<Experience>
+  ) => {
+    const currentExperience = data.experience || {
+      years: 0,
+      relevantAreas: [],
+      highlights: []
+    };
+
+    const updatedAreas = [...currentExperience.relevantAreas];
+    updatedAreas[index] = {
+      ...updatedAreas[index],
       ...updates,
     };
-    onChange({ experiences: updatedExperiences });
+
+    onChange({
+      experience: {
+        ...currentExperience,
+        relevantAreas: updatedAreas,
+      },
+    });
   };
 
   return (
     <div className="space-y-6">
-      {experiences.map((exp, index) => (
+      {experiences.map((exp: Experience, index: number) => (
         <ExperienceCard
           key={index}
           index={index}
           canDelete={index > 0}
           onDelete={() => removeExperience(index)}
           experience={exp}
-          onUpdate={(updates) => updateExperience(index, updates)}
+          onUpdate={(updates: Partial<Experience>) => updateExperience(index, updates)}
           errors={errors}
           isFirst={index === 0}
         />

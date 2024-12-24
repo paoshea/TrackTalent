@@ -1,6 +1,13 @@
 import type { LucideIcon } from "lucide-react";
 
+export interface ActivityUser {
+  id: string;
+  name: string;
+  avatar?: string;
+}
+
 export interface DashboardMetrics {
+  messages: number;
   jobs: {
     total: number;
     active: number;
@@ -48,15 +55,22 @@ export interface Activity {
   icon: LucideIcon;
   timestamp: string;
   content?: string;
+  user: ActivityUser;
+  action: string;
+  target: string;
   metadata?: {
     jobTitle?: string;
     candidateName?: string;
     interviewDate?: string;
+    description?: string;
+    liked?: boolean;
+    likes?: number;
     comments?: Array<{
       id: string;
       content: string;
       userName: string;
       timestamp: string;
+      user: ActivityUser;
     }>;
   };
 }

@@ -1,15 +1,13 @@
 import { Clock, MapPin, Building2, Users } from "lucide-react";
-import type { Job, JobStatus } from "../../types/jobs";
+import type { Job } from "../../types/jobs";
 
 interface JobListItemProps {
   job: Job;
 }
 
-const statusColors: Record<JobStatus, string> = {
+const statusColors: Record<Job['status'], string> = {
   draft: "bg-gray-100 text-gray-800",
   published: "bg-blue-100 text-blue-800",
-  active: "bg-green-100 text-green-800",
-  paused: "bg-yellow-100 text-yellow-800",
   closed: "bg-gray-100 text-gray-800",
 };
 
@@ -34,7 +32,7 @@ export function JobListItem({ job }: JobListItemProps) {
             </div>
             <div className="flex items-center">
               <Users className="h-4 w-4 mr-1" />
-              {job.newApplicants} applicants
+              {job.applicantCount} applicants
             </div>
           </div>
         </div>
@@ -58,11 +56,6 @@ export function JobListItem({ job }: JobListItemProps) {
             {job.compensation.salary.min.toLocaleString()} -{" "}
             {job.compensation.salary.max.toLocaleString()}
           </span>
-          {job.compensation.equity && (
-            <span className="text-sm text-gray-500">
-              • {job.compensation.equity} equity
-            </span>
-          )}
         </div>
         <div className="flex space-x-2">
           <button

@@ -2,6 +2,7 @@ import React from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { useDashboardMetrics } from "../../hooks/useDashboardMetrics";
 import { useActivityFeed } from "../../hooks/useActivityFeed";
+import type { Activity } from "../../types/activity";
 import { Users, Briefcase, CheckCircle, TrendingUp } from "lucide-react";
 
 const navigationItems = [
@@ -20,8 +21,8 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
     if (!metrics) return null;
 
     return {
-      applications: metrics.applications || 0,
-      interviews: metrics.interviews || 0,
+      applications: metrics.applications?.total || 0,
+      interviews: metrics.interviews?.total || 0,
       connections: metrics.connections || 0,
       messages: metrics.messages || 0,
     };
@@ -96,15 +97,17 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                     <li key={activity.id} className="px-4 py-4">
                       <div className="flex items-center space-x-4">
                         <div className="flex-shrink-0">
-                          <activity.icon className="h-6 w-6 text-gray-400" />
+                          {activity.icon}
                         </div>
                         <div>
                           <p className="text-sm font-medium text-gray-900">
-                            {activity.title}
+                            {activity.message}
                           </p>
-                          <p className="text-sm text-gray-500">
-                            {activity.description}
-                          </p>
+                          {activity.content && (
+                            <p className="text-sm text-gray-500">
+                              {activity.content}
+                            </p>
+                          )}
                         </div>
                       </div>
                     </li>

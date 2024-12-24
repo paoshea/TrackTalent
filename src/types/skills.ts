@@ -1,89 +1,32 @@
-export interface Skill {
-  id: string;
+export interface SkillRatingState {
   name: string;
-  description?: string;
-  categoryId: string;
   rating: number;
-  endorsements?: number;
-  verified?: boolean;
-  level?: "beginner" | "intermediate" | "advanced" | "expert";
-  lastUsed?: string;
-  yearsOfExperience?: number;
-  projects?: Array<{
-    id: string;
-    name: string;
-    description: string;
-    url?: string;
-  }>;
-  certifications?: Array<{
-    id: string;
-    name: string;
-    issuer: string;
-    issueDate: string;
-    expiryDate?: string;
-    url?: string;
-  }>;
+  yearsOfExperience: number;
 }
 
-export interface SkillCategory {
-  id: string;
-  name: string;
-  description?: string;
-  skills: Skill[];
-  order?: number;
-  icon?: string;
+export const skillLevels = ["Beginner", "Basic", "Intermediate", "Advanced", "Expert"];
+
+export function formatSkillForSubmission(skill: SkillRatingState): string {
+  const level = skillLevels[skill.rating - 1];
+  return `${skill.name} (${level}, ${skill.yearsOfExperience} years)`;
 }
 
-export interface SkillAssessment {
-  id: string;
-  skillId: string;
-  userId: string;
-  score: number;
-  completedAt: string;
-  questions: Array<{
-    id: string;
-    question: string;
-    answer: string;
-    correct: boolean;
-  }>;
-  timeSpent: number;
-  passThreshold: number;
-  passed: boolean;
-}
+export function parseSkillFromString(skillString: string): SkillRatingState {
+  const match = skillString.match(/^(.+) \((\w+), (\d+(?:\.\d+)?) years\)$/);
+  if (!match) {
+    return {
+      name: skillString,
+      rating: 1,
+      yearsOfExperience: 0
+    };
+  }
 
-export interface SkillEndorsement {
-  id: string;
-  skillId: string;
-  endorserId: string;
-  endorseeId: string;
-  level: "beginner" | "intermediate" | "advanced" | "expert";
-  comment?: string;
-  createdAt: string;
-}
+  const [, name, level, years] = match;
+  const rating = skillLevels.indexOf(level) + 1;
 
-export interface SkillAssessmentProps {
-  userId: string;
-  categoryId?: string;
-  onComplete?: (results: SkillAssessment) => void;
-}
-
-export interface SkillSummaryProps {
-  categories: SkillCategory[];
-  onSkillClick?: (skill: Skill) => void;
-  showEndorsements?: boolean;
-}
-
-export interface UseSkillsResult {
-  skills: Skill[];
-  categories: SkillCategory[];
-  isLoading: boolean;
-  error: string | null;
-  addSkill: (skill: Omit<Skill, "id">) => Promise<void>;
-  updateSkill: (id: string, updates: Partial<Skill>) => Promise<void>;
-  deleteSkill: (id: string) => Promise<void>;
-  endorseSkill: (
-    skillId: string,
-    level: SkillEndorsement["level"],
-    comment?: string,
-  ) => Promise<void>;
+  return {
+    name,
+    rating: rating > 0 ? rating : 1,
+    yearsOfExperience: parseFloat(years)
+  };
 }

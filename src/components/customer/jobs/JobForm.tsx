@@ -1,6 +1,6 @@
-import React from "react";
+import { useState } from "react";
 import { useFormValidation, type ValidationRule } from "../../../hooks/useFormValidation";
-import type { JobFormData, JobRemote, JobCompensation } from "../../../types/jobs";
+import type { JobFormData } from "../../../types/jobs";
 import { JobBasicInfo } from "./JobBasicInfo";
 import { JobRequirements } from "./JobRequirements";
 import { JobCompensation as JobCompensationComponent } from "./JobCompensation";
@@ -72,56 +72,55 @@ const validationRules = {
     },
   } as ValidationRule<JobFormData["experienceLevel"], JobFormData>,
 
-  compensation: {
-    salary: {
-      min: {
-        required: true,
-        validate: (value: number) => {
-          return value <= 0 ? "Minimum salary must be greater than 0" : "";
-        },
-      } as ValidationRule<number, JobFormData>,
-      max: {
-        required: true,
-        validate: (value: number, data?: JobFormData) => {
-          if (value <= 0) return "Maximum salary must be greater than 0";
-          if (data?.compensation.salary.min && value < data.compensation.salary.min) {
-            return "Maximum salary must be greater than minimum";
-          }
-          return "";
-        },
-      } as ValidationRule<number, JobFormData>,
-      currency: {
-        required: true,
-        validate: (value: string) => {
-          return !value ? "Currency is required" : "";
-        },
-      } as ValidationRule<string, JobFormData>,
-      period: {
-        required: true,
-        validate: (value: string) => {
-          return !value ? "Salary period is required" : "";
-        },
-      } as ValidationRule<string, JobFormData>,
+
+  "compensation.salary.min": {
+    required: true,
+    validate: (value: number) => {
+      return value <= 0 ? "Minimum salary must be greater than 0" : "";
     },
-  },
+  } as ValidationRule<number, JobFormData>,
+
+  "compensation.salary.max": {
+    required: true,
+    validate: (value: number, data?: JobFormData) => {
+      if (value <= 0) return "Maximum salary must be greater than 0";
+      if (data?.compensation.salary.min && value < data.compensation.salary.min) {
+        return "Maximum salary must be greater than minimum";
+      }
+      return "";
+    },
+  } as ValidationRule<number, JobFormData>,
+
+  "compensation.salary.currency": {
+    required: true,
+    validate: (value: string) => {
+      return !value ? "Currency is required" : "";
+    },
+  } as ValidationRule<string, JobFormData>,
+
+  "compensation.salary.period": {
+    required: true,
+    validate: (value: string) => {
+      return !value ? "Salary period is required" : "";
+    },
+  } as ValidationRule<string, JobFormData>,
 
   benefits: {
     required: false,
     validate: (_value: string[]) => "",
   } as ValidationRule<string[], JobFormData>,
 
-  remote: {
-    allowed: {
-      required: true,
-      validate: (value: boolean) => {
-        return typeof value !== 'boolean' ? "Remote work preference must be specified" : "";
-      },
-    } as ValidationRule<boolean, JobFormData>,
-  },
+
+  "remote.allowed": {
+    required: true,
+    validate: (value: boolean) => {
+      return typeof value !== 'boolean' ? "Remote work preference must be specified" : "";
+    },
+  } as ValidationRule<boolean, JobFormData>,
 };
 
 export function JobForm({ initialData, onSubmit, isSubmitting }: JobFormProps) {
-  const [formData, setFormData] = React.useState<JobFormData>({
+  const [formData, setFormData] = useState<JobFormData>({
     title: initialData?.title || "",
     description: initialData?.description || "",
     department: initialData?.department || "",

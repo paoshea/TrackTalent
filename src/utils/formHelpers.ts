@@ -1,102 +1,51 @@
-import type { ApplicationData } from "../types/applications";
-import type { ValidationRule } from "../types/form";
+import type { ApplicationData, ApplicationFormStep } from "../types/candidate";
 
-interface Experience {
-  title: string;
-  company: string;
-  startDate: string;
-  endDate?: string;
-  description: string;
-  current?: boolean;
-}
+export function getStepProgress(
+  step: ApplicationFormStep,
+  data: Partial<ApplicationData>
+): number {
+  switch (step) {
+    case "personal-info":
+      if (!data.personalInfo) return 0;
+      const requiredFields = ["firstName", "lastName", "email"];
+      const completedFields = requiredFields.filter(
+        (field) => data.personalInfo?.[field as keyof typeof data.personalInfo]
+      );
+      return (completedFields.length / requiredFields.length) * 100;
 
-interface Skill {
-  name: string;
-  level: "beginner" | "intermediate" | "advanced" | "expert";
-  rating?: number;
-  description?: string;
-}
+    case "experience":
+      if (!data.experiences?.length) return 0;
+      const requiredExpFields = ["position", "company", "startDate", "description"];
+      const completedExp = data.experiences.filter((exp) =>
+        requiredExpFields.every((field) => exp[field as keyof typeof exp])
+      );
+      return (completedExp.length / data.experiences.length) * 100;
 
-export function validateApplicationData(
-  data: ApplicationData,
-): Record<string, string> {
-  const errors: Record<string, string> = {};
+    case "skills":
+      if (!data.skills?.length) return 0;
+      const validSkills = data.skills.filter(
+        (skill) => skill.name && skill.level && skill.rating
+      );
+      return (validSkills.length / data.skills.length) * 100;
 
-  if (!data.jobId) {
-    errors.jobId = "Job ID is required";
+    case "questions":
+      if (!data.questions || !Object.keys(data.questions).length) return 0;
+      const answeredQuestions = Object.values(data.questions).filter(Boolean);
+      return (answeredQuestions.length / Object.keys(data.questions).length) * 100;
+
+    case "review":
+      const steps: ApplicationFormStep[] = [
+        "personal-info",
+        "experience",
+        "skills",
+        "questions",
+      ];
+      const totalProgress = steps
+        .map((s) => getStepProgress(s, data))
+        .reduce((sum, progress) => sum + progress, 0);
+      return totalProgress / steps.length;
+
+    default:
+      return 0;
   }
-
-  if (!data.resume) {
-    errors.resume = "Resume is required";
-  }
-
-  return errors;
-}
-
-export function validateExperience(experiences: Experience[]): boolean {
-  if (!Array.isArray(experiences) || experiences.length === 0) {
-    return false;
-  }
-
-  return experiences.every((exp) => {
-    return exp.title && exp.company && exp.startDate && exp.description;
-  });
-}
-
-export function validateSkills(skills: Skill[]): boolean {
-  if (!Array.isArray(skills) || skills.length === 0) {
-    return false;
-  }
-
-  return skills.every((skill) => {
-    return (
-      skill.name &&
-      skill.level &&
-      ["beginner", "intermediate", "advanced", "expert"].includes(skill.level)
-    );
-  });
-}
-
-export function validateRules<T>(
-  value: unknown,
-  rules: ValidationRule<T>[],
-  formData: T,
-): string[] {
-  const errors: string[] = [];
-
-  for (const rule of rules) {
-    switch (rule.type) {
-      case "required":
-        if (!value) {
-          errors.push(rule.message);
-        }
-        break;
-
-      case "minLength":
-        if (typeof value === "string" && value.length < rule.value) {
-          errors.push(rule.message);
-        }
-        break;
-
-      case "maxLength":
-        if (typeof value === "string" && value.length > rule.value) {
-          errors.push(rule.message);
-        }
-        break;
-
-      case "pattern":
-        if (typeof value === "string" && !new RegExp(rule.value).test(value)) {
-          errors.push(rule.message);
-        }
-        break;
-
-      case "custom":
-        if (!rule.validate(value, formData)) {
-          errors.push(rule.message);
-        }
-        break;
-    }
-  }
-
-  return errors;
 }

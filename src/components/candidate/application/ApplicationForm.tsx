@@ -3,9 +3,9 @@ import { useApplicationSubmit } from "../../../hooks/useApplicationSubmit";
 import {
   useFormValidation,
   type ValidationRule,
-  type ValidationRules,
 } from "../../../hooks/useFormValidation";
 import type { ApplicationData } from "../../../hooks/useApplicationSubmit";
+import type { Skill } from "../../../types/candidate";
 
 interface ApplicationFormProps {
   jobId: string;
@@ -17,26 +17,39 @@ interface ApplicationFormProps {
 type SubmitState = "idle" | "submitting" | "success" | "error";
 
 const validationRules = {
-  jobId: ((value: ApplicationData["jobId"]) => {
-    return !value ? "Job ID is required" : "";
-  }) satisfies ValidationRule<ApplicationData["jobId"]>,
+  jobId: {
+    required: true,
+    validate: (value: string) => {
+      return !value ? "Job ID is required" : "";
+    }
+  } satisfies ValidationRule<string>,
 
-  coverLetter: ((value: ApplicationData["coverLetter"]) => {
-    return !value ? "Cover letter is required" : "";
-  }) satisfies ValidationRule<ApplicationData["coverLetter"]>,
+  coverLetter: {
+    required: true,
+    validate: (value: string) => {
+      return !value ? "Cover letter is required" : "";
+    }
+  } satisfies ValidationRule<string>,
 
-  resumeUrl: ((value: ApplicationData["resumeUrl"]) => {
-    return !value ? "Resume is required" : "";
-  }) satisfies ValidationRule<ApplicationData["resumeUrl"]>,
+  resumeUrl: {
+    required: true,
+    validate: (value: string) => {
+      return !value ? "Resume is required" : "";
+    }
+  } satisfies ValidationRule<string>,
 
-  questions: ((_value: ApplicationData["questions"]) => {
-    return ""; // Optional field
-  }) satisfies ValidationRule<ApplicationData["questions"]>,
+  questions: {
+    validate: (_value?: Record<string, string>) => {
+      return ""; // Optional field
+    }
+  } satisfies ValidationRule<Record<string, string> | undefined>,
 
-  skills: ((_value: ApplicationData["skills"]) => {
-    return ""; // Optional field
-  }) satisfies ValidationRule<ApplicationData["skills"]>,
-} satisfies ValidationRules<ApplicationData>;
+  skills: {
+    validate: (_value?: string[]) => {
+      return ""; // Optional field
+    }
+  } satisfies ValidationRule<string[] | undefined>
+};
 
 export function ApplicationForm({
   jobId,
@@ -50,6 +63,12 @@ export function ApplicationForm({
     resumeUrl: "",
     questions: {},
     skills: [],
+    experience: {
+      years: 0,
+      relevantAreas: [],
+      highlights: []
+    },
+    education: [],
   });
 
   const [submitState, setSubmitState] = useState<SubmitState>("idle");

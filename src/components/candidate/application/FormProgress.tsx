@@ -1,13 +1,14 @@
-import React from "react";
 import { getStepProgress } from "../../../utils/formHelpers";
 import type { ApplicationData } from "../../../types/candidate";
+import type { ApplicationFormStep } from "../../../types/candidate";
 
 interface FormProgressProps {
   data: Partial<ApplicationData>;
+  currentStep: ApplicationFormStep;
 }
 
-export function FormProgress({ data }: FormProgressProps) {
-  const progress = getStepProgress(data);
+export function FormProgress({ data, currentStep }: FormProgressProps) {
+  const progress = getStepProgress(currentStep, data);
 
   return (
     <div className="mb-6">

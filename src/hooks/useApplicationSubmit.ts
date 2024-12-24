@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "./useAuth";
+import type { Experience } from "../types/candidate";
 
 export interface ApplicationData {
   jobId: string;
@@ -33,7 +34,7 @@ export interface ApplicationData {
   skills?: string[];
   experience?: {
     years: number;
-    relevantAreas: string[];
+    relevantAreas: Experience[];
     highlights: string[];
   };
   education?: {

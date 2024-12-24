@@ -1,7 +1,9 @@
 import { Plus, X } from "lucide-react";
 import { SkillRating } from "./skills/SkillRating";
 import { FormField } from "../../shared/FormField";
-import type { ApplicationData, Skill } from "../../../types/candidate";
+import type { ApplicationData } from "../../../hooks/useApplicationSubmit";
+import type { SkillRatingState } from "../../../types/skills";
+import { formatSkillForSubmission, parseSkillFromString } from "../../../types/skills";
 
 interface SkillsAssessmentProps {
   data: Partial<ApplicationData>;
@@ -14,34 +16,39 @@ export function SkillsAssessment({
   onChange,
   errors,
 }: SkillsAssessmentProps) {
-  const skills = data.skills || [];
+  // Convert string[] to SkillRatingState[]
+  const skillStates = (data.skills || []).map(parseSkillFromString);
 
   const addSkill = () => {
     onChange({
       skills: [
-        ...skills,
-        {
+        ...(data.skills || []),
+        formatSkillForSubmission({
           name: "",
           rating: 1,
           yearsOfExperience: 0,
-        },
+        }),
       ],
     });
   };
 
   const removeSkill = (index: number) => {
     onChange({
-      skills: skills.filter((_, i) => i !== index),
+      skills: skillStates
+        .filter((_: SkillRatingState, i: number) => i !== index)
+        .map(formatSkillForSubmission),
     });
   };
 
-  const updateSkill = (index: number, updates: Partial<Skill>) => {
-    const updatedSkills = [...skills];
+  const updateSkill = (index: number, updates: Partial<SkillRatingState>) => {
+    const updatedSkills = [...skillStates];
     updatedSkills[index] = {
       ...updatedSkills[index],
       ...updates,
     };
-    onChange({ skills: updatedSkills });
+    onChange({ 
+      skills: updatedSkills.map(formatSkillForSubmission)
+    });
   };
 
   return (
@@ -51,7 +58,7 @@ export function SkillsAssessment({
         (Expert)
       </p>
 
-      {skills.map((skill, index) => (
+      {skillStates.map((skill: SkillRatingState, index: number) => (
         <div key={index} className="bg-white p-6 rounded-lg shadow mb-4">
           <div className="flex justify-between items-start mb-4">
             <FormField

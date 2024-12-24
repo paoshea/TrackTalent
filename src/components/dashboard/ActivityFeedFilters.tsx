@@ -13,10 +13,10 @@ export function ActivityFeedFilters({
   onClearFilters,
 }: ActivityFeedFiltersProps) {
   const types: { type: ActivityType; label: string }[] = [
-    { type: "application", label: "Applications" },
-    { type: "interview", label: "Interviews" },
-    { type: "offer", label: "Offers" },
-    { type: "status", label: "Status Updates" },
+    { type: "application_received", label: "Applications" },
+    { type: "interview_scheduled", label: "Interviews" },
+    { type: "offer_sent", label: "Offers" },
+    { type: "status_update", label: "Status Updates" },
   ];
 
   return (
