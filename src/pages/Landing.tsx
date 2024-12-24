@@ -1,6 +1,7 @@
 //import React from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, Briefcase, Users, BarChart } from "lucide-react";
+import { Logo } from "../components/branding/Logo";
 
 export function Landing() {
   return (
@@ -9,7 +10,7 @@ export function Landing() {
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex justify-between items-center">
           <div className="flex items-center">
-            <img src="/logo.svg" alt="TalentTrack" className="h-8 w-auto" />
+            <Logo className="h-8 w-auto" />
             <span className="ml-2 text-xl font-bold text-gray-900">
               TalentTrack
             </span>
