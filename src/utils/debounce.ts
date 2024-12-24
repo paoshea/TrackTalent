@@ -1,11 +1,9 @@
 import { useCallback, useRef } from "react";
 
-type AnyFunction = (...args: unknown[]) => unknown;
-
-export function useDebounce<T extends AnyFunction>(
-  callback: T,
+export function useDebounce<T, R>(
+  callback: (arg: T) => R,
   delay: number,
-): (...args: Parameters<T>) => void {
+): (arg: T) => void {
   const timeoutRef = useRef<NodeJS.Timeout>();
   const callbackRef = useRef(callback);
 
@@ -13,13 +11,13 @@ export function useDebounce<T extends AnyFunction>(
   callbackRef.current = callback;
 
   return useCallback(
-    (...args: Parameters<T>) => {
+    (arg: T) => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
 
       timeoutRef.current = setTimeout(() => {
-        callbackRef.current(...args);
+        callbackRef.current(arg);
       }, delay);
     },
     [delay],

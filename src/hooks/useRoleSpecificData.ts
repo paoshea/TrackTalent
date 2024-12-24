@@ -90,14 +90,61 @@ function getMockDataForRole(role: UserRole): RoleData[UserRole] {
     case "candidate":
       return {
         metrics: {
-          applications: 12,
-          interviews: 2,
-          connections: 25,
           messages: 8,
+          recentActivities: [],
+          systemAlerts: [],
+          userGrowth: {
+            total: 1000,
+            trend: 5,
+            byPeriod: {
+              daily: 10,
+              weekly: 50,
+              monthly: 200
+            },
+            byType: {
+              candidates: 800,
+              employers: 200
+            },
+            retention: 85,
+            churnRate: 15
+          },
+          jobs: {
+            total: 100,
+            active: 45,
+            trend: 10
+          },
+          applications: {
+            total: 12,
+            pending: 5,
+            trend: 8
+          },
+          interviews: {
+            total: 2,
+            scheduled: 1,
+            completed: 1,
+            byOutcome: {
+              offered: 0,
+              rejected: 0,
+              pending: 1
+            },
+            trend: 5
+          },
+          timeToHire: {
+            average: 15,
+            trend: -2
+          },
+          activeJobsChange: 5,
+          totalCandidates: 500,
+          candidatesChange: 10,
+          placementRate: 75,
+          placementRateChange: 5,
+          timeToFill: 20,
+          timeToFillChange: -1,
+          connections: 25,
           jobViews: 45,
-          profileViews: 15,
           savedJobs: 5,
           matchScore: 85,
+          profileViews: 15
         },
         recentApplications: [
           {
@@ -122,14 +169,61 @@ function getMockDataForRole(role: UserRole): RoleData[UserRole] {
     case "employer":
       return {
         metrics: {
-          applications: 45,
-          interviews: 8,
-          connections: 120,
           messages: 35,
-          activeJobs: 5,
-          totalApplications: 45,
-          scheduledInterviews: 8,
-          offersSent: 3,
+          recentActivities: [],
+          systemAlerts: [],
+          userGrowth: {
+            total: 1000,
+            trend: 5,
+            byPeriod: {
+              daily: 10,
+              weekly: 50,
+              monthly: 200
+            },
+            byType: {
+              candidates: 800,
+              employers: 200
+            },
+            retention: 85,
+            churnRate: 15
+          },
+          jobs: {
+            total: 150,
+            active: 45,
+            trend: 15
+          },
+          applications: {
+            total: 45,
+            pending: 20,
+            trend: 12
+          },
+          interviews: {
+            total: 8,
+            scheduled: 5,
+            completed: 3,
+            byOutcome: {
+              offered: 1,
+              rejected: 1,
+              pending: 1
+            },
+            trend: 8
+          },
+          timeToHire: {
+            average: 18,
+            trend: -1
+          },
+          activeJobsChange: 8,
+          totalCandidates: 800,
+          candidatesChange: 15,
+          placementRate: 80,
+          placementRateChange: 8,
+          timeToFill: 22,
+          timeToFillChange: -2,
+          connections: 120,
+          jobViews: 250,
+          savedJobs: 15,
+          matchScore: 90,
+          profileViews: 180
         },
         activeJobs: [
           {
@@ -153,26 +247,61 @@ function getMockDataForRole(role: UserRole): RoleData[UserRole] {
     case "admin":
       return {
         metrics: {
-          applications: 890,
-          interviews: 156,
-          connections: 2500,
           messages: 1200,
-          totalUsers: 1250,
-          activeJobs: 156,
-          totalApplications: 890,
-          systemUptime: 99.9,
+          recentActivities: [],
+          systemAlerts: [],
           userGrowth: {
-            value: 12,
-            isPositive: true,
+            total: 5000,
+            trend: 12,
+            byPeriod: {
+              daily: 50,
+              weekly: 250,
+              monthly: 1000
+            },
+            byType: {
+              candidates: 4000,
+              employers: 1000
+            },
+            retention: 90,
+            churnRate: 10
           },
-          jobGrowth: {
-            value: 8,
-            isPositive: true,
+          jobs: {
+            total: 1000,
+            active: 450,
+            trend: 25
           },
-          applicationRateGrowth: {
-            value: 15,
-            isPositive: true,
+          applications: {
+            total: 890,
+            pending: 200,
+            trend: 15
           },
+          interviews: {
+            total: 156,
+            scheduled: 80,
+            completed: 76,
+            byOutcome: {
+              offered: 45,
+              rejected: 20,
+              pending: 11
+            },
+            trend: 12
+          },
+          timeToHire: {
+            average: 16,
+            trend: -3
+          },
+          activeJobsChange: 25,
+          totalCandidates: 4000,
+          candidatesChange: 20,
+          placementRate: 85,
+          placementRateChange: 10,
+          timeToFill: 18,
+          timeToFillChange: -3,
+          connections: 2500,
+          jobViews: 15000,
+          savedJobs: 2500,
+          matchScore: 92,
+          profileViews: 8000
         },
         systemHealth: {
           status: "healthy",

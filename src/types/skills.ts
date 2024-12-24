@@ -1,32 +1,46 @@
-export interface SkillRatingState {
+export interface Skill {
+  id: string;
   name: string;
-  rating: number;
-  yearsOfExperience: number;
+  category: string;
+  level: "beginner" | "intermediate" | "advanced" | "expert";
+  yearsOfExperience?: number;
+  endorsements?: number;
+  description?: string;
+  keywords?: string[];
 }
 
-export const skillLevels = ["Beginner", "Basic", "Intermediate", "Advanced", "Expert"];
-
-export function formatSkillForSubmission(skill: SkillRatingState): string {
-  const level = skillLevels[skill.rating - 1];
-  return `${skill.name} (${level}, ${skill.yearsOfExperience} years)`;
+export interface SkillCategory {
+  id: string;
+  name: string;
+  description?: string;
+  skills: Skill[];
+  parentId?: string;
 }
 
-export function parseSkillFromString(skillString: string): SkillRatingState {
-  const match = skillString.match(/^(.+) \((\w+), (\d+(?:\.\d+)?) years\)$/);
-  if (!match) {
-    return {
-      name: skillString,
-      rating: 1,
-      yearsOfExperience: 0
-    };
-  }
+export interface SkillAssessment {
+  skillId: string;
+  userId: string;
+  level: Skill["level"];
+  score?: number;
+  feedback?: string;
+  assessedAt: string;
+  assessedBy?: string;
+  validUntil?: string;
+}
 
-  const [, name, level, years] = match;
-  const rating = skillLevels.indexOf(level) + 1;
+export interface SkillEndorsement {
+  skillId: string;
+  userId: string;
+  endorserId: string;
+  relationship?: string;
+  comment?: string;
+  createdAt: string;
+}
 
-  return {
-    name,
-    rating: rating > 0 ? rating : 1,
-    yearsOfExperience: parseFloat(years)
-  };
+export interface SkillRequirement {
+  skillId: string;
+  level: Skill["level"];
+  required: boolean;
+  weight?: number;
+  description?: string;
 }

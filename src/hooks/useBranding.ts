@@ -1,22 +1,16 @@
 import { useState, useEffect, useContext } from "react";
 import { BrandingContext } from "../contexts/BrandingContext";
-import type { BrandingTheme, BrandingConfig } from "../types/branding";
+import { supabase } from "../lib/supabase";
+import type { BrandingTheme, BrandingConfig, BrandingMutation } from "../types/branding";
 
 const defaultTheme: BrandingTheme = {
   primaryColor: "#4F46E5", // Indigo-600
   secondaryColor: "#6B7280", // Gray-500
   fontFamily: "Inter, system-ui, sans-serif",
-  backgroundColor: "#FFFFFF",
-  textColor: "#111827", // Gray-900
-  borderColor: "#E5E7EB", // Gray-200
-  buttonStyle: {
-    borderRadius: "0.375rem",
-    padding: "0.5rem 1rem",
-    fontWeight: "500",
-  },
+  buttonStyle: "rounded",
 };
 
-export function useBranding() {
+export function useBranding(): BrandingMutation {
   const [theme, setTheme] = useState<BrandingTheme>(defaultTheme);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -50,11 +44,31 @@ export function useBranding() {
     loadBranding();
   }, []);
 
-  const updateTheme = (updates: Partial<BrandingTheme>) => {
-    setTheme((current) => ({
-      ...current,
-      ...updates,
-    }));
+  const updateTheme = async (updates: Partial<BrandingTheme>) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Not authenticated");
+
+      const { error: updateError } = await supabase
+        .from("company_branding")
+        .update({
+          theme: { ...theme, ...updates },
+          updated_at: new Date().toISOString(),
+        })
+        .eq("company_id", user.user_metadata.company_id);
+
+      if (updateError) throw updateError;
+
+      setTheme(currentTheme => ({ ...currentTheme, ...updates }));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to update theme");
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return {

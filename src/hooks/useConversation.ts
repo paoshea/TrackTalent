@@ -11,14 +11,21 @@ export function useConversation(conversationId: string) {
       setConversation({
         id: conversationId,
         company: "TechCorp",
+        companyId: "tech-corp-id",
+        participants: ["user", "company"],
+        unreadCount: 1,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
         messages: [
           {
             id: "1",
-            content:
-              "Thank you for your application. We would like to schedule an interview.",
-            timestamp: new Date().toISOString(),
+            conversationId,
+            content: "Thank you for your application. We would like to schedule an interview.",
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
             senderId: "company",
-            read: false,
+            recipientId: "user",
+            isRead: false,
           },
         ],
       });
@@ -32,10 +39,13 @@ export function useConversation(conversationId: string) {
 
       const newMessage: Message = {
         id: Date.now().toString(),
+        conversationId,
         content,
-        timestamp: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
         senderId: "user",
-        read: true,
+        recipientId: "company",
+        isRead: true,
       };
 
       setConversation((prev) =>
@@ -59,7 +69,7 @@ export function useConversation(conversationId: string) {
             ...prev,
             messages: prev.messages.map((msg) => ({
               ...msg,
-              read: true,
+              isRead: true,
             })),
           }
         : null,

@@ -3,7 +3,6 @@ import { useAuth } from "./useAuth";
 import {
   getMetricSnapshots,
   getEngagementStats,
-  calculateMetrics,
   getAnalytics,
 } from "../services/analytics";
 import type {
@@ -11,7 +10,6 @@ import type {
   EngagementStats,
   AnalyticsData,
   AnalyticsFilter,
-  ActivityItem,
 } from "../types/analytics";
 import type { DashboardMetrics } from "../types/dashboard";
 

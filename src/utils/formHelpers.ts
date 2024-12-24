@@ -1,4 +1,4 @@
-import type { ApplicationData, ApplicationFormStep } from "../types/candidate";
+import type { ApplicationData, ApplicationFormStep, Experience, Skill } from "../types/candidate";
 
 export function getStepProgress(
   step: ApplicationFormStep,
@@ -14,17 +14,17 @@ export function getStepProgress(
       return (completedFields.length / requiredFields.length) * 100;
 
     case "experience":
-      if (!data.experiences?.length) return 0;
+      if (!data.experience?.relevantAreas.length) return 0;
       const requiredExpFields = ["position", "company", "startDate", "description"];
-      const completedExp = data.experiences.filter((exp) =>
+      const completedExp = data.experience.relevantAreas.filter((exp: Experience) =>
         requiredExpFields.every((field) => exp[field as keyof typeof exp])
       );
-      return (completedExp.length / data.experiences.length) * 100;
+      return (completedExp.length / data.experience.relevantAreas.length) * 100;
 
     case "skills":
       if (!data.skills?.length) return 0;
       const validSkills = data.skills.filter(
-        (skill) => skill.name && skill.level && skill.rating
+        (skill: Skill) => skill.name && skill.level && skill.rating >= 1 && skill.rating <= 5
       );
       return (validSkills.length / data.skills.length) * 100;
 

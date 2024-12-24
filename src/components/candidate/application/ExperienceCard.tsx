@@ -7,7 +7,6 @@ interface ExperienceCardProps {
   onUpdate: (updates: Partial<Experience>) => void;
   onDelete: () => void;
   canDelete: boolean;
-  errors: Record<string, string>;
   isFirst: boolean;
 }
 
@@ -17,7 +16,6 @@ export function ExperienceCard({
   onUpdate,
   onDelete,
   canDelete,
-  errors,
   isFirst,
 }: ExperienceCardProps) {
   return (

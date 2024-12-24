@@ -6,29 +6,33 @@ const mockFrontendSkills: Skill[] = [
     id: "1",
     name: "React",
     level: "intermediate",
-    rating: 4,
-    categoryId: "frontend",
+    yearsOfExperience: 2,
+    endorsements: 4,
+    category: "frontend",
   },
   {
     id: "2",
     name: "TypeScript",
     level: "intermediate",
-    rating: 4,
-    categoryId: "frontend",
+    yearsOfExperience: 3,
+    endorsements: 4,
+    category: "frontend",
   },
   {
     id: "3",
     name: "CSS/Tailwind",
     level: "intermediate",
-    rating: 4,
-    categoryId: "frontend",
+    yearsOfExperience: 2,
+    endorsements: 4,
+    category: "frontend",
   },
   {
     id: "4",
     name: "Testing",
     level: "intermediate",
-    rating: 3,
-    categoryId: "frontend",
+    yearsOfExperience: 1,
+    endorsements: 3,
+    category: "frontend",
   },
 ];
 
@@ -37,29 +41,33 @@ const mockBackendSkills: Skill[] = [
     id: "5",
     name: "Node.js",
     level: "intermediate",
-    rating: 4,
-    categoryId: "backend",
+    yearsOfExperience: 2,
+    endorsements: 4,
+    category: "backend",
   },
   {
     id: "6",
     name: "Databases",
     level: "intermediate",
-    rating: 3,
-    categoryId: "backend",
+    yearsOfExperience: 2,
+    endorsements: 3,
+    category: "backend",
   },
   {
     id: "7",
     name: "API Design",
     level: "intermediate",
-    rating: 4,
-    categoryId: "backend",
+    yearsOfExperience: 3,
+    endorsements: 4,
+    category: "backend",
   },
   {
     id: "8",
     name: "Security",
     level: "intermediate",
-    rating: 3,
-    categoryId: "backend",
+    yearsOfExperience: 1,
+    endorsements: 3,
+    category: "backend",
   },
 ];
 
@@ -68,13 +76,13 @@ const initialCategories: SkillCategory[] = [
     id: "frontend",
     name: "Frontend Development",
     skills: mockFrontendSkills,
-    icon: "monitor",
+    description: "Frontend development skills",
   },
   {
     id: "backend",
     name: "Backend Development",
     skills: mockBackendSkills,
-    icon: "server",
+    description: "Backend development skills",
   },
 ];
 
@@ -93,7 +101,7 @@ export function useSkillAssessment(_userId: string) {
         category.id === categoryId
           ? {
               ...category,
-              skills: category.skills.map((skill) =>
+              skills: category.skills.map((skill: Skill) =>
                 skill.id === skillId ? { ...skill, level } : skill,
               ),
             }
@@ -104,15 +112,15 @@ export function useSkillAssessment(_userId: string) {
 
   const addSkill = async (
     categoryId: string,
-    skill: Omit<Skill, "id" | "categoryId">,
+    skill: Omit<Skill, "id">,
   ) => {
     try {
       // In a real app, this would make an API call
       const newSkill: Skill = {
         ...skill,
         id: Math.random().toString(36).substr(2, 9),
-        categoryId,
-        rating: 0,
+        category: categoryId,
+        endorsements: 0,
       };
 
       setCategories((prev) =>
@@ -138,7 +146,7 @@ export function useSkillAssessment(_userId: string) {
           category.id === categoryId
             ? {
                 ...category,
-                skills: category.skills.filter((skill) => skill.id !== skillId),
+                skills: category.skills.filter((skill: Skill) => skill.id !== skillId),
               }
             : category,
         ),

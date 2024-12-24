@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { useFormValidation, type ValidationRule, type NestedValidationRules } from "./useFormValidation";
+import { useFormValidation, type NestedValidationRules, type ValidationRule } from "./useFormValidation";
 import { useFormPersistence } from "./useFormPersistence";
 import type { JobFormData, JobCompensation, JobRemote } from "../types/jobs";
 
@@ -94,7 +94,62 @@ export function useJobForm(jobId?: string) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { errors, validateField, validateForm } =
-    useFormValidation<JobFormData>(validationRules as NestedValidationRules<JobFormData>);
+    useFormValidation<JobFormData>({
+      ...validationRules,
+      compensation: {
+        salary: {
+          min: {
+            required: true,
+            validate: (value: unknown) => {
+              const numValue = Number(value);
+              return numValue > 0 ? "" : "Minimum salary must be greater than 0";
+            }
+          } as ValidationRule<unknown, JobFormData>,
+          max: {
+            required: true,
+            validate: (value: unknown, data?: JobFormData) => {
+              const numValue = Number(value);
+              if (numValue <= 0) return "Maximum salary must be greater than 0";
+              if (data?.compensation.salary.min && numValue < data.compensation.salary.min) {
+                return "Maximum salary must be greater than minimum";
+              }
+              return "";
+            }
+          } as ValidationRule<unknown, JobFormData>,
+          currency: {
+            required: true,
+            validate: (value: unknown) => {
+              return typeof value === 'string' && value ? "" : "Currency is required";
+            }
+          } as ValidationRule<unknown, JobFormData>,
+          period: {
+            required: true,
+            validate: (value: unknown) => {
+              return typeof value === 'string' && ['hourly', 'monthly', 'yearly'].includes(value as string)
+                ? ""
+                : "Invalid period";
+            }
+          } as ValidationRule<unknown, JobFormData>
+        }
+      },
+      remote: {
+        allowed: {
+          required: true,
+          validate: (value: unknown) => {
+            return typeof value === 'boolean' ? "" : "Remote work preference must be specified";
+          }
+        } as ValidationRule<unknown, JobFormData>,
+        type: {
+          required: false,
+          validate: (value: unknown) => {
+            if (!value) return "";
+            return typeof value === 'string' && ['fully', 'hybrid', 'occasional'].includes(value)
+              ? ""
+              : "Invalid remote type";
+          }
+        } as ValidationRule<unknown, JobFormData>
+      }
+    });
 
   const { saveData, clearData } = useFormPersistence<JobFormData>(
     `job_form_${jobId || "new"}`,

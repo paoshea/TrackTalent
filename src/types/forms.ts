@@ -1,4 +1,4 @@
-t tag var import type { JobFormData } from "./jobs";
+import type { JobFormData } from "./jobs";
 import type { ApplicationData } from "./applications";
 
 export interface ApplicationFormStep {

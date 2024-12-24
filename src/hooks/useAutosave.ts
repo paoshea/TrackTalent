@@ -33,8 +33,7 @@ export function useAutosave<T>(saveFunction: SaveFunction<T>) {
     [], // No dependencies needed since we use ref
   );
 
-  // Type assertion to match the SaveFunction type
-  const debouncedSave = useDebounce<SaveFunction<T>>(save, 1000);
+  const debouncedSave = useDebounce<T, Promise<void>>(save, 1000);
 
   return {
     autosaveState: state,

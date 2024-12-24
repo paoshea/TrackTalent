@@ -21,7 +21,7 @@ export function useStatus() {
         const params: CreateStatusParams = {
           userId: user.id,
           content,
-          visibility: content.visibility || "public",
+          visibility: "public",
         };
 
         const status = await createStatus(params);

@@ -1,5 +1,4 @@
-import React from "react";
-import type { ApplicationFormStep } from "../../../../types/candidate";
+import type { ApplicationFormStep } from "../../../../types/forms";
 
 interface StepIndicatorProps {
   steps: ApplicationFormStep[];
@@ -14,7 +13,7 @@ export function StepIndicator({ steps, currentStep }: StepIndicatorProps) {
     >
       {steps.map((step, index) => (
         <div
-          key={step.label}
+          key={step.id}
           className="flex items-center"
           aria-current={index === currentStep ? "step" : undefined}
         >

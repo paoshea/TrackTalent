@@ -35,6 +35,24 @@ export async function getAnalytics(
     // Transform raw database metrics into DashboardMetrics shape
     return {
       metrics: {
+        messages: data.messages || 0,
+        recentActivities: data.activities || [],
+        systemAlerts: [],
+        userGrowth: {
+          total: data.connections || 0,
+          trend: data.comparisons.previousPeriod,
+          byPeriod: {
+            daily: data.trends.daily[0] || 0,
+            weekly: data.trends.weekly[0] || 0,
+            monthly: data.trends.monthly[0] || 0
+          },
+          byType: {
+            candidates: Math.floor((data.connections || 0) * 0.8), // Example: 80% candidates
+            employers: Math.floor((data.connections || 0) * 0.2)  // Example: 20% employers
+          },
+          retention: 85, // Example: 85% retention
+          churnRate: 15  // Example: 15% churn
+        },
         jobs: {
           total: data.trends.daily[0] || 0,
           active: data.trends.daily[0] || 0,

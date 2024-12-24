@@ -26,6 +26,13 @@ export function useLiveActivity() {
           timestamp: activity.timestamp,
           icon: activity.icon,
           metadata: activity.metadata,
+          user: {
+            id: activity.user_id,
+            name: activity.user_name,
+            avatar: activity.user_avatar
+          },
+          action: activity.action || activity.type,
+          target: activity.target || activity.title
         }));
 
         setActivities(formattedActivities);
@@ -57,6 +64,13 @@ export function useLiveActivity() {
             timestamp: newActivity.timestamp,
             icon: newActivity.icon,
             metadata: newActivity.metadata,
+            user: {
+              id: newActivity.user_id,
+              name: newActivity.user_name,
+              avatar: newActivity.user_avatar
+            },
+            action: newActivity.action || newActivity.type,
+            target: newActivity.target || newActivity.title
           };
 
           setActivities((prev) => [formattedActivity, ...prev].slice(0, 20));

@@ -1,29 +1,28 @@
 export interface BrandingTheme {
   primaryColor: string;
   secondaryColor: string;
+  logo?: string;
   fontFamily?: string;
-  logoUrl?: string;
-  accentColor?: string;
-  textColor?: string;
-  backgroundColor?: string;
-  borderColor?: string;
-  buttonStyle?: {
-    borderRadius?: string;
-    padding?: string;
-    fontWeight?: string;
-  };
-  customCss?: Record<string, string>;
+  buttonStyle?: 'rounded' | 'square';
+  customCss?: string;
+}
+
+export interface BrandingMutation {
+  theme: BrandingTheme;
+  updateTheme: (updates: Partial<BrandingTheme>) => Promise<void>;
+  isLoading: boolean;
+  error: string | null;
 }
 
 export interface BrandingConfig {
   theme: BrandingTheme;
   companyName: string;
-  companyLogo?: string;
-  favicon?: string;
+  domain?: string;
   customDomain?: string;
-  emailTemplate?: {
-    header?: string;
-    footer?: string;
-    style?: Record<string, string>;
+  favicon?: string;
+  metaTags?: {
+    title?: string;
+    description?: string;
+    keywords?: string[];
   };
 }

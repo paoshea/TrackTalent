@@ -38,6 +38,13 @@ export function useRecentActivity(): UseRecentActivityResult {
             metadata: {
               jobTitle: "Senior Software Engineer",
             },
+            user: {
+              id: "1",
+              name: "HR Team",
+              avatar: "/avatars/hr-team.png"
+            },
+            action: "posted",
+            target: "Senior Software Engineer position"
           },
           {
             id: "2",
@@ -51,6 +58,13 @@ export function useRecentActivity(): UseRecentActivityResult {
               jobTitle: "Senior Software Engineer",
               interviewDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
             },
+            user: {
+              id: "2",
+              name: "Hiring Manager",
+              avatar: "/avatars/hiring-manager.png"
+            },
+            action: "scheduled",
+            target: "Interview with John Doe"
           },
           {
             id: "3",
@@ -63,6 +77,13 @@ export function useRecentActivity(): UseRecentActivityResult {
               candidateName: "Jane Smith",
               jobTitle: "Product Manager",
             },
+            user: {
+              id: "3",
+              name: "Jane Smith",
+              avatar: "/avatars/jane-smith.png"
+            },
+            action: "accepted",
+            target: "Product Manager offer"
           },
           {
             id: "4",
@@ -75,6 +96,13 @@ export function useRecentActivity(): UseRecentActivityResult {
               candidateName: "Mike Johnson",
               jobTitle: "Frontend Developer",
             },
+            user: {
+              id: "4",
+              name: "Technical Team",
+              avatar: "/avatars/tech-team.png"
+            },
+            action: "updated",
+            target: "Mike Johnson's application"
           },
         ];
 

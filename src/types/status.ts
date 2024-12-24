@@ -20,6 +20,14 @@ export interface CreateStatusParams {
   metadata?: Status["metadata"];
 }
 
+export interface MentionSuggestion {
+  id: string;
+  type: "user" | "company" | "job";
+  name: string;
+  avatarUrl?: string;
+  subtitle?: string;
+}
+
 export interface StatusMention {
   id: string;
   type: "user" | "company" | "job";
@@ -40,6 +48,7 @@ export type StatusContent = {
     url: string;
     title?: string;
   }>;
+  visibility?: "public" | "team" | "private";
 };
 
 export interface Status {
@@ -72,7 +81,7 @@ export interface StatusFilter {
   userId?: string;
   startDate?: string;
   endDate?: string;
-  visibility?: Status["visibility"];
+  visibility?: StatusContent["visibility"];
   pinned?: boolean;
 }
 

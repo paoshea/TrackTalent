@@ -6,13 +6,11 @@ import { ExperienceCard } from "../../../components/candidate/application/Experi
 interface ExperienceFormProps {
   data: Partial<ApplicationData>;
   onChange: (data: Partial<ApplicationData>) => void;
-  errors: Record<string, string>;
 }
 
 export function ExperienceForm({
   data,
   onChange,
-  errors,
 }: ExperienceFormProps) {
   const experiences = data.experience?.relevantAreas || [];
 
@@ -92,7 +90,6 @@ export function ExperienceForm({
           onDelete={() => removeExperience(index)}
           experience={exp}
           onUpdate={(updates: Partial<Experience>) => updateExperience(index, updates)}
-          errors={errors}
           isFirst={index === 0}
         />
       ))}

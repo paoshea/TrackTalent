@@ -44,6 +44,7 @@ export type ApplicationFormStep =
 
 export interface ApplicationData {
   jobId: string;
+  personalInfo: PersonalInfo;
   coverLetter: string;
   resumeUrl: string;
   portfolioUrl?: string;
@@ -70,7 +71,7 @@ export interface ApplicationData {
     frequency: "yearly" | "monthly" | "hourly";
   };
   questions?: Record<string, string>;
-  skills: string[];
+  skills: Skill[];
   experience?: {
     years: number;
     relevantAreas: Experience[];
