@@ -5,6 +5,7 @@ import { Logo } from "../../components/branding/Logo";
 import { JobList } from "../../components/jobs/JobList";
 import { JobSearch } from "../../components/jobs/JobSearch";
 import { JobSearchFilters } from "../../components/jobs/JobSearchFilters";
+import { MainLayout } from "../../components/layout/MainLayout";
 
 const mockJobs = [
   {
