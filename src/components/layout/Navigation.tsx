@@ -32,12 +32,11 @@ export function Navigation({ items }: NavigationProps) {
     }
   };
 
-  const baseRoute = getBaseRoute(user.role as UserRole);
   const filteredItems = items.filter(
-    (item) => !item.roles || item.roles.includes(user.role as UserRole),
+    (item) => !item.roles || item.roles.includes(user.role as UserRole)
   ).map(item => ({
     ...item,
-    href: item.href.startsWith('/') ? `${baseRoute}${item.href}` : item.href
+    href: `/candidate${item.href}`
   }));
 
   // Assume translate function is available in scope.  This would need to be added elsewhere.
