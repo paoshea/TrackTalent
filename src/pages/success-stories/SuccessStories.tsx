@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Logo } from '../../components/branding/Logo';
 import { Award, Briefcase, TrendingUp, User } from 'lucide-react';
 
 interface SuccessStory {
@@ -50,6 +51,7 @@ export default function SuccessStories() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="text-center mb-12">
+        <Logo className="h-16 w-auto mx-auto mb-6" />
         <h1 className="text-3xl font-bold text-gray-900 mb-4">Success Stories</h1>
         <p className="text-lg text-gray-600">
           Real stories of successful career transitions from our community
