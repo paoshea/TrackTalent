@@ -64,8 +64,15 @@ export function Landing() {
             <h2 className="text-base text-indigo-600 font-semibold tracking-wide uppercase">
               Features
             </h2>
-            <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-              Everything you need to manage talent
+          </div>
+
+          {/* For Candidates Section */}
+          <div className="mt-12 lg:text-center">
+            <h3 className="text-2xl font-semibold text-gray-900">
+              For Candidates
+            </h3>
+            <p className="mt-2 text-lg text-gray-600">
+              Tools to advance your career and find the perfect opportunity
             </p>
           </div>
 
@@ -125,7 +132,17 @@ export function Landing() {
             </Link>
           </div>
 
-          <div className="mt-20">
+          {/* For Employers Section */}
+          <div className="mt-20 lg:text-center">
+            <h3 className="text-2xl font-semibold text-gray-900">
+              For Employers
+            </h3>
+            <p className="mt-2 text-lg text-gray-600">
+              Everything you need to manage talent effectively
+            </p>
+          </div>
+
+          <div className="mt-12">
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
               <Link to="/employer/job-postings" className="pt-6 block transition-all duration-200">
                 <div className="flow-root bg-white rounded-lg px-6 pb-8 hover:shadow-lg transition-shadow duration-200">
