@@ -3,6 +3,7 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import Jobs from "../pages/jobs/Jobs";
 import type { UserRole, User } from "../types/auth";
+import JobPostings from "../pages/employer/JobPostings";
 
 import AdminDashboard from "../pages/admin/Dashboard";
 import CustomerDashboard from "../pages/customer/Dashboard";
