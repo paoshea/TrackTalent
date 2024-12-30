@@ -1,7 +1,10 @@
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Logo } from '../../components/branding/Logo';
 import { BookOpen, PlayCircle, Award, ExternalLink } from 'lucide-react';
+
+const navigate = useNavigate();
 
 interface Resource {
   id: string;

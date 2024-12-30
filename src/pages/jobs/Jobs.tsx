@@ -1,9 +1,12 @@
 
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Logo } from "../../components/branding/Logo";
 import { JobList } from "../../components/jobs/JobList";
 import { JobSearch } from "../../components/jobs/JobSearch";
 import { JobSearchFilters } from "../../components/jobs/JobSearchFilters";
+
+const navigate = useNavigate();
 
 const mockJobs = [
   {
