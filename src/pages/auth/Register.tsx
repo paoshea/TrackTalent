@@ -47,7 +47,7 @@ export default function Register() {
           <Link to="/" className="mr-4 text-gray-600 hover:text-gray-900">
             <ArrowLeft className="h-6 w-6" />
           </Link>
-          <Logo className="h-24 w-auto" />
+          <Logo className="h-48 w-auto" />
         </div>
       </nav>
       <div className="flex-1 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
