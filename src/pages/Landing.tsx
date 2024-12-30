@@ -68,6 +68,62 @@ export function Landing() {
               Everything you need to manage talent
             </p>
           </div>
+          
+          <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            <Link to="/jobs" className="group hover:shadow-lg transition-shadow duration-200 rounded-lg">
+              <div className="pt-6">
+                <div className="flow-root bg-white rounded-lg px-6 pb-8">
+                  <div className="-mt-6">
+                    <div className="inline-flex items-center justify-center p-3 bg-indigo-500 rounded-md shadow-lg group-hover:bg-indigo-600">
+                      <Briefcase className="h-6 w-6 text-white" />
+                    </div>
+                    <h3 className="mt-8 text-lg font-medium text-gray-900 group-hover:text-indigo-600">
+                      Browse Jobs
+                    </h3>
+                    <p className="mt-5 text-base text-gray-500">
+                      Explore available positions and career opportunities
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </Link>
+
+            <Link to="/resources" className="group hover:shadow-lg transition-shadow duration-200 rounded-lg">
+              <div className="pt-6">
+                <div className="flow-root bg-white rounded-lg px-6 pb-8">
+                  <div className="-mt-6">
+                    <div className="inline-flex items-center justify-center p-3 bg-indigo-500 rounded-md shadow-lg group-hover:bg-indigo-600">
+                      <BookOpen className="h-6 w-6 text-white" />
+                    </div>
+                    <h3 className="mt-8 text-lg font-medium text-gray-900 group-hover:text-indigo-600">
+                      Learning Resources
+                    </h3>
+                    <p className="mt-5 text-base text-gray-500">
+                      Access career development materials and guides
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </Link>
+
+            <Link to="/success-stories" className="group hover:shadow-lg transition-shadow duration-200 rounded-lg">
+              <div className="pt-6">
+                <div className="flow-root bg-white rounded-lg px-6 pb-8">
+                  <div className="-mt-6">
+                    <div className="inline-flex items-center justify-center p-3 bg-indigo-500 rounded-md shadow-lg group-hover:bg-indigo-600">
+                      <TrendingUp className="h-6 w-6 text-white" />
+                    </div>
+                    <h3 className="mt-8 text-lg font-medium text-gray-900 group-hover:text-indigo-600">
+                      Success Stories
+                    </h3>
+                    <p className="mt-5 text-base text-gray-500">
+                      Read about successful career transitions and placements
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </Link>
+          </div>
 
           <div className="mt-20">
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
