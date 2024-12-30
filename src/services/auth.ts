@@ -19,10 +19,13 @@ export async function signUp(data: SignUpData) {
     password,
     options: {
       data: metadata,
+      emailRedirectTo: `${window.location.origin}/auth/verify-email`,
     },
   });
 
   if (error) throw error;
+  if (!authData.user) throw new Error('Signup failed');
+  
   return authData;
 }
 
