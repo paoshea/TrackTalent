@@ -6,9 +6,9 @@ import type { UserRole, User } from "../types/auth";
 import JobPostings from "../pages/employer/JobPostings";
 import CandidateManagement from "../pages/employer/CandidateManagement";
 import Analytics from "../pages/employer/Analytics";
-import Applications from "../pages/employer/Applications"; // Assumed to exist
-import Messages from "../pages/employer/Messages";     // Assumed to exist
-import Profile from "../pages/employer/Profile";       // Assumed to exist
+import Applications from "../pages/candidate/Applications"; 
+import Messages from "../pages/candidate/Messages";     
+import Profile from "../pages/candidate/Profile";       
 
 import AdminDashboard from "../pages/admin/Dashboard";
 import CustomerDashboard from "../pages/customer/Dashboard";
