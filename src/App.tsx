@@ -1,8 +1,11 @@
+
+import { useState, useEffect } from 'react';
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import { FormProvider } from "./contexts/FormContext";
 import { routes } from "./router/routes";
 import { Logo } from "./components/branding/Logo";
+import { supabase } from './lib/supabase';
 
 const router = createBrowserRouter(routes);
 
@@ -18,6 +21,18 @@ function LoadingScreen() {
 }
 
 function App() {
+  const [todos, setTodos] = useState([]);
+
+  useEffect(() => {
+    async function getTodos() {
+      const { data } = await supabase.from('todos').select();
+      if (data && data.length > 0) {
+        setTodos(data);
+      }
+    }
+    getTodos();
+  }, []);
+
   return (
     <AuthProvider>
       <FormProvider onSubmit={async () => {}}>
