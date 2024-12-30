@@ -188,6 +188,14 @@ export const routes = [
         path: "applications",
         element: <Applications />
       },
+      {
+        path: "messages",
+        element: <Messages />
+      },
+      {
+        path: "profile",
+        element: <Profile />
+      }
     ],
   },
   {
