@@ -58,7 +58,8 @@ const mockJobs = [
 export default function Jobs() {
   const navigate = useNavigate();
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative">
+    <MainLayout>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative">
       <button
         onClick={() => navigate('/')}
         className="absolute top-4 left-4 inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
@@ -77,6 +78,6 @@ export default function Jobs() {
           <JobList jobs={mockJobs} />
         </div>
       </div>
-    </div>
+    </MainLayout>
   );
 }
