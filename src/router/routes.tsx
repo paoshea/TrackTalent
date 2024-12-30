@@ -80,7 +80,7 @@ export const routes = [
         path: "jobs",
         element: (
           <React.Suspense fallback={<div>Loading...</div>}>
-            <React.lazy(() => import("../pages/jobs/Jobs")) />
+            {React.createElement(React.lazy(() => import("../pages/jobs/Jobs")))}
           </React.Suspense>
         ),
       },
