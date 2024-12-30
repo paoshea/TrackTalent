@@ -20,8 +20,9 @@ export function VerifyEmail() {
 
     const verify = async () => {
       try {
+        const userRole = localStorage.getItem('userRole') || 'candidate'; // Get user role from local storage
         await verifyEmail(token);
-        navigate("/dashboard");
+        navigate(userRole === 'employer' ? '/employer/dashboard' : '/candidate/dashboard'); // Redirect based on role
       } catch (err) {
         setError("Failed to verify email. Please try again.");
       }
