@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
@@ -46,31 +47,14 @@ export default function Register() {
       });
       
       setSuccess(true);
-      navigate('/auth/verify-email');
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create account');
-    } finally {
-      setIsLoading(false);
-    }
-
-      setSuccess(true);
       localStorage.setItem('userRole', formData.role);
       
-      if (response.confirmEmail) {
-        navigate("/auth/verify-email", { 
-          state: { 
-            email: formData.email,
-            role: formData.role
-          },
-          replace: true
-        });
-      } else {
-        // Add a slight delay to allow context updates
-        setTimeout(() => {
-          const redirectPath = formData.role === 'employer' ? '/employer/dashboard' : '/candidate/dashboard';
-          navigate(redirectPath, { replace: true });
-        }, 500);
-      }
+      // Add a slight delay to allow context updates
+      setTimeout(() => {
+        const redirectPath = formData.role === 'employer' ? '/employer/dashboard' : '/candidate/dashboard';
+        navigate(redirectPath, { replace: true });
+      }, 500);
+      
     } catch (err) {
       const errorMessage = err instanceof Error 
         ? err.message.includes('Load failed') 
