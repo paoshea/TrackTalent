@@ -15,6 +15,7 @@ import { ResetPassword } from "../pages/auth/ResetPassword";
 import NotFound from "../pages/NotFound";
 import { OnboardingFlow } from "../pages/onboarding/OnboardingFlow";
 import SuccessStories from "../pages/success-stories/SuccessStories";
+import Resources from "../pages/resources/Resources";
 
 interface ProtectedRouteProps {
   allowedRoles?: UserRole[];
@@ -112,6 +113,10 @@ export const routes = [
       {
         path: "success-stories",
         element: <SuccessStories />,
+      },
+      {
+        path: "/resources",
+        element: <Resources />,
       },
     ],
   },
