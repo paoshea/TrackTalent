@@ -6,7 +6,7 @@ import { Button } from "../../components/shared/Button";
 import { Input } from "../../components/shared/Input";
 import { Alert } from "../../components/shared/Alert";
 
-export function Register() {
+export default function Register() {
   const navigate = useNavigate();
   const { signUp } = useAuth();
   const [formData, setFormData] = useState({
@@ -27,7 +27,7 @@ export function Register() {
       const response = await signUp(formData);
       if (response?.user) {
         setSuccess(true);
-        navigate("/auth/verify-email", { 
+        navigate("/auth/verify-email", {
           state: { email: formData.email }
         });
       }
