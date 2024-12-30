@@ -5,7 +5,7 @@ import { Alert } from "../../components/shared/Alert";
 import { Button } from "../../components/shared/Button";
 import { Input } from "../../components/shared/Input";
 import { Select } from "../../components/shared/Select";
-import { Alert } from "../../components/shared/Alert";
+import { Logo } from "../../components/branding/Logo";
 import type { SignUpData } from "../../types/auth";
 
 const roleOptions = [
