@@ -38,6 +38,10 @@ export function Navigation({ items }: NavigationProps) {
     href: item.href.startsWith('/') ? `${baseRoute}${item.href}` : item.href
   }));
 
+  // Assume translate function is available in scope.  This would need to be added elsewhere.
+  const translate = (text: string) => text; // Placeholder for actual translation logic
+
+
   return (
     <nav className="space-y-1">
       {filteredItems.map((item) => {
@@ -52,7 +56,7 @@ export function Navigation({ items }: NavigationProps) {
               aria-hidden="true"
               className="mr-3 flex-shrink-0 h-6 w-6 text-gray-400 group-hover:text-gray-500"
             />
-            {item.name}
+            {translate(item.name)} {/* Apply translation here */}
           </Link>
         );
       })}

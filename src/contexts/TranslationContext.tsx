@@ -14,13 +14,29 @@ const translations = {
     'nav.signin': 'Sign In',
     'nav.signup': 'Get Started',
     'landing.title': 'Find Your Next Career Opportunity',
-    // Add more translations as needed
+    'dashboard.jobs': 'Jobs',
+    'dashboard.applications': 'Applications',
+    'dashboard.messages': 'Messages',
+    'dashboard.analytics': 'Analytics',
+    'dashboard.profile': 'Profile',
+    'actions.search': 'Search',
+    'actions.apply': 'Apply Now',
+    'actions.save': 'Save',
+    'actions.cancel': 'Cancel'
   },
   es: {
     'nav.signin': 'Iniciar Sesión',
     'nav.signup': 'Comenzar',
     'landing.title': 'Encuentra Tu Próxima Oportunidad Laboral',
-    // Add more translations as needed
+    'dashboard.jobs': 'Empleos',
+    'dashboard.applications': 'Aplicaciones',
+    'dashboard.messages': 'Mensajes',
+    'dashboard.analytics': 'Análisis',
+    'dashboard.profile': 'Perfil',
+    'actions.search': 'Buscar',
+    'actions.apply': 'Aplicar Ahora',
+    'actions.save': 'Guardar',
+    'actions.cancel': 'Cancelar'
   }
 };
 
