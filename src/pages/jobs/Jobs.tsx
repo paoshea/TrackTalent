@@ -57,7 +57,7 @@ const mockJobs = [
 export default function Jobs() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <Logo className="h-16 w-auto mx-auto mb-6" />
+      <Logo className="h-12 w-auto mx-auto mb-6" />
       <h1 className="text-3xl font-bold mb-8">Browse Jobs</h1>
       <div className="grid gap-6">
         <JobSearch />
