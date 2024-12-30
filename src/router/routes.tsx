@@ -148,7 +148,7 @@ export const routes = [
         </React.Suspense>,
       },
       {
-        path: "candidates",
+        path: "candidate-management",
         element: <React.Suspense fallback={<div>Loading...</div>}>
           <CandidateManagement />
         </React.Suspense>,
