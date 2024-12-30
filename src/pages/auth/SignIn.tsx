@@ -4,6 +4,7 @@ import { useAuth } from "../../hooks/useAuth";
 import { Button } from "../../components/shared/Button";
 import { Input } from "../../components/shared/Input";
 import { Alert } from "../../components/shared/Alert";
+import { Logo } from "../../components/branding/Logo";
 
 export function SignIn() {
   const { signIn } = useAuth();
