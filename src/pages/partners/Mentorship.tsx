@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
-//import { ArrowLeft } from 'lucide-react'; // Removed as not used in the modified structure.
+import { ArrowLeft } from 'lucide-react';
 import Footer from '../../components/layout/Footer';
 
 export default function Mentorship() {

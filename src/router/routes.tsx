@@ -125,6 +125,23 @@ export const routes = [
         path: "/resources",
         element: <Resources />,
       },
+      {
+        path: "partners",
+        children: [
+          {
+            path: "analytics",
+            element: <Analytics />,
+          },
+          {
+            path: "apprenticeships",
+            element: <Apprenticeships />,
+          },
+          {
+            path: "mentorship",
+            element: <Mentorship />,
+          },
+        ],
+      },
     ],
   },
   {
