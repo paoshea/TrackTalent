@@ -1,27 +1,68 @@
 
+import React from "react";
 import { JobList } from "../../components/jobs/JobList";
-import { useJobs } from "../../hooks/useJobs";
+import { JobSearch } from "../../components/jobs/JobSearch";
+import { JobSearchFilters } from "../../components/jobs/JobSearchFilters";
+
+const mockJobs = [
+  {
+    id: "1",
+    title: "Senior Software Engineer",
+    description: "We are looking for a senior software engineer with React experience",
+    type: "full-time",
+    location: "Remote",
+    company: {
+      id: "1",
+      name: "TechCorp",
+      logo: null
+    },
+    compensation: {
+      salary: {
+        min: 100000,
+        max: 150000,
+        currency: "USD",
+        period: "yearly"
+      }
+    },
+    skills: ["React", "TypeScript", "Node.js"],
+    publishedAt: "2024-01-15T00:00:00Z",
+    createdAt: "2024-01-15T00:00:00Z"
+  },
+  {
+    id: "2",
+    title: "Product Designer",
+    description: "Looking for a product designer to join our growing team",
+    type: "full-time",
+    location: "New York, NY",
+    company: {
+      id: "2",
+      name: "DesignCo",
+      logo: null
+    },
+    compensation: {
+      salary: {
+        min: 90000,
+        max: 130000,
+        currency: "USD",
+        period: "yearly"
+      }
+    },
+    skills: ["Figma", "UI/UX", "Design Systems"],
+    publishedAt: "2024-01-14T00:00:00Z",
+    createdAt: "2024-01-14T00:00:00Z"
+  }
+];
 
 export default function Jobs() {
-  const { jobs, isLoading } = useJobs();
-
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="sm:flex sm:items-center">
-        <div className="sm:flex-auto">
-          <h1 className="text-3xl font-semibold text-gray-900">Available Positions</h1>
-          <p className="mt-2 text-sm text-gray-700">
-            Browse through our current job openings and find your next opportunity
-          </p>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <h1 className="text-3xl font-bold mb-8">Browse Jobs</h1>
+      <div className="grid gap-6">
+        <JobSearch />
+        <div className="grid md:grid-cols-[300px,1fr] gap-6">
+          <JobSearchFilters />
+          <JobList jobs={mockJobs} />
         </div>
-      </div>
-      <div className="mt-8">
-        <JobList
-          jobs={jobs}
-          isLoading={isLoading}
-          hasMore={false}
-          onLoadMore={() => {}}
-        />
       </div>
     </div>
   );

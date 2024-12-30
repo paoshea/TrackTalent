@@ -1,6 +1,7 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
+import Jobs from "../pages/jobs/Jobs";
 import type { UserRole, User } from "../types/auth";
 
 import AdminDashboard from "../pages/admin/Dashboard";
@@ -81,7 +82,7 @@ export const routes = [
         path: "jobs",
         element: (
           <React.Suspense fallback={<div>Loading...</div>}>
-            {React.createElement(React.lazy(() => import("../pages/jobs/Jobs")))}
+            <Jobs />
           </React.Suspense>
         ),
       },
