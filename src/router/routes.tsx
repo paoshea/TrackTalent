@@ -139,10 +139,23 @@ export const routes = [
   },
   {
     path: "/employer",
+    element: <ProtectedRoute allowedRoles={["employer"]} />,
     children: [
       {
         path: "",
         element: <EmployerDashboard />,
+      },
+      {
+        path: "messages",
+        element: <Messages />,
+      },
+      {
+        path: "applications",
+        element: <Applications />,
+      },
+      {
+        path: "profile",
+        element: <Profile />,
       },
       {
         path: "job-postings",
