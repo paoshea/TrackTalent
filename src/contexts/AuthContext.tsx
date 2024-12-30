@@ -98,7 +98,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
             role: data.role,
             companyName: data.companyName,
           },
+          emailRedirectTo: `${window.location.origin}/auth/verify-email`,
         },
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        redirectTo: `${window.location.origin}/auth/verify-email`
       });
       if (signUpError) throw signUpError;
 

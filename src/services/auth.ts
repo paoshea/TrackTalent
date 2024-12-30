@@ -25,6 +25,11 @@ export async function signUp(data: SignUpData) {
           data: metadata,
           emailRedirectTo: `${window.location.origin}/auth/verify-email`,
         },
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        redirectTo: `${window.location.origin}/auth/verify-email`
       });
 
       if (error) {
