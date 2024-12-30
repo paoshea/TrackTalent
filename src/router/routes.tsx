@@ -77,6 +77,10 @@ export const routes = [
         element: <Landing />,
       },
       {
+        path: "jobs",
+        element: <React.lazy(() => import("../pages/jobs/Jobs")) />,
+      },
+      {
         path: "auth",
         element: <PublicRoute />,
         children: [
