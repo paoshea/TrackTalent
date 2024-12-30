@@ -157,24 +157,27 @@ export const routes = [
     children: [
       {
         path: "",
-        element: <EmployerDashboard />,
+        element: <EmployerFeatures />,
       },
       {
         path: "features",
-        element: <JobPostings />,
+        element: <EmployerFeatures />,
       },
       {
         path: "solutions",
-        element: <CandidateManagement />,
+        element: <EmployerSolutions />,
       },
       {
         path: "insights",
-        element: <Analytics />,
+        element: <EmployerInsights />,
       },
       {
-        // Protected routes requiring authentication
         element: <ProtectedRoute allowedRoles={["employer"]} />,
         children: [
+          {
+            path: "dashboard",
+            element: <EmployerDashboard />,
+          },
           {
             path: "dashboard",
             element: <EmployerDashboard />,
