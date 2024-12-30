@@ -174,21 +174,19 @@ export const routes = [
       },
       {
         path: "job-postings",
-        element: <React.Suspense fallback={<div>Loading...</div>}>
-          <JobPostings />
-        </React.Suspense>,
+        element: <JobPostings />,
       },
       {
         path: "candidate-management",
-        element: <React.Suspense fallback={<div>Loading...</div>}>
-          <CandidateManagement />
-        </React.Suspense>,
+        element: <CandidateManagement />,
       },
       {
         path: "analytics",
-        element: <React.Suspense fallback={<div>Loading...</div>}>
-          <Analytics />
-        </React.Suspense>,
+        element: <Analytics />,
+      },
+      {
+        path: "signout",
+        element: <Navigate to="/auth/login" replace />,
       },
     ],
   },
