@@ -23,6 +23,9 @@ import NotFound from "../pages/NotFound";
 import { OnboardingFlow } from "../pages/onboarding/OnboardingFlow";
 import SuccessStories from "../pages/success-stories/SuccessStories";
 import Resources from "../pages/resources/Resources";
+import Apprenticeships from "../pages/partners/Apprenticeships";
+import Mentorship from "../pages/partners/Mentorship";
+import Analytics from "../pages/partners/Analytics";
 
 interface ProtectedRouteProps {
   allowedRoles?: UserRole[];
@@ -124,6 +127,18 @@ export const routes = [
       {
         path: "/resources",
         element: <Resources />,
+      },
+      {
+        path: "/partners/apprenticeships",
+        element: <Apprenticeships />,
+      },
+      {
+        path: "/partners/mentorship",
+        element: <Mentorship />,
+      },
+      {
+        path: "/partners/analytics",
+        element: <Analytics />,
       },
     ],
   },
