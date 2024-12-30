@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
+import { Alert } from "../../components/shared/Alert";
 import { Button } from "../../components/shared/Button";
 import { Input } from "../../components/shared/Input";
 import { Select } from "../../components/shared/Select";
@@ -40,15 +41,21 @@ export function SignUp() {
     }));
   };
 
+  const navigate = useNavigate();
+  const [success, setSuccess] = useState(false);
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setSuccess(false);
     setIsLoading(true);
 
     try {
       await signUp(formData);
-      // Redirect to onboarding after successful signup
-      navigate("/onboarding");
+      setSuccess(true);
+      setTimeout(() => {
+        navigate("/onboarding");
+      }, 1500);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to sign up");
     } finally {
@@ -76,6 +83,7 @@ export function SignUp() {
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           {error && <Alert type="error" message={error} />}
+          {success && <Alert type="success" message="Account created successfully! Redirecting..." />}
 
           <div className="rounded-md shadow-sm space-y-4">
             <Input
