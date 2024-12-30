@@ -40,13 +40,21 @@ export function Register() {
     }));
   };
 
+  const navigate = useNavigate();
+  const [success, setSuccess] = useState(false);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setSuccess(false);
     setIsLoading(true);
 
     try {
       await signUp(formData);
+      setSuccess(true);
+      setTimeout(() => {
+        navigate("/onboarding");
+      }, 1500);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to sign up");
     } finally {
@@ -74,6 +82,7 @@ export function Register() {
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           {error && <Alert type="error" message={error} />}
+          {success && <Alert type="success" message="Account created successfully! Redirecting..." />}
 
           <div className="rounded-md shadow-sm space-y-4">
             <Input
