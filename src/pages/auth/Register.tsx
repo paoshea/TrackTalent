@@ -37,28 +37,25 @@ export default function Register() {
       const response = await signUp(formData);
       setSuccess(true);
       
+      // Store role in localStorage for after email verification
+      localStorage.setItem('userRole', formData.role);
+      
       if (response.confirmEmail) {
-        // Store role in localStorage for after email verification
-        localStorage.setItem('userRole', formData.role);
-        
         setTimeout(() => {
           navigate("/auth/verify-email", { 
             state: { 
               email: formData.email,
-              role: formData.role,
-              fromRegistration: true 
+              role: formData.role
             }
           });
-        }, 1500);
+        }, 1000);
       } else {
-        // Direct login case
         setTimeout(() => {
           navigate(formData.role === 'employer' ? '/employer/dashboard' : '/candidate/dashboard');
-        }, 1500);
+        }, 1000);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to sign up");
-    } finally {
       setIsLoading(false);
     }
   };
@@ -137,7 +134,7 @@ export default function Register() {
           <div className="mt-6">
             <div className="relative">
               <div className="text-sm text-center">
-                Already have an account?{' '}
+                Already have an account?{" "}
                 <Link to="/auth/login" className="font-medium text-indigo-600 hover:text-indigo-500">
                   Sign in
                 </Link>
