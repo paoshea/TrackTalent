@@ -135,6 +135,74 @@ export function Landing() {
             </Link>
           </div>
 
+          {/* For Partners Section */}
+          <div className="mt-20 lg:text-center">
+            <h3 className="text-2xl font-semibold text-gray-900">
+              For Partners
+            </h3>
+            <p className="mt-2 text-lg text-gray-600">
+              Join our network of education and training providers
+            </p>
+          </div>
+
+          <div className="mt-12">
+            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+              <Link to="/partners/apprenticeships" className="pt-6 block transition-all duration-200">
+                <div className="flow-root bg-white rounded-lg px-6 pb-8 hover:shadow-lg transition-shadow duration-200">
+                  <div className="-mt-6">
+                    <div>
+                      <span className="inline-flex items-center justify-center p-3 bg-indigo-500 rounded-md shadow-lg transition-colors duration-200">
+                        <BookOpen className="h-6 w-6 text-white" />
+                      </span>
+                    </div>
+                    <h3 className="mt-8 text-lg font-medium text-gray-900 tracking-tight hover:text-indigo-600 transition-colors duration-200">
+                      Apprenticeship Programs
+                    </h3>
+                    <p className="mt-5 text-base text-gray-500">
+                      Create and manage apprenticeship opportunities with leading employers
+                    </p>
+                  </div>
+                </div>
+              </Link>
+
+              <Link to="/partners/mentorship" className="pt-6 block transition-all duration-200">
+                <div className="flow-root bg-white rounded-lg px-6 pb-8 hover:shadow-lg transition-shadow duration-200">
+                  <div className="-mt-6">
+                    <div>
+                      <span className="inline-flex items-center justify-center p-3 bg-indigo-500 rounded-md shadow-lg transition-colors duration-200">
+                        <Users className="h-6 w-6 text-white" />
+                      </span>
+                    </div>
+                    <h3 className="mt-8 text-lg font-medium text-gray-900 tracking-tight hover:text-indigo-600 transition-colors duration-200">
+                      Mentorship Network
+                    </h3>
+                    <p className="mt-5 text-base text-gray-500">
+                      Connect experienced professionals with emerging talent
+                    </p>
+                  </div>
+                </div>
+              </Link>
+
+              <Link to="/partners/analytics" className="pt-6 block transition-all duration-200">
+                <div className="flow-root bg-white rounded-lg px-6 pb-8 hover:shadow-lg transition-shadow duration-200">
+                  <div className="-mt-6">
+                    <div>
+                      <span className="inline-flex items-center justify-center p-3 bg-indigo-500 rounded-md shadow-lg transition-colors duration-200">
+                        <BarChart className="h-6 w-6 text-white" />
+                      </span>
+                    </div>
+                    <h3 className="mt-8 text-lg font-medium text-gray-900 tracking-tight hover:text-indigo-600 transition-colors duration-200">
+                      Partner Analytics
+                    </h3>
+                    <p className="mt-5 text-base text-gray-500">
+                      Track program success and measure impact with detailed analytics
+                    </p>
+                  </div>
+                </div>
+              </Link>
+            </div>
+          </div>
+
           {/* For Employers Section */}
           <div className="mt-20 lg:text-center">
             <h3 className="text-2xl font-semibold text-gray-900">
