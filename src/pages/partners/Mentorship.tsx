@@ -32,7 +32,7 @@ export default function Mentorship() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex items-center mb-8">
-        <img src="/logo.svg" alt="Logo" className="h-12 w-12" />
+        <img src="/favicon.svg" alt="Logo" className="h-12 w-12 md:h-[48px] md:w-[48px]" />
         <button 
           onClick={() => window.history.back()} 
           className="ml-4 flex items-center gap-2 text-gray-600 hover:text-gray-900"
