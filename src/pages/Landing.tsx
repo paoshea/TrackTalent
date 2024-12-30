@@ -163,7 +163,7 @@ export function Landing() {
                 </div>
               </Link>
 
-              <Link to="/employer/candidate-management" className="pt-6 block transition-all duration-200">
+              <Link to="/employer/candidates" className="pt-6 block transition-all duration-200">
                 <div className="flow-root bg-white rounded-lg px-6 pb-8 hover:shadow-lg transition-shadow duration-200">
                   <div className="-mt-6">
                     <div>

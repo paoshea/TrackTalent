@@ -1,12 +1,11 @@
+
 import React from 'react';
-import { Logo } from '../../components/branding/Logo';
 import { Users, Filter, Search } from 'lucide-react';
 
 export default function CandidateManagement() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="text-center mb-12">
-        <Logo className="h-12 w-auto mx-auto mb-6" />
         <h1 className="text-3xl font-bold text-gray-900 mb-4">Candidate Management</h1>
         <p className="text-lg text-gray-600">Track and manage candidates throughout the hiring process</p>
       </div>
@@ -31,7 +30,9 @@ export default function CandidateManagement() {
         
         <div className="px-4 py-5 sm:p-6">
           <div className="text-center text-gray-500 py-12">
-            No candidates yet
+            <Users className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+            <p className="text-lg">No candidates yet</p>
+            <p className="mt-2">Candidates who apply to your jobs will appear here</p>
           </div>
         </div>
       </div>
