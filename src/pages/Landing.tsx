@@ -136,7 +136,9 @@ export function Landing() {
                       </span>
                     </div>
                     <h3 className="mt-8 text-lg font-medium text-gray-900 tracking-tight">
-                      Job Postings
+                      <Link to="/employer/job-postings" className="hover:text-indigo-600">
+                        Job Postings
+                      </Link>
                     </h3>
                     <p className="mt-5 text-base text-gray-500">
                       Create and manage job postings with ease. Reach qualified

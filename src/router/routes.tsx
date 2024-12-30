@@ -138,6 +138,24 @@ export const routes = [
         path: "",
         element: <CustomerDashboard />,
       },
+      {
+        path: "job-postings",
+        element: <React.Suspense fallback={<div>Loading...</div>}>
+          <JobPostings />
+        </React.Suspense>,
+      },
+      {
+        path: "candidates",
+        element: <React.Suspense fallback={<div>Loading...</div>}>
+          <CandidateManagement />
+        </React.Suspense>,
+      },
+      {
+        path: "analytics",
+        element: <React.Suspense fallback={<div>Loading...</div>}>
+          <Analytics />
+        </React.Suspense>,
+      },
     ],
   },
   {
