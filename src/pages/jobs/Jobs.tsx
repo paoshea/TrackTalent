@@ -78,6 +78,7 @@ export default function Jobs() {
           <JobList jobs={mockJobs} />
         </div>
       </div>
-    </MainLayout>
+    </div>
+  </MainLayout>
   );
 }
