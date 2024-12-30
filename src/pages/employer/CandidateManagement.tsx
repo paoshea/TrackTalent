@@ -5,6 +5,11 @@ import { Users, Filter, Search } from 'lucide-react';
 export default function CandidateManagement() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="mb-4">
+        <Link to="/" className="text-indigo-600 hover:text-indigo-500">
+          ← Back to Home
+        </Link>
+      </div>
       <div className="text-center mb-12">
         <h1 className="text-3xl font-bold text-gray-900 mb-4">Candidate Management</h1>
         <p className="text-lg text-gray-600">Track and manage candidates throughout the hiring process</p>
