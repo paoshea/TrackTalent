@@ -1,81 +1,30 @@
-// import React from "react";
+
 import { MainLayout } from "../../components/layout/MainLayout";
+import { QuickStats } from "../../components/dashboard/QuickStats";
+import { JobRecommendations } from "../../components/dashboard/JobRecommendations";
+import { ApplicationTracker } from "../../components/applications/ApplicationTracker";
+import { useAuth } from "../../hooks/useAuth";
 import { useDashboardMetrics } from "../../hooks/useDashboardMetrics";
-import { MetricCard } from "../../components/metrics/MetricCard";
-import { Users, Briefcase, CheckCircle, TrendingUp } from "lucide-react";
 
-const CandidateDashboard = () => {
-  const { metrics, isLoading, error } = useDashboardMetrics();
-
-  if (isLoading) {
-    return (
-      <MainLayout>
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
-        </div>
-      </MainLayout>
-    );
-  }
-
-  if (error) {
-    return (
-      <MainLayout>
-        <div className="bg-red-50 border border-red-200 rounded-md p-4">
-          <p className="text-red-600">{error}</p>
-        </div>
-      </MainLayout>
-    );
-  }
+export default function CandidateDashboard() {
+  const { user } = useAuth();
+  const { metrics } = useDashboardMetrics();
 
   return (
     <MainLayout>
-      <div className="space-y-6">
-        <h1 className="text-2xl font-semibold text-gray-900">
-          Candidate Dashboard
-        </h1>
-
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          <MetricCard
-            label="Applications"
-            value={metrics?.applications?.total || 0}
-            icon={CheckCircle}
-            trend={{
-              value: 12,
-              isPositive: true,
-            }}
-          />
-          <MetricCard
-            label="Interviews"
-            value={metrics?.interviews?.total || 0}
-            icon={Users}
-            trend={{
-              value: 5,
-              isPositive: true,
-            }}
-          />
-          <MetricCard
-            label="Saved Jobs"
-            value={metrics?.savedJobs || 0}
-            icon={Briefcase}
-          />
-          <MetricCard
-            label="Match Score"
-            value={metrics?.matchScore || 0}
-            icon={TrendingUp}
-            suffix="%"
-            trend={{
-              value: 8,
-              isPositive: true,
-            }}
-          />
-        </div>
-
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          {/* Add more candidate-specific components here */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <h1 className="text-2xl font-semibold text-gray-900">Dashboard</h1>
+        <QuickStats metrics={metrics} />
+        
+        <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-3">
+          <div className="lg:col-span-2">
+            <JobRecommendations />
+          </div>
+          <div>
+            <ApplicationTracker />
+          </div>
         </div>
       </div>
     </MainLayout>
   );
-};
-
-export default CandidateDashboard;
+}

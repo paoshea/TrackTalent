@@ -1,11 +1,14 @@
-// import React from "react";
+
+import { MainLayout } from "../../components/layout/MainLayout";
 import { ApplicationList } from "../../components/applications/ApplicationList";
 
-export function Applications() {
+export default function Applications() {
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-semibold text-gray-900">My Applications</h1>
-      <ApplicationList />
-    </div>
+    <MainLayout>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <h1 className="text-2xl font-semibold text-gray-900">My Applications</h1>
+        <ApplicationList />
+      </div>
+    </MainLayout>
   );
 }
