@@ -1,0 +1,18 @@
+Unexpected Application Error!
+null is not an object (evaluating 'm.activeJobs')
+value@https://459e4ba0-d47a-4873-9bc0-1b2da8a27082-00-3e8kup6o9njfw.kirk.replit.dev/src/components/dashboard/QuickStats.tsx:28:20
+@https://459e4ba0-d47a-4873-9bc0-1b2da8a27082-00-3e8kup6o9njfw.kirk.replit.dev/src/components/dashboard/QuickStats.tsx:61:29
+map@[native code]
+QuickStats@https://459e4ba0-d47a-4873-9bc0-1b2da8a27082-00-3e8kup6o9njfw.kirk.replit.dev/src/components/dashboard/QuickStats.tsx:60:180
+renderWithHooks@https://459e4ba0-d47a-4873-9bc0-1b2da8a27082-00-3e8kup6o9njfw.kirk.replit.dev/node_modules/.vite/deps/chunk-IA5K47JS.js:12151:35
+mountIndeterminateComponent@https://459e4ba0-d47a-4873-9bc0-1b2da8a27082-00-3e8kup6o9njfw.kirk.replit.dev/node_modules/.vite/deps/chunk-IA5K47JS.js:14901:36
+beginWork$1@https://459e4ba0-d47a-4873-9bc0-1b2da8a27082-00-3e8kup6o9njfw.kirk.replit.dev/node_modules/.vite/deps/chunk-IA5K47JS.js:19721:31
+performUnitOfWork@https://459e4ba0-d47a-4873-9bc0-1b2da8a27082-00-3e8kup6o9njfw.kirk.replit.dev/node_modules/.vite/deps/chunk-IA5K47JS.js:19166:31
+workLoopSync@https://459e4ba0-d47a-4873-9bc0-1b2da8a27082-00-3e8kup6o9njfw.kirk.replit.dev/node_modules/.vite/deps/chunk-IA5K47JS.js:19105:30
+renderRootSync@https://459e4ba0-d47a-4873-9bc0-1b2da8a27082-00-3e8kup6o9njfw.kirk.replit.dev/node_modules/.vite/deps/chunk-IA5K47JS.js:19084:27
+recoverFromConcurrentError@https://459e4ba0-d47a-4873-9bc0-1b2da8a27082-00-3e8kup6o9njfw.kirk.replit.dev/node_modules/.vite/deps/chunk-IA5K47JS.js:18704:42
+performConcurrentWorkOnRoot@https://459e4ba0-d47a-4873-9bc0-1b2da8a27082-00-3e8kup6o9njfw.kirk.replit.dev/node_modules/.vite/deps/chunk-IA5K47JS.js:18652:56
+workLoop@https://459e4ba0-d47a-4873-9bc0-1b2da8a27082-00-3e8kup6o9njfw.kirk.replit.dev/node_modules/.vite/deps/chunk-IA5K47JS.js:197:50
+flushWork@https://459e4ba0-d47a-4873-9bc0-1b2da8a27082-00-3e8kup6o9njfw.kirk.replit.dev/node_modules/.vite/deps/chunk-IA5K47JS.js:176:30
+performWorkUntilDeadline@https://459e4ba0-d47a-4873-9bc0-1b2da8a27082-00-3e8kup6o9njfw.kirk.replit.dev/node_modules/.vite/deps/chunk-IA5K47JS.js:384:50
+💿 H
