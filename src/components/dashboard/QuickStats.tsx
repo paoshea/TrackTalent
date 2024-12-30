@@ -28,7 +28,7 @@ interface QuickStatsProps {
 const stats = [
   {
     name: "Active Jobs",
-    value: (m: QuickStatsMetrics) => m.activeJobs,
+    value: (m: QuickStatsMetrics) => m?.activeJobs || 0,
     trend: (m: QuickStatsMetrics) => m.trends.jobs,
     icon: Briefcase,
     color: "text-blue-600",
