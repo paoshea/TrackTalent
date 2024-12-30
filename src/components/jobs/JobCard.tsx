@@ -16,13 +16,13 @@ export function JobCard({ job, className = "" }: JobCardProps) {
           <div className="flex items-center space-x-3">
             {job.company?.logo ? (
               <img
-                className="h-10 w-10 rounded-full"
+                className="h-12 w-12 rounded-full"
                 src={job.company.logo}
                 alt={job.company.name || "Company logo"}
               />
             ) : (
-              <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
-                <Building className="h-6 w-6 text-gray-400" />
+              <div className="h-12 w-12 rounded-full bg-gray-200 flex items-center justify-center">
+                <Building className="h-8 w-8 text-gray-400" />
               </div>
             )}
             <div>
