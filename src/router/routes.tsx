@@ -165,15 +165,15 @@ export const routes = [
       },
       {
         path: "applications",
-        element: <React.Suspense fallback={<div>Loading...</div>}><Applications /></React.Suspense>,
+        element: <Applications />,
       },
       {
         path: "messages",
-        element: <React.Suspense fallback={<div>Loading...</div>}><Messages /></React.Suspense>,
+        element: <Messages />,
       },
       {
         path: "profile",
-        element: <React.Suspense fallback={<div>Loading...</div>}><Profile /></React.Suspense>,
+        element: <Profile />,
       },
     ],
   },

@@ -23,7 +23,7 @@ export function Landing() {
               Sign in
             </Link>
             <Link
-              to="/employer"
+              to="/employer/messages"
               className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700"
             >
               Get started
@@ -48,7 +48,7 @@ export function Landing() {
             <div className="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
               <div className="rounded-md shadow">
                 <Link
-                  to="/employer"
+                  to="/employer/messages"
                   className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10"
                 >
                   Get started
@@ -147,7 +147,7 @@ export function Landing() {
 
           <div className="mt-12">
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              <Link to="/employer" className="pt-6 block transition-all duration-200">
+              <Link to="/employer/job-postings" className="pt-6 block transition-all duration-200">
                 <div className="flow-root bg-white rounded-lg px-6 pb-8 hover:shadow-lg transition-shadow duration-200">
                   <div className="-mt-6">
                     <div>
@@ -166,7 +166,7 @@ export function Landing() {
                 </div>
               </Link>
 
-              <Link to="/employer" className="pt-6 block transition-all duration-200">
+              <Link to="/employer/messages" className="pt-6 block transition-all duration-200">
                 <div className="flow-root bg-white rounded-lg px-6 pb-8 hover:shadow-lg transition-shadow duration-200">
                   <div className="-mt-6">
                     <div>
@@ -185,7 +185,7 @@ export function Landing() {
                 </div>
               </Link>
 
-              <Link to="/employer" className="pt-6 block transition-all duration-200">
+              <Link to="/employer/profile" className="pt-6 block transition-all duration-200">
                 <div className="flow-root bg-white rounded-lg px-6 pb-8 hover:shadow-lg transition-shadow duration-200">
                   <div className="-mt-6">
                     <div>
@@ -237,8 +237,8 @@ export function Landing() {
               <h3 className="text-lg font-semibold text-gray-900 mb-4">For Employers</h3>
               <ul className="space-y-2">
                 <li><Link to="/employer/job-postings" className="text-gray-600 hover:text-indigo-600">Post a Job</Link></li>
-                <li><Link to="/employer/candidate-management" className="text-gray-600 hover:text-indigo-600">Talent Search</Link></li>
-                <li><Link to="/employer/analytics" className="text-gray-600 hover:text-indigo-600">Hiring Analytics</Link></li>
+                <li><Link to="/employer/messages" className="text-gray-600 hover:text-indigo-600">Talent Search</Link></li>
+                <li><Link to="/employer/profile" className="text-gray-600 hover:text-indigo-600">Hiring Analytics</Link></li>
               </ul>
             </div>
 
