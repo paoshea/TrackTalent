@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Logo } from '../../components/branding/Logo';
 import { Award, Briefcase, TrendingUp, User } from 'lucide-react';
-import MainLayout from '../../components/layout/MainLayout'; // Assumed import path
+import { MainLayout } from '../../components/layout/MainLayout';
 
 interface SuccessStory {
   id: string;
