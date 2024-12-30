@@ -47,6 +47,8 @@ export function SignUp() {
 
     try {
       await signUp(formData);
+      // Redirect to onboarding after successful signup
+      navigate("/onboarding");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to sign up");
     } finally {
