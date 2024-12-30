@@ -1,10 +1,10 @@
-
 import { Briefcase, Star, Users, Clock } from 'lucide-react';
 import type { QuickStatsMetrics } from '../../types/dashboard';
 
 interface QuickStatsProps {
   metrics?: QuickStatsMetrics;
   isLoading?: boolean;
+  error?: string; // Added error handling
 }
 
 const stats = [
@@ -38,9 +38,12 @@ const stats = [
   },
 ];
 
-export function QuickStats({ metrics, isLoading = false }: QuickStatsProps) {
+export function QuickStats({ metrics, isLoading = false, error }: QuickStatsProps) {
   if (isLoading) {
     return <div className="animate-pulse">Loading stats...</div>;
+  }
+  if (error) {
+    return <div className="text-red-500">Error loading stats: {error}</div>; //Added error display
   }
 
   return (
