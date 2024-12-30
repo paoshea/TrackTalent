@@ -36,7 +36,7 @@ export default function Register() {
     setSuccess(false);
 
     try {
-      const response = await signUp({
+      await signUp({
         email: formData.email.trim(),
         password: formData.password,
         firstName: formData.firstName.trim(),
@@ -44,6 +44,14 @@ export default function Register() {
         role: formData.role,
         companyName: formData.role === 'employer' ? formData.companyName.trim() : undefined
       });
+      
+      setSuccess(true);
+      navigate('/auth/verify-email');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to create account');
+    } finally {
+      setIsLoading(false);
+    }
 
       setSuccess(true);
       localStorage.setItem('userRole', formData.role);

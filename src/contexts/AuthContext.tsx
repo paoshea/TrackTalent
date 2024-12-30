@@ -108,9 +108,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
       });
       if (signUpError) throw signUpError;
 
-      // Create profile in profiles table
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData?.user?.id) {
+        throw new Error('Failed to create user account');
+      }
+      
       const { error: profileError } = await supabase.from("profiles").insert({
-        id: (await supabase.auth.getUser()).data.user?.id,
+        id: userData.user.id,
         first_name: data.firstName,
         last_name: data.lastName,
         role: data.role,
