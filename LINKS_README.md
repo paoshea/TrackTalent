@@ -5,6 +5,10 @@
 
 ### Core Routes (/src/router/routes.tsx)
 - [x] /
+  - /jobs
+  - /resources
+  - /success-stories
+  - /partners (NEW)
 - [x] /auth/*
   - /auth/login
   - /auth/register
@@ -17,6 +21,7 @@
   - /candidate/profile
   - /candidate/jobs
 - [x] /employer/*
+  - /employer/dashboard
   - /employer/messages
   - /employer/applications
   - /employer/profile
@@ -24,6 +29,11 @@
   - /employer/candidate-management
   - /employer/analytics
 - [x] /admin/*
+- [x] /partners/* (NEW)
+  - /partners/dashboard
+  - /partners/apprenticeships
+  - /partners/mentorship
+  - /partners/analytics
 
 ## 2. Known Issues
 
@@ -34,7 +44,14 @@
    - [ ] Fix sign out functionality
    - [ ] Verify job recommendations links
 
-2. Navigation Components:
+2. Employer Dashboard Links:
+   - [ ] Fix /employer/analytics data loading
+   - [ ] Update /employer/job-postings navigation
+   - [ ] Verify /employer/candidate-management filters
+   - [ ] Fix /employer/applications relationship
+   - [ ] Update employer metrics display
+
+3. Navigation Components:
    - [ ] Update DashboardLayout.tsx links
    - [ ] Fix QuickStats navigation
    - [ ] Review MetricCard link handling
@@ -51,6 +68,7 @@
 2. Test each route with different user roles:
    - Candidate access
    - Employer access
+   - Partner access
    - Admin access
    - Unauthenticated access
 
@@ -82,7 +100,7 @@
 ## 4. Implementation Priority
 
 ### High Priority
-1. Fix candidate area navigation
+1. Fix employer analytics loading
 2. Repair sign out functionality
 3. Update dashboard component links
 4. Fix application flow navigation
@@ -105,7 +123,7 @@
 ```typescript
 interface RouteTest {
   path: string;
-  role: 'candidate' | 'employer' | 'admin' | 'unauthenticated';
+  role: 'candidate' | 'employer' | 'partner' | 'admin' | 'unauthenticated';
   expectedOutcome: 'success' | 'redirect' | 'error';
   redirectPath?: string;
 }
@@ -152,3 +170,37 @@ const testRoute = async (route: RouteTest) => {
    - Track 404 errors
    - Monitor navigation patterns
    - Record user flow completion rates
+
+## 8. Employer Dashboard Specific Tests
+
+1. Analytics Page:
+   - Verify metrics loading
+   - Test date range filters
+   - Check export functionality
+   - Validate data refresh
+
+2. Candidate Management:
+   - Test sorting functionality
+   - Verify filter operations
+   - Check candidate profile links
+   - Test bulk actions
+
+3. Job Postings:
+   - Verify create/edit flow
+   - Test preview functionality
+   - Check publishing workflow
+   - Validate job templates
+
+## 9. Partners Section Tests
+
+1. Dashboard:
+   - Test apprenticeship listings
+   - Verify mentorship matches
+   - Check analytics integration
+   - Validate partner profiles
+
+2. Integration Points:
+   - Test employer connections
+   - Verify candidate referrals
+   - Check program enrollment
+   - Validate partner communications
