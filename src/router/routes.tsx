@@ -25,7 +25,7 @@ import SuccessStories from "../pages/success-stories/SuccessStories";
 import Resources from "../pages/resources/Resources";
 import Apprenticeships from "../pages/partners/Apprenticeships";
 import Mentorship from "../pages/partners/Mentorship";
-import Analytics from "../pages/partners/Analytics";
+import PartnerAnalytics from "../pages/partners/Analytics";
 
 interface ProtectedRouteProps {
   allowedRoles?: UserRole[];
@@ -138,7 +138,7 @@ export const routes = [
       },
       {
         path: "/partners/analytics",
-        element: <Analytics />,
+        element: <PartnerAnalytics />,
       },
     ],
   },
