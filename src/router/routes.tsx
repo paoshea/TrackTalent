@@ -174,7 +174,7 @@ export const routes = [
         element: <React.Suspense fallback={<div>Loading...</div>}>
           <Analytics />
         </React.Suspense>,
-      }
+      },
     ],
   },
   {
@@ -187,16 +187,16 @@ export const routes = [
       },
       {
         path: "applications",
-        element: <Applications />
+        element: <Applications />,
       },
       {
         path: "messages",
-        element: <Messages />
+        element: <Messages />,
       },
       {
         path: "profile",
-        element: <Profile />
-      }
+        element: <Profile />,
+      },
     ],
   },
   {
