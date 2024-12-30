@@ -3,7 +3,7 @@ import { Calendar } from "lucide-react";
 import { ApplicationsChart } from "./ApplicationsChart";
 import { ResponseRateChart } from "./ResponseRateChart";
 import { MetricsTimeline } from "./MetricsTimeline";
-import QuickStats from "../dashboard/QuickStats";
+import { QuickStats } from "../dashboard/QuickStats";
 import { useAnalytics } from "../../hooks/useAnalytics";
 import { LoadingState } from "../shared/LoadingState";
 import { ErrorMessage } from "../shared/ErrorMessage";

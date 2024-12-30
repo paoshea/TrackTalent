@@ -38,7 +38,7 @@ const stats = [
   },
 ];
 
-export default function QuickStats({ metrics, isLoading = false }: QuickStatsProps) {
+export function QuickStats({ metrics, isLoading = false }: QuickStatsProps) {
   if (isLoading) {
     return <div className="animate-pulse">Loading stats...</div>;
   }
