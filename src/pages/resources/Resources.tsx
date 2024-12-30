@@ -4,8 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { Logo } from '../../components/branding/Logo';
 import { BookOpen, PlayCircle, Award, ExternalLink } from 'lucide-react';
 
-const navigate = useNavigate();
-
 interface Resource {
   id: string;
   title: string;
@@ -16,6 +14,7 @@ interface Resource {
 }
 
 export default function Resources() {
+  const navigate = useNavigate();
   const resources: Resource[] = [
     {
       id: '1',

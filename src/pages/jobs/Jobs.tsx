@@ -6,8 +6,6 @@ import { JobList } from "../../components/jobs/JobList";
 import { JobSearch } from "../../components/jobs/JobSearch";
 import { JobSearchFilters } from "../../components/jobs/JobSearchFilters";
 
-const navigate = useNavigate();
-
 const mockJobs = [
   {
     id: "1",
@@ -58,6 +56,7 @@ const mockJobs = [
 ];
 
 export default function Jobs() {
+  const navigate = useNavigate();
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative">
       <button
