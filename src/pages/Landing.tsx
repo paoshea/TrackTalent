@@ -147,7 +147,7 @@ export function Landing() {
 
           <div className="mt-12">
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              <Link to="/employer/job-postings" className="pt-6 block transition-all duration-200">
+              <Link to="/employer" className="pt-6 block transition-all duration-200">
                 <div className="flow-root bg-white rounded-lg px-6 pb-8 hover:shadow-lg transition-shadow duration-200">
                   <div className="-mt-6">
                     <div>
@@ -166,7 +166,7 @@ export function Landing() {
                 </div>
               </Link>
 
-              <Link to="/employer/candidate-management" className="pt-6 block transition-all duration-200">
+              <Link to="/employer" className="pt-6 block transition-all duration-200">
                 <div className="flow-root bg-white rounded-lg px-6 pb-8 hover:shadow-lg transition-shadow duration-200">
                   <div className="-mt-6">
                     <div>
@@ -185,7 +185,7 @@ export function Landing() {
                 </div>
               </Link>
 
-              <Link to="/employer/analytics" className="pt-6 block transition-all duration-200">
+              <Link to="/employer" className="pt-6 block transition-all duration-200">
                 <div className="flow-root bg-white rounded-lg px-6 pb-8 hover:shadow-lg transition-shadow duration-200">
                   <div className="-mt-6">
                     <div>
