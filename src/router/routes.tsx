@@ -12,6 +12,7 @@ import Profile from "../pages/employer/Profile";       // Assumed to exist
 
 import AdminDashboard from "../pages/admin/Dashboard";
 import CustomerDashboard from "../pages/customer/Dashboard";
+import EmployerDashboard from "../pages/employer/Dashboard";
 import CandidateDashboard from "../pages/candidate/Dashboard";
 import { Landing } from "../pages/Landing";
 import Login from "../pages/auth/Login";
@@ -138,11 +139,11 @@ export const routes = [
   },
   {
     path: "/employer",
-    element: <Outlet />,
+    element: <ProtectedRoute allowedRoles={["employer"]} />,
     children: [
       {
         path: "",
-        element: <CustomerDashboard />,
+        element: <EmployerDashboard />,
       },
       {
         path: "job-postings",
