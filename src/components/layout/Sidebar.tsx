@@ -135,7 +135,14 @@ export function Sidebar({ className = "" }: SidebarProps) {
               </p>
             </div>
             <button
-              onClick={() => signOut()}
+              onClick={async () => {
+                try {
+                  await signOut();
+                  window.location.href = '/auth/login';
+                } catch (error) {
+                  console.error('Error signing out:', error);
+                }
+              }}
               className="ml-auto flex items-center justify-center h-8 w-8 rounded-full hover:bg-gray-100"
             >
               <LogOut className="h-5 w-5 text-gray-400" />
