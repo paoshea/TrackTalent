@@ -1,23 +1,33 @@
 
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
+import { Alert } from "../../components/shared/Alert";
 import { Button } from "../../components/shared/Button";
 import { Input } from "../../components/shared/Input";
-import { Alert } from "../../components/shared/Alert";
+import { Select } from "../../components/shared/Select";
 import { Logo } from "../../components/branding/Logo";
-import { ArrowLeft } from "lucide-react";
+import type { SignUpData } from "../../types/auth";
 
-export default function Register() {
+const roleOptions = [
+  { value: "candidate", label: "Job Seeker" },
+  { value: "employer", label: "Employer" },
+];
+
+export function Register() {
   const navigate = useNavigate();
   const { signUp } = useAuth();
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<SignUpData>({
     email: "",
     password: "",
-    userType: "jobseeker"
+    firstName: "",
+    lastName: "",
+    role: "candidate",
+    companyName: "",
   });
-  const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -26,13 +36,9 @@ export default function Register() {
     setIsLoading(true);
 
     try {
-      const response = await signUp(formData);
-      if (response?.user) {
-        setSuccess(true);
-        navigate("/auth/verify-email", {
-          state: { email: formData.email }
-        });
-      }
+      await signUp(formData);
+      setSuccess(true);
+      navigate("/auth/verify-email", { state: { email: formData.email } });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to sign up");
     } finally {
@@ -64,6 +70,20 @@ export default function Register() {
             
             <form className="space-y-6" onSubmit={handleSubmit}>
               <Input
+                label="First Name"
+                value={formData.firstName}
+                onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                required
+              />
+
+              <Input
+                label="Last Name"
+                value={formData.lastName}
+                onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                required
+              />
+
+              <Input
                 label="Email address"
                 type="email"
                 value={formData.email}
@@ -78,6 +98,23 @@ export default function Register() {
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 required
               />
+
+              <Select
+                label="I am a..."
+                options={roleOptions}
+                value={formData.role}
+                onChange={(value) => setFormData({ ...formData, role: value as "candidate" | "employer" })}
+                required
+              />
+
+              {formData.role === "employer" && (
+                <Input
+                  label="Company Name"
+                  value={formData.companyName}
+                  onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
+                  required
+                />
+              )}
 
               <Button
                 type="submit"
@@ -104,3 +141,5 @@ export default function Register() {
     </div>
   );
 }
+
+export default Register;
