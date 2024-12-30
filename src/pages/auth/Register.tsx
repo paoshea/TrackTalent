@@ -37,7 +37,15 @@ export default function Register() {
     setSuccess(false);
 
     try {
-      const response = await signUp(formData);
+      const response = await signUp({
+        email: formData.email.trim(),
+        password: formData.password,
+        firstName: formData.firstName.trim(),
+        lastName: formData.lastName.trim(),
+        role: formData.role,
+        companyName: formData.role === 'employer' ? formData.companyName.trim() : undefined
+      });
+
       setSuccess(true);
       localStorage.setItem('userRole', formData.role);
       
@@ -46,13 +54,16 @@ export default function Register() {
           state: { 
             email: formData.email,
             role: formData.role
-          }
+          },
+          replace: true
         });
       } else {
-        navigate(formData.role === 'employer' ? '/employer/dashboard' : '/candidate/dashboard');
+        const redirectPath = formData.role === 'employer' ? '/employer/dashboard' : '/candidate/dashboard';
+        navigate(redirectPath, { replace: true });
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to sign up");
+      console.error('Registration error:', err);
+      setError(err instanceof Error ? err.message : "Failed to create account. Please try again.");
     } finally {
       setIsLoading(false);
     }

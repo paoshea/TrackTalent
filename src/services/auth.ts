@@ -24,17 +24,24 @@ export async function signUp(data: SignUpData) {
       },
     });
 
-    if (error) throw error;
-    if (!authData.user) throw new Error('Signup failed');
-    
+    if (error) {
+      console.error('SignUp error:', error);
+      throw new Error(error.message);
+    }
+
+    if (!authData?.user) {
+      throw new Error('Registration failed. Please try again.');
+    }
+
+    const { user, session } = authData;
     return {
-      user: authData.user,
-      session: authData.session,
-      confirmEmail: !authData.session
+      user,
+      session,
+      confirmEmail: !session
     };
   } catch (error) {
     console.error('SignUp error:', error);
-    throw error;
+    throw error instanceof Error ? error : new Error('An unexpected error occurred');
   }
 }
 
