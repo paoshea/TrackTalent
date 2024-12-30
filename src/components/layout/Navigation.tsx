@@ -32,7 +32,7 @@ export function Navigation({ items }: NavigationProps) {
     }
   };
 
-  const baseRoute = `/candidate`;
+  const baseRoute = user.role === 'employer' ? '/employer' : '/candidate';
   const filteredItems = items.filter(
     (item) => !item.roles || item.roles.includes(user.role as UserRole)
   ).map(item => ({

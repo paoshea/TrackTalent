@@ -158,13 +158,13 @@ export const routes = [
         element: <Profile />,
       },
       {
-        path: "job-postings",
+        path: "jobs",
         element: <React.Suspense fallback={<div>Loading...</div>}>
           <JobPostings />
         </React.Suspense>,
       },
       {
-        path: "candidate-management",
+        path: "candidates",
         element: <React.Suspense fallback={<div>Loading...</div>}>
           <CandidateManagement />
         </React.Suspense>,
