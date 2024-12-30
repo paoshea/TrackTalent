@@ -19,7 +19,7 @@ export default function Analytics() {
           { icon: Users, label: 'Active Candidates', value: '0' },
           { icon: Clock, label: 'Avg. Time to Hire', value: '0 days' },
         ].map((stat) => (
-          <div key={stat.label} className="bg-white overflow-hidden shadow rounded-lg">
+          <div key={stat.label} className="bg-white overflow-hidden shadow rounded-lg hover:shadow-lg transition-shadow duration-200">
             <div className="p-5">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
