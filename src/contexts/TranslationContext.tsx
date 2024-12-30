@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useCallback } from 'react';
 
 type Language = 'en' | 'es';
 
@@ -45,9 +45,9 @@ const TranslationContext = createContext<TranslationContextType | undefined>(und
 export function TranslationProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguage] = useState<Language>('en');
 
-  const translate = (key: string) => {
+  const translate = useCallback((key: string): string => {
     return translations[language][key] || key;
-  };
+  }, [language]);
 
   return (
     <TranslationContext.Provider value={{ language, setLanguage, translate }}>

@@ -1,4 +1,5 @@
 
+import React from 'react';
 import { Button } from './Button';
 import { useTranslation } from '../../contexts/TranslationContext';
 
@@ -14,9 +15,9 @@ export function LanguageToggle() {
       variant="ghost"
       size="sm"
       onClick={toggleLanguage}
-      className="flex items-center gap-2 text-sm"
+      className="flex items-center gap-2 text-sm font-medium"
     >
-      {language.toUpperCase()}
+      {language === 'en' ? 'ES' : 'EN'}
     </Button>
   );
 }
