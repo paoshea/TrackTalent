@@ -17,13 +17,13 @@ export function Landing() {
               onLanguageChange={(lang) => console.log('Language changed to:', lang)} 
             />
             <Link
-              to="/auth/signin"
+              to="/auth/login"
               className="text-base font-medium text-gray-500 hover:text-gray-900"
             >
               Sign in
             </Link>
             <Link
-              to="/auth/signup"
+              to="/auth/register"
               className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700"
             >
               Get started
