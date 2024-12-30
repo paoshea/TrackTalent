@@ -50,11 +50,13 @@ export function Register() {
     setIsLoading(true);
 
     try {
-      await signUp(formData);
-      setSuccess(true);
-      setTimeout(() => {
-        navigate("/onboarding");
-      }, 1500);
+      const response = await signUp(formData);
+      if (response.user) {
+        setSuccess(true);
+        navigate("/auth/verify-email", { 
+          state: { email: formData.email }
+        });
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to sign up");
     } finally {

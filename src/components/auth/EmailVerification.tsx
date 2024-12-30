@@ -8,7 +8,8 @@ interface Props {
 
 export function EmailVerification({ email, onResend, isResending }: Props) {
   return (
-    <div className="bg-white p-6 rounded-lg shadow-sm">
+    <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="bg-white p-6 rounded-lg shadow-sm max-w-md mx-auto">
       <div className="flex items-center justify-center w-12 h-12 mx-auto bg-indigo-100 rounded-full">
         <MailCheck className="w-6 h-6 text-indigo-600" />
       </div>

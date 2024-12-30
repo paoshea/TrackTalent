@@ -26,6 +26,11 @@ export async function signUp(data: SignUpData) {
   if (error) throw error;
   if (!authData.user) throw new Error('Signup failed');
   
+  // Store the session if available
+  if (authData.session) {
+    await supabase.auth.setSession(authData.session);
+  }
+  
   return authData;
 }
 
