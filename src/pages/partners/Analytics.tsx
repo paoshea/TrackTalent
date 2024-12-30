@@ -1,5 +1,5 @@
 import React from 'react';
-import { BarChart, Users, Award } from 'lucide-react';
+import { BarChart, Users, Award, ArrowLeft } from 'lucide-react';
 
 export default function Analytics() {
   const metrics = [
