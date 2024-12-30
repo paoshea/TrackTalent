@@ -63,7 +63,9 @@ export async function signUp(data: SignUpData) {
       await new Promise(resolve => setTimeout(resolve, 1000 * attempts));
     }
   }
-  throw new Error('Registration failed after multiple attempts. Please try again later.');
+  const error = new Error('Registration failed after multiple attempts. Please try again later.');
+  console.error('Final signup error:', error);
+  throw error;
 }
 
 export async function signOut() {
