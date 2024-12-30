@@ -1,5 +1,6 @@
+
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { Button } from "../../components/shared/Button";
 import { Input } from "../../components/shared/Input";
@@ -8,6 +9,7 @@ import { Logo } from "../../components/branding/Logo";
 
 export function SignIn() {
   const { signIn } = useAuth();
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -19,7 +21,10 @@ export function SignIn() {
     setIsLoading(true);
 
     try {
-      await signIn(email, password);
+      const response = await signIn(email, password);
+      const userRole = response?.user?.user_metadata?.role || 'candidate';
+      const dashboardPath = `/${userRole}/dashboard`;
+      navigate(dashboardPath, { replace: true });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to sign in");
     } finally {
@@ -36,59 +41,59 @@ export function SignIn() {
       </nav>
       <div className="flex-1 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Sign in to your account
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Or{" "}
-            <Link
-              to="/register"
-              className="font-medium text-blue-600 hover:text-blue-500"
-            >
-              create a new account
-            </Link>
-          </p>
-        </div>
-
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          {error && <Alert type="error" message={error} />}
-
-          <div className="rounded-md shadow-sm -space-y-px">
-            <Input
-              label="Email address"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              autoComplete="email"
-            />
-            <Input
-              label="Password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              autoComplete="current-password"
-            />
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div className="text-sm">
+          <div>
+            <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+              Sign in to your account
+            </h2>
+            <p className="mt-2 text-center text-sm text-gray-600">
+              Or{" "}
               <Link
-                to="/reset-password"
+                to="/auth/register"
                 className="font-medium text-blue-600 hover:text-blue-500"
               >
-                Forgot your password?
+                create a new account
               </Link>
-            </div>
+            </p>
           </div>
 
-          <Button type="submit" className="w-full" isLoading={isLoading}>
-            Sign in
-          </Button>
-        </form>
-      </div>
+          <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+            {error && <Alert type="error" message={error} />}
+
+            <div className="rounded-md shadow-sm -space-y-px">
+              <Input
+                label="Email address"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                autoComplete="email"
+              />
+              <Input
+                label="Password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                autoComplete="current-password"
+              />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div className="text-sm">
+                <Link
+                  to="/auth/reset-password"
+                  className="font-medium text-blue-600 hover:text-blue-500"
+                >
+                  Forgot your password?
+                </Link>
+              </div>
+            </div>
+
+            <Button type="submit" className="w-full" isLoading={isLoading}>
+              Sign in
+            </Button>
+          </form>
+        </div>
       </div>
     </div>
   );

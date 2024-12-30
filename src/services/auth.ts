@@ -7,7 +7,14 @@ export async function signIn({ email, password }: AuthCredentials) {
     password,
   });
 
-  if (error) throw error;
+  if (error) {
+    throw new Error(error.message);
+  }
+  
+  if (!data?.user) {
+    throw new Error('Sign in failed. Please try again.');
+  }
+
   return data;
 }
 
