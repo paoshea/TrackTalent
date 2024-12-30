@@ -34,8 +34,9 @@ export default function Mentorship() {
         <img src="/logo.svg" alt="Logo" className="h-12 w-12" />
         <button 
           onClick={() => window.history.back()} 
-          className="ml-4 text-gray-600 hover:text-gray-900"
+          className="ml-4 flex items-center gap-2 text-gray-600 hover:text-gray-900"
         >
+          <ArrowLeft className="h-4 w-4" />
           Back to Home
         </button>
       </div>
