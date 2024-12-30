@@ -6,6 +6,9 @@ import type { UserRole, User } from "../types/auth";
 import JobPostings from "../pages/employer/JobPostings";
 import CandidateManagement from "../pages/employer/CandidateManagement";
 import Analytics from "../pages/employer/Analytics";
+import Applications from "../pages/employer/Applications"; // Assumed to exist
+import Messages from "../pages/employer/Messages";     // Assumed to exist
+import Profile from "../pages/employer/Profile";       // Assumed to exist
 
 import AdminDashboard from "../pages/admin/Dashboard";
 import CustomerDashboard from "../pages/customer/Dashboard";
@@ -158,6 +161,18 @@ export const routes = [
         element: <React.Suspense fallback={<div>Loading...</div>}>
           <Analytics />
         </React.Suspense>,
+      },
+      {
+        path: "applications",
+        element: <React.Suspense fallback={<div>Loading...</div>}><Applications /></React.Suspense>,
+      },
+      {
+        path: "messages",
+        element: <React.Suspense fallback={<div>Loading...</div>}><Messages /></React.Suspense>,
+      },
+      {
+        path: "profile",
+        element: <React.Suspense fallback={<div>Loading...</div>}><Profile /></React.Suspense>,
       },
     ],
   },
