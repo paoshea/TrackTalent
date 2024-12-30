@@ -38,7 +38,15 @@ export function Register() {
     try {
       await signUp(formData);
       setSuccess(true);
-      navigate("/auth/verify-email", { state: { email: formData.email } });
+      // Show success message for 2 seconds before redirecting
+      setTimeout(() => {
+        navigate("/auth/verify-email", { 
+          state: { 
+            email: formData.email,
+            fromRegistration: true 
+          } 
+        });
+      }, 2000);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to sign up");
     } finally {
