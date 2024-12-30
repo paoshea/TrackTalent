@@ -5,10 +5,10 @@ import { useActivityFeed } from "../../hooks/useActivityFeed";
 import { Users, Briefcase, CheckCircle, TrendingUp } from "lucide-react";
 
 const navigationItems = [
-  { name: "Overview", href: "/dashboard", icon: TrendingUp },
-  { name: "Applications", href: "/applications", icon: CheckCircle },
-  { name: "Jobs", href: "/jobs", icon: Briefcase },
-  { name: "Network", href: "/network", icon: Users },
+  { name: "Overview", href: "/candidate", icon: TrendingUp },
+  { name: "Applications", href: "/candidate/applications", icon: CheckCircle },
+  { name: "Jobs", href: "/candidate/jobs", icon: Briefcase },
+  { name: "Messages", href: "/candidate/messages", icon: Users },
 ];
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
