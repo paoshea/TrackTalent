@@ -13,36 +13,52 @@ export async function signIn({ email, password }: AuthCredentials) {
 
 export async function signUp(data: SignUpData) {
   const { email, password, ...metadata } = data;
+  const maxRetries = 3;
+  let attempts = 0;
 
-  try {
-    const { data: authData, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: metadata,
-        emailRedirectTo: `${window.location.origin}/auth/verify-email`,
-      },
-    });
+  while (attempts < maxRetries) {
+    try {
+      const { data: authData, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: metadata,
+          emailRedirectTo: `${window.location.origin}/auth/verify-email`,
+        },
+      });
 
-    if (error) {
-      console.error('SignUp error:', error);
-      throw new Error(error.message);
+      if (error) {
+        if (error.status === 0 || error.message.includes('network')) {
+          attempts++;
+          if (attempts === maxRetries) {
+            throw new Error('Network error. Please check your connection and try again.');
+          }
+          await new Promise(resolve => setTimeout(resolve, 1000 * attempts));
+          continue;
+        }
+        throw new Error(error.message);
+      }
+
+      if (!authData?.user) {
+        throw new Error('Registration failed. Please try again.');
+      }
+
+      const { user, session } = authData;
+      return {
+        user,
+        session,
+        confirmEmail: !session
+      };
+    } catch (error) {
+      if (attempts === maxRetries - 1) {
+        console.error('SignUp error:', error);
+        throw error instanceof Error ? error : new Error('Registration failed. Please try again later.');
+      }
+      attempts++;
+      await new Promise(resolve => setTimeout(resolve, 1000 * attempts));
     }
-
-    if (!authData?.user) {
-      throw new Error('Registration failed. Please try again.');
-    }
-
-    const { user, session } = authData;
-    return {
-      user,
-      session,
-      confirmEmail: !session
-    };
-  } catch (error) {
-    console.error('SignUp error:', error);
-    throw error instanceof Error ? error : new Error('An unexpected error occurred');
   }
+  throw new Error('Registration failed after multiple attempts. Please try again later.');
 }
 
 export async function signOut() {
