@@ -1,119 +1,103 @@
 
-import React, { useState } from 'react';
-import { Users, Filter, Search, MapPin, Briefcase, Star, ChevronDown } from 'lucide-react';
-import { Link } from 'react-router-dom';
-
-const MOCK_CANDIDATES = [
-  {
-    id: 1,
-    name: 'Sarah Wilson',
-    role: 'Senior Frontend Developer',
-    location: 'San Francisco, CA',
-    experience: '8 years',
-    status: 'Interview',
-    matchScore: 92,
-  },
-  {
-    id: 2,
-    name: 'Michael Chen',
-    role: 'Full Stack Engineer',
-    location: 'New York, NY',
-    experience: '5 years',
-    status: 'Screening',
-    matchScore: 88,
-  },
-  {
-    id: 3,
-    name: 'Emily Rodriguez',
-    role: 'UI/UX Designer',
-    location: 'Austin, TX',
-    experience: '6 years',
-    status: 'Offer',
-    matchScore: 95,
-  },
-];
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Logo } from '../../components/branding/Logo';
+import { User, Calendar, Mail, Phone } from 'lucide-react';
 
 export default function CandidateManagement() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterOpen, setFilterOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const candidates = [
+    {
+      id: 1,
+      name: 'Sarah Wilson',
+      role: 'Frontend Developer',
+      status: 'Interview',
+      experience: '5 years',
+      email: 'sarah.w@example.com',
+      phone: '+1 234-567-8901'
+    },
+    {
+      id: 2,
+      name: 'Michael Chen',
+      role: 'Product Manager',
+      status: 'Screening',
+      experience: '8 years',
+      email: 'michael.c@example.com',
+      phone: '+1 234-567-8902'
+    },
+    {
+      id: 3,
+      name: 'Emma Davis',
+      role: 'UX Designer',
+      status: 'Offer',
+      experience: '4 years',
+      email: 'emma.d@example.com',
+      phone: '+1 234-567-8903'
+    }
+  ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="mb-4">
-        <Link to="/" className="text-indigo-600 hover:text-indigo-500">
-          ← Back to Home
-        </Link>
-      </div>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative">
+      <button
+        onClick={() => navigate('/')}
+        className="absolute top-4 left-4 inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+          <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
+        </svg>
+        Back
+      </button>
       <div className="text-center mb-12">
+        <Logo className="h-48 w-auto mx-auto mb-6" />
         <h1 className="text-3xl font-bold text-gray-900 mb-4">Candidate Management</h1>
-        <p className="text-lg text-gray-600">Track and manage candidates throughout the hiring process</p>
       </div>
 
-      <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-        <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
-          <div className="flex justify-between items-center">
-            <div className="relative flex-1 max-w-lg">
-              <Search className="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search candidates..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-              />
-            </div>
-            <button 
-              onClick={() => setFilterOpen(!filterOpen)}
-              className="ml-4 inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 hover:shadow-lg transition-shadow duration-200"
-            >
-              <Filter className="h-5 w-5 mr-2" />
-              Filters
-              <ChevronDown className={`ml-2 h-4 w-4 transform transition-transform ${filterOpen ? 'rotate-180' : ''}`} />
-            </button>
-          </div>
-        </div>
-        
-        <div className="px-4 py-5 sm:p-6">
-          {MOCK_CANDIDATES.length > 0 ? (
-            <div className="space-y-4">
-              {MOCK_CANDIDATES.map((candidate) => (
-                <div key={candidate.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow duration-200">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="text-lg font-medium text-gray-900">{candidate.name}</h3>
-                      <div className="mt-1 flex items-center text-sm text-gray-500">
-                        <Briefcase className="h-4 w-4 mr-1" />
-                        {candidate.role}
-                      </div>
-                      <div className="mt-1 flex items-center text-sm text-gray-500">
-                        <MapPin className="h-4 w-4 mr-1" />
-                        {candidate.location}
-                      </div>
+      <div className="bg-white shadow overflow-hidden sm:rounded-md">
+        <ul className="divide-y divide-gray-200">
+          {candidates.map((candidate) => (
+            <li key={candidate.id}>
+              <div className="px-4 py-4 sm:px-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0">
+                      <User className="h-12 w-12 text-gray-400" />
                     </div>
-                    <div className="text-right">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                        ${candidate.status === 'Interview' ? 'bg-blue-100 text-blue-800' :
-                          candidate.status === 'Screening' ? 'bg-yellow-100 text-yellow-800' :
-                          'bg-green-100 text-green-800'}`}>
-                        {candidate.status}
-                      </span>
-                      <div className="mt-2 flex items-center justify-end">
-                        <Star className="h-4 w-4 text-yellow-400 mr-1" />
-                        <span className="text-sm text-gray-600">{candidate.matchScore}% match</span>
-                      </div>
+                    <div className="ml-4">
+                      <h3 className="text-lg font-medium text-gray-900">{candidate.name}</h3>
+                      <p className="text-sm text-gray-500">{candidate.role}</p>
                     </div>
                   </div>
+                  <div className="flex items-center">
+                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                      candidate.status === 'Interview' ? 'bg-yellow-100 text-yellow-800' :
+                      candidate.status === 'Screening' ? 'bg-blue-100 text-blue-800' :
+                      'bg-green-100 text-green-800'
+                    }`}>
+                      {candidate.status}
+                    </span>
+                  </div>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center text-gray-500 py-12">
-              <Users className="h-12 w-12 mx-auto text-gray-400 mb-4" />
-              <p className="text-lg">No candidates found</p>
-              <p className="mt-2">Try adjusting your search filters</p>
-            </div>
-          )}
-        </div>
+                <div className="mt-4 sm:flex sm:justify-between">
+                  <div className="sm:flex">
+                    <p className="flex items-center text-sm text-gray-500">
+                      <Calendar className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" />
+                      {candidate.experience} experience
+                    </p>
+                    <p className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-6">
+                      <Mail className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" />
+                      {candidate.email}
+                    </p>
+                    <p className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-6">
+                      <Phone className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" />
+                      {candidate.phone}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );
