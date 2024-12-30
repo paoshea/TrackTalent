@@ -1,38 +1,38 @@
 # Deploying TalentTrack on Replit
 
-## Required Files
+[Previous content remains unchanged up to vite.config.ts section...]
 
-### 1. .replit
-```bash
-run = "npm run dev"
-entrypoint = "src/main.tsx"
+### 4. vite.config.ts Configuration
+```typescript
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
-[nix]
-channel = "stable-22_11"
+export default defineConfig({
+  plugins: [react()],
+  server: {
+    host: '0.0.0.0',
+    port: 3000,
+    hmr: {
+      clientPort: 443
+    }
+  },
+  build: {
+    outDir: 'dist',
+    sourcemap: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-ui': ['@headlessui/react', '@heroicons/react']
+        }
+      }
+    }
+  }
+});
+```
 
-[env]
-PATH = "/home/runner/$REPL_SLUG/.config/npm/node_global/bin:/home/runner/$REPL_SLUG/node_modules/.bin"
-npm_config_prefix = "/home/runner/$REPL_SLUG/.config/npm/node_global"
-
-[packager]
-language = "nodejs"
-
-[packager.features]
-packageSearch = true
-guessImports = true
-enabledForHosting = true
-
-[languages.javascript]
-pattern = "**/{*.js,*.jsx,*.ts,*.tsx}"
-syntax = "javascript"
-
-[languages.javascript.languageServer]
-start = [ "typescript-language-server", "--stdio" ]
-
-[deployment]
-run = ["sh", "-c", "npm run dev"]
-deploymentTarget = "cloudrun"
-ignorePorts = false
+### 5. Required Dependencies
+Add these to your package.json:
 ```
 
 ### 2. replit.nix
@@ -66,7 +66,7 @@ export default defineConfig({
     hmr: {
       clientPort: 443
     }
-  }
+  },  }
 });
 ```
 
@@ -216,16 +216,30 @@ const Dashboard = React.lazy(() => import('./pages/Dashboard'));
 // Configure Vite for asset optimization
 export default defineConfig({
   build: {
+    outDir: 'dist',
+    sourcemap: true,
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom'],
-          utils: ['./src/utils']
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-ui': ['@headlessui/react', '@heroicons/react']
         }
       }
     }
   }
 });
+```
+
+### 5. Additional Dependencies
+Add these to your package.json:
+```json
+{
+  "dependencies": {
+    "@headlessui/react": "latest",
+    "@heroicons/react": "latest",
+    "react-router-dom": "latest"
+  }
+}
 ```
 
 ### Security Considerations
