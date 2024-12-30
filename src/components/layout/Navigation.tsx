@@ -70,11 +70,17 @@ export function Navigation({ items }: NavigationProps) {
           </Link>
         );
       })}
-      {user.role === 'candidate' && (
-        <button onClick={handleSignOut}>
-          Sign Out
-        </button>
-      )}
+      <Link
+        to="/auth/signout"
+        onClick={handleSignOut}
+        className="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+      >
+        <LogOut
+          aria-hidden="true"
+          className="mr-3 flex-shrink-0 h-6 w-6 text-gray-400 group-hover:text-gray-500"
+        />
+        Sign Out
+      </Link>
     </nav>
   );
 }
