@@ -68,7 +68,7 @@ export function Landing() {
               Everything you need to manage talent
             </p>
           </div>
-          
+
           <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             <Link to="/jobs" className="group hover:shadow-lg transition-shadow duration-200 rounded-lg">
               <div className="pt-6">
@@ -127,18 +127,16 @@ export function Landing() {
 
           <div className="mt-20">
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              <div className="pt-6">
-                <div className="flow-root bg-white rounded-lg px-6 pb-8">
+              <Link to="/employer/job-postings" className="pt-6 block transition-all duration-200">
+                <div className="flow-root bg-white rounded-lg px-6 pb-8 hover:shadow-lg transition-shadow duration-200">
                   <div className="-mt-6">
                     <div>
-                      <span className="inline-flex items-center justify-center p-3 bg-indigo-500 rounded-md shadow-lg">
+                      <span className="inline-flex items-center justify-center p-3 bg-indigo-500 rounded-md shadow-lg group-hover:bg-indigo-600 transition-colors duration-200">
                         <Briefcase className="h-6 w-6 text-white" />
                       </span>
                     </div>
-                    <h3 className="mt-8 text-lg font-medium text-gray-900 tracking-tight">
-                      <Link to="/employer/job-postings" className="hover:text-indigo-600">
-                        Job Postings
-                      </Link>
+                    <h3 className="mt-8 text-lg font-medium text-gray-900 tracking-tight hover:text-indigo-600 transition-colors duration-200">
+                      Job Postings
                     </h3>
                     <p className="mt-5 text-base text-gray-500">
                       Create and manage job postings with ease. Reach qualified
@@ -146,17 +144,17 @@ export function Landing() {
                     </p>
                   </div>
                 </div>
-              </div>
+              </Link>
 
-              <div className="pt-6">
-                <div className="flow-root bg-white rounded-lg px-6 pb-8">
+              <Link to="/employer/candidate-management" className="pt-6 block transition-all duration-200">
+                <div className="flow-root bg-white rounded-lg px-6 pb-8 hover:shadow-lg transition-shadow duration-200">
                   <div className="-mt-6">
                     <div>
-                      <span className="inline-flex items-center justify-center p-3 bg-indigo-500 rounded-md shadow-lg">
+                      <span className="inline-flex items-center justify-center p-3 bg-indigo-500 rounded-md shadow-lg group-hover:bg-indigo-600 transition-colors duration-200">
                         <Users className="h-6 w-6 text-white" />
                       </span>
                     </div>
-                    <h3 className="mt-8 text-lg font-medium text-gray-900 tracking-tight">
+                    <h3 className="mt-8 text-lg font-medium text-gray-900 tracking-tight hover:text-indigo-600 transition-colors duration-200">
                       Candidate Management
                     </h3>
                     <p className="mt-5 text-base text-gray-500">
@@ -165,17 +163,17 @@ export function Landing() {
                     </p>
                   </div>
                 </div>
-              </div>
+              </Link>
 
-              <div className="pt-6">
-                <div className="flow-root bg-white rounded-lg px-6 pb-8">
+              <Link to="/employer/analytics" className="pt-6 block transition-all duration-200">
+                <div className="flow-root bg-white rounded-lg px-6 pb-8 hover:shadow-lg transition-shadow duration-200">
                   <div className="-mt-6">
                     <div>
-                      <span className="inline-flex items-center justify-center p-3 bg-indigo-500 rounded-md shadow-lg">
+                      <span className="inline-flex items-center justify-center p-3 bg-indigo-500 rounded-md shadow-lg group-hover:bg-indigo-600 transition-colors duration-200">
                         <BarChart className="h-6 w-6 text-white" />
                       </span>
                     </div>
-                    <h3 className="mt-8 text-lg font-medium text-gray-900 tracking-tight">
+                    <h3 className="mt-8 text-lg font-medium text-gray-900 tracking-tight hover:text-indigo-600 transition-colors duration-200">
                       Analytics
                     </h3>
                     <p className="mt-5 text-base text-gray-500">
@@ -184,7 +182,7 @@ export function Landing() {
                     </p>
                   </div>
                 </div>
-              </div>
+              </Link>
             </div>
           </div>
         </div>
