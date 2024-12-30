@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import type { UserRole } from "../../types/auth";
 import type { LucideIcon } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export interface NavigationItem {
   name: string;
@@ -15,7 +16,8 @@ interface NavigationProps {
 }
 
 export function Navigation({ items }: NavigationProps) {
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
 
   if (!user || !user.role) return null;
 
@@ -41,6 +43,14 @@ export function Navigation({ items }: NavigationProps) {
   // Assume translate function is available in scope.  This would need to be added elsewhere.
   const translate = (text: string) => text; // Placeholder for actual translation logic
 
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      navigate('/auth/signin', { replace: true });
+    } catch (error) {
+      console.error('Sign out failed:', error);
+    }
+  };
 
   return (
     <nav className="space-y-1">
@@ -60,6 +70,11 @@ export function Navigation({ items }: NavigationProps) {
           </Link>
         );
       })}
+      {user.role === 'candidate' && (
+        <button onClick={handleSignOut}>
+          Sign Out
+        </button>
+      )}
     </nav>
   );
 }
