@@ -1,6 +1,7 @@
 
 import { Link } from "react-router-dom";
 import { ArrowRight, Briefcase, Users, BarChart, BookOpen, TrendingUp } from "lucide-react";
+import { LanguageToggle } from "../components/shared/LanguageToggle";
 import { Logo } from "../components/branding/Logo";
 
 export function Landing() {
@@ -13,6 +14,9 @@ export function Landing() {
             <Logo className="h-48 w-auto" />
           </div>
           <div className="flex items-center space-x-4">
+            <LanguageToggle 
+              onLanguageChange={(lang) => console.log('Language changed to:', lang)} 
+            />
             <Link
               to="/auth/login"
               className="text-base font-medium text-gray-500 hover:text-gray-900"
