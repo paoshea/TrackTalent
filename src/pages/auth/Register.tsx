@@ -61,8 +61,12 @@ export default function Register() {
         navigate(redirectPath, { replace: true });
       }
     } catch (err) {
-      console.error('Registration error:', err);
-      setError(err instanceof Error ? err.message : "Failed to create account. Please try again.");
+      const errorMessage = err instanceof Error 
+        ? err.message.includes('Load failed') 
+          ? 'Network error. Please check your connection and try again.'
+          : err.message
+        : 'Failed to sign up';
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
