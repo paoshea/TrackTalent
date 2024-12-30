@@ -204,6 +204,56 @@ export function Landing() {
           </div>
         </div>
       </div>
+
+      {/* Footer Section with Contact Us */}
+      <footer className="bg-gray-50 border-t border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {/* Contact Us */}
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Contact Us</h3>
+              <div className="space-y-3">
+                <p className="text-gray-600">Have questions? We're here to help.</p>
+                <p className="text-gray-600">Email: support@talenttrack.com</p>
+                <p className="text-gray-600">Phone: (555) 123-4567</p>
+              </div>
+            </div>
+
+            {/* Quick Links */}
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Links</h3>
+              <ul className="space-y-2">
+                <li><Link to="/jobs" className="text-gray-600 hover:text-indigo-600">Browse Jobs</Link></li>
+                <li><Link to="/resources" className="text-gray-600 hover:text-indigo-600">Resources</Link></li>
+                <li><Link to="/success-stories" className="text-gray-600 hover:text-indigo-600">Success Stories</Link></li>
+              </ul>
+            </div>
+
+            {/* For Employers */}
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">For Employers</h3>
+              <ul className="space-y-2">
+                <li><Link to="/employer/job-postings" className="text-gray-600 hover:text-indigo-600">Post a Job</Link></li>
+                <li><Link to="/employer/candidate-management" className="text-gray-600 hover:text-indigo-600">Talent Search</Link></li>
+                <li><Link to="/employer/analytics" className="text-gray-600 hover:text-indigo-600">Hiring Analytics</Link></li>
+              </ul>
+            </div>
+
+            {/* Legal */}
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Legal</h3>
+              <ul className="space-y-2">
+                <li><Link to="/privacy" className="text-gray-600 hover:text-indigo-600">Privacy Policy</Link></li>
+                <li><Link to="/terms" className="text-gray-600 hover:text-indigo-600">Terms of Service</Link></li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="mt-8 pt-8 border-t border-gray-200">
+            <p className="text-center text-gray-500">&copy; {new Date().getFullYear()} TalentTrack. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
