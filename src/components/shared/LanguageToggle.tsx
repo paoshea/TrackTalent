@@ -1,22 +1,12 @@
 
-import { useState } from 'react';
 import { Button } from './Button';
+import { useTranslation } from '../../contexts/TranslationContext';
 
-interface LanguageToggleProps {
-  defaultLanguage?: string;
-  onLanguageChange?: (language: string) => void;
-}
-
-export function LanguageToggle({ 
-  defaultLanguage = 'en',
-  onLanguageChange 
-}: LanguageToggleProps) {
-  const [currentLanguage, setCurrentLanguage] = useState(defaultLanguage);
+export function LanguageToggle() {
+  const { language, setLanguage } = useTranslation();
 
   const toggleLanguage = () => {
-    const newLanguage = currentLanguage === 'en' ? 'es' : 'en';
-    setCurrentLanguage(newLanguage);
-    onLanguageChange?.(newLanguage);
+    setLanguage(language === 'en' ? 'es' : 'en');
   };
 
   return (
@@ -26,7 +16,7 @@ export function LanguageToggle({
       onClick={toggleLanguage}
       className="flex items-center gap-2 text-sm"
     >
-      {currentLanguage.toUpperCase()}
+      {language.toUpperCase()}
     </Button>
   );
 }
