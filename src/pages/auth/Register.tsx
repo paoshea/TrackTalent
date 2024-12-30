@@ -5,6 +5,8 @@ import { useAuth } from "../../hooks/useAuth";
 import { Button } from "../../components/shared/Button";
 import { Input } from "../../components/shared/Input";
 import { Alert } from "../../components/shared/Alert";
+import { Logo } from "../../components/branding/Logo";
+import { ArrowLeft } from "lucide-react";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -39,8 +41,17 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      <nav className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center">
+          <Link to="/" className="mr-4 text-gray-600 hover:text-gray-900">
+            <ArrowLeft className="h-6 w-6" />
+          </Link>
+          <Logo className="h-24 w-auto" />
+        </div>
+      </nav>
+      <div className="flex-1 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+        <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
           Create your account
         </h2>
