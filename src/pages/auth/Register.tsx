@@ -57,8 +57,11 @@ export default function Register() {
           replace: true
         });
       } else {
-        const redirectPath = formData.role === 'employer' ? '/employer/dashboard' : '/candidate/dashboard';
-        navigate(redirectPath, { replace: true });
+        // Add a slight delay to allow context updates
+        setTimeout(() => {
+          const redirectPath = formData.role === 'employer' ? '/employer/dashboard' : '/candidate/dashboard';
+          navigate(redirectPath, { replace: true });
+        }, 500);
       }
     } catch (err) {
       const errorMessage = err instanceof Error 
