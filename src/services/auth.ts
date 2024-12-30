@@ -14,23 +14,28 @@ export async function signIn({ email, password }: AuthCredentials) {
 export async function signUp(data: SignUpData) {
   const { email, password, ...metadata } = data;
 
-  const { data: authData, error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      data: metadata,
-      emailRedirectTo: `${window.location.origin}/auth/verify-email`,
-    },
-  });
+  try {
+    const { data: authData, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: metadata,
+        emailRedirectTo: `${window.location.origin}/auth/verify-email`,
+      },
+    });
 
-  if (error) throw error;
-  if (!authData.user) throw new Error('Signup failed');
-  
-  return {
-    user: authData.user,
-    session: authData.session,
-    confirmEmail: !authData.session // If no session, email confirmation is required
-  };
+    if (error) throw error;
+    if (!authData.user) throw new Error('Signup failed');
+    
+    return {
+      user: authData.user,
+      session: authData.session,
+      confirmEmail: !authData.session
+    };
+  } catch (error) {
+    console.error('SignUp error:', error);
+    throw error;
+  }
 }
 
 export async function signOut() {

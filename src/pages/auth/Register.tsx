@@ -30,32 +30,30 @@ export default function Register() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isLoading) return;
+    
     setError(null);
     setIsLoading(true);
+    setSuccess(false);
 
     try {
       const response = await signUp(formData);
       setSuccess(true);
-      
-      // Store role in localStorage for after email verification
       localStorage.setItem('userRole', formData.role);
       
       if (response.confirmEmail) {
-        setTimeout(() => {
-          navigate("/auth/verify-email", { 
-            state: { 
-              email: formData.email,
-              role: formData.role
-            }
-          });
-        }, 1000);
+        navigate("/auth/verify-email", { 
+          state: { 
+            email: formData.email,
+            role: formData.role
+          }
+        });
       } else {
-        setTimeout(() => {
-          navigate(formData.role === 'employer' ? '/employer/dashboard' : '/candidate/dashboard');
-        }, 1000);
+        navigate(formData.role === 'employer' ? '/employer/dashboard' : '/candidate/dashboard');
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to sign up");
+    } finally {
       setIsLoading(false);
     }
   };
