@@ -237,8 +237,8 @@ export function Landing() {
               <h3 className="text-lg font-semibold text-gray-900 mb-4">For Employers</h3>
               <ul className="space-y-2">
                 <li><Link to="/employer/job-postings" className="text-gray-600 hover:text-indigo-600">Post a Job</Link></li>
-                <li><Link to="/employer/dashboard" className="text-gray-600 hover:text-indigo-600">Applications</Link></li>
-                <li><Link to="/employer/analytics" className="text-gray-600 hover:text-indigo-600">Hiring Analytics</Link></li>
+                <li><Link to="/employer/candidate-management" className="text-gray-600 hover:text-indigo-600">Candidate Management</Link></li>
+                <li><Link to="/employer/analytics" className="text-gray-600 hover:text-indigo-600">Analytics</Link></li>
               </ul>
             </div>
 
