@@ -14,7 +14,7 @@ const stats = [
     trend: (m?: QuickStatsMetrics) => m?.trends?.jobs ?? 0,
     icon: Briefcase,
     color: "text-blue-600",
-    link: "/candidate/jobs" // Added link
+    link: "/candidate/jobs"
   },
   {
     name: "Applications",
@@ -22,7 +22,7 @@ const stats = [
     trend: (m?: QuickStatsMetrics) => m?.trends?.applications ?? 0,
     icon: Star,
     color: "text-yellow-600",
-    link: "/candidate/applications" // Added link
+    link: "/candidate/applications"
   },
   {
     name: "Interviews",

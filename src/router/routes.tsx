@@ -186,19 +186,19 @@ export const routes = [
         element: <CandidateDashboard />,
       },
       {
-        path: "/candidate/applications",
+        path: "applications",
         element: <Applications />,
       },
       {
-        path: "/candidate/messages",
+        path: "messages",
         element: <Messages />,
       },
       {
-        path: "/candidate/profile",
+        path: "profile",
         element: <Profile />,
       },
       {
-        path: "/candidate/jobs",
+        path: "jobs",
         element: <Jobs />,
       },
     ],
