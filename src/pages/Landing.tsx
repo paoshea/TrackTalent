@@ -215,7 +215,7 @@ export function Landing() {
 
           <div className="mt-12">
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              <Link to="/employer/job-postings" className="pt-6 block transition-all duration-200">
+              <Link to="/auth/register" className="pt-6 block transition-all duration-200">
                 <div className="flow-root bg-white rounded-lg px-6 pb-8 hover:shadow-lg transition-shadow duration-200">
                   <div className="-mt-6">
                     <div>
@@ -234,7 +234,7 @@ export function Landing() {
                 </div>
               </Link>
 
-              <Link to="/employer/candidate-management" className="pt-6 block transition-all duration-200">
+              <Link to="/auth/register" className="pt-6 block transition-all duration-200">
                 <div className="flow-root bg-white rounded-lg px-6 pb-8 hover:shadow-lg transition-shadow duration-200">
                   <div className="-mt-6">
                     <div>
@@ -253,7 +253,7 @@ export function Landing() {
                 </div>
               </Link>
 
-              <Link to="/employer/analytics" className="pt-6 block transition-all duration-200">
+              <Link to="/auth/register" className="pt-6 block transition-all duration-200">
                 <div className="flow-root bg-white rounded-lg px-6 pb-8 hover:shadow-lg transition-shadow duration-200">
                   <div className="-mt-6">
                     <div>
@@ -304,9 +304,9 @@ export function Landing() {
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-4">For Employers</h3>
               <ul className="space-y-2">
-                <li><Link to="/employer/job-postings" className="text-gray-600 hover:text-indigo-600">Post a Job</Link></li>
-                <li><Link to="/employer/candidate-management" className="text-gray-600 hover:text-indigo-600">Candidate Management</Link></li>
-                <li><Link to="/employer/analytics" className="text-gray-600 hover:text-indigo-600">Analytics</Link></li>
+                <li><Link to="/auth/register" className="text-gray-600 hover:text-indigo-600">Post a Job</Link></li>
+                <li><Link to="/auth/register" className="text-gray-600 hover:text-indigo-600">Candidate Management</Link></li>
+                <li><Link to="/auth/register" className="text-gray-600 hover:text-indigo-600">Analytics</Link></li>
               </ul>
             </div>
 
