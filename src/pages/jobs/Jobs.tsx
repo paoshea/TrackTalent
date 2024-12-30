@@ -14,7 +14,7 @@ const mockJobs = [
     company: {
       id: "1",
       name: "TechCorp",
-      logo: null
+      logo: "https://api.dicebear.com/7.x/shapes/svg?seed=TechCorp"
     },
     compensation: {
       salary: {
@@ -37,7 +37,7 @@ const mockJobs = [
     company: {
       id: "2",
       name: "DesignCo",
-      logo: null
+      logo: "https://api.dicebear.com/7.x/shapes/svg?seed=DesignCo"
     },
     compensation: {
       salary: {
