@@ -22,11 +22,19 @@ export function SignIn() {
 
     try {
       const response = await signIn(email, password);
-      const userRole = response?.user?.user_metadata?.role || 'candidate';
+      if (!response?.user) {
+        setError("Invalid email or password");
+        return;
+      }
+      const userRole = response.user.user_metadata?.role || 'candidate';
       const dashboardPath = `/${userRole}/dashboard`;
       navigate(dashboardPath, { replace: true });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to sign in");
+      if (err instanceof Error) {
+        setError(err.message.includes("Invalid") ? "Invalid email or password" : err.message);
+      } else {
+        setError("Unable to sign in. Please check your credentials and try again.");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -57,7 +65,13 @@ export function SignIn() {
           </div>
 
           <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-            {error && <Alert type="error" message={error} />}
+            {error && (
+            <Alert 
+              type="error" 
+              message={error}
+              className="mb-4 text-center font-medium"
+            />
+          )}
 
             <div className="rounded-md shadow-sm -space-y-px">
               <Input
