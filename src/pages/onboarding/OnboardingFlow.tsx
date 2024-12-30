@@ -1,3 +1,4 @@
+
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useOnboarding } from "../../hooks/useOnboarding";
@@ -7,39 +8,27 @@ import { ProfileSetup } from "./steps/ProfileSetup";
 import { PreferencesSetup } from "./steps/PreferencesSetup";
 import { TeamSetup } from "./steps/TeamSetup";
 import { CompanyInfo } from "./steps/CompanyInfo";
-import type {
-  OnboardingStepType,
-  OnboardingData,
-  OnboardingStepProps,
-} from "../../types/onboarding";
+import { ResumeUpload } from "./steps/ResumeUpload";
+import { JobPreferences } from "./steps/JobPreferences";
+import { EmailVerification } from "../../components/auth/EmailVerification";
+import type { OnboardingStepType, OnboardingData, OnboardingStepProps } from "../../types/onboarding";
 import type { User } from "../../types/auth";
 
-interface OnboardingFlowProps {
-  onComplete: (user: User) => string;
-}
-
-const STEPS: OnboardingStepType[] = [
+const CANDIDATE_STEPS: OnboardingStepType[] = [
   "role-selection",
+  "email-verification",
   "profile-setup",
-  "preferences-setup",
-  "team-setup",
-  "company-info",
+  "resume-upload",
+  "job-preferences",
 ];
 
-const StepComponents: Record<
-  OnboardingStepType,
-  React.ComponentType<OnboardingStepProps>
-> = {
-  "role-selection": RoleSelection,
-  "profile-setup": ProfileSetup,
-  "preferences-setup": PreferencesSetup,
-  "team-setup": TeamSetup,
-  "company-info": CompanyInfo,
-  profile: ProfileSetup,
-  company: CompanyInfo,
-  preferences: PreferencesSetup,
-  team: TeamSetup,
-};
+const EMPLOYER_STEPS: OnboardingStepType[] = [
+  "role-selection",
+  "email-verification",
+  "profile-setup",
+  "company-info",
+  "team-setup",
+];
 
 export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
   const navigate = useNavigate();
@@ -54,41 +43,26 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
     goToPreviousStep,
     completeOnboarding,
   } = useOnboarding({
-    steps: STEPS,
+    steps: data.role === 'employer' ? EMPLOYER_STEPS : CANDIDATE_STEPS,
     initialData: {
       currentStep: "role-selection",
       completedSteps: [],
     } as Partial<OnboardingData>,
     onComplete: async (data) => {
-      // Convert onboarding data to AuthUser format
-      const user: User = {
-        id: "", // This would come from auth context
-        email: data.profile?.email || "",
-        firstName: data.profile?.firstName || "",
-        lastName: data.profile?.lastName || "",
-        role: data.role || "candidate",
-        companyName: data.company?.name,
-        emailVerified: true,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        metadata: {
-          onboardingCompleted: true,
-          preferences: {
-            notifications: {
-              email:
-                data.preferences?.notificationMethod === "email" ||
-                data.preferences?.notificationMethod === "both",
-              push:
-                data.preferences?.notificationMethod === "in-app" ||
-                data.preferences?.notificationMethod === "both",
-            },
-          },
-        },
-      };
-      const path = onComplete(user);
-      navigate(path);
+      const dashboardPath = data.role === 'employer' ? '/employer' : '/candidate';
+      navigate(dashboardPath);
     },
   });
+
+  const StepComponents = {
+    "role-selection": RoleSelection,
+    "email-verification": EmailVerification,
+    "profile-setup": ProfileSetup,
+    "resume-upload": ResumeUpload,
+    "job-preferences": JobPreferences,
+    "company-info": CompanyInfo,
+    "team-setup": TeamSetup,
+  };
 
   useEffect(() => {
     if (!data.role && currentStep !== "role-selection") {
@@ -105,9 +79,8 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
         <OnboardingProgress
           currentStep={currentStep}
           completedSteps={completedSteps}
-          totalSteps={STEPS.length}
+          totalSteps={data.role === 'employer' ? EMPLOYER_STEPS.length : CANDIDATE_STEPS.length}
         />
-
         <div className="mt-10">
           <CurrentStepComponent
             data={data}
