@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -35,11 +36,11 @@ function App() {
 
   return (
     <AuthProvider>
-      <FormProvider onSubmit={async () => {}}>
-        <TranslationProvider>
+      <TranslationProvider>
+        <FormProvider onSubmit={async () => {}}>
           <RouterProvider router={router} fallbackElement={<LoadingScreen />} />
-        </TranslationProvider>
-      </FormProvider>
+        </FormProvider>
+      </TranslationProvider>
     </AuthProvider>
   );
 }
