@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Logo } from '../../components/branding/Logo';
 import { BookOpen, PlayCircle, Award, ExternalLink } from 'lucide-react';
-import MainLayout from './MainLayout'; // Assuming MainLayout component exists
+import { MainLayout } from '../../components/layout/MainLayout';
 
 interface Resource {
   id: string;
