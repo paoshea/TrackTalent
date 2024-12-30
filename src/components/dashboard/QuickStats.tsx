@@ -14,6 +14,7 @@ const stats = [
     trend: (m?: QuickStatsMetrics) => m?.trends?.jobs ?? 0,
     icon: Briefcase,
     color: "text-blue-600",
+    link: "/candidate/jobs" // Added link
   },
   {
     name: "Applications",
@@ -21,6 +22,7 @@ const stats = [
     trend: (m?: QuickStatsMetrics) => m?.trends?.applications ?? 0,
     icon: Star,
     color: "text-yellow-600",
+    link: "/candidate/applications" // Added link
   },
   {
     name: "Interviews",
@@ -28,6 +30,7 @@ const stats = [
     trend: (m?: QuickStatsMetrics) => m?.trends?.interviews ?? 0,
     icon: Users,
     color: "text-green-600",
+    link: "/candidate/interviews" // Added link
   },
   {
     name: "Response Rate",
@@ -35,6 +38,7 @@ const stats = [
     trend: (m?: QuickStatsMetrics) => m?.trends?.responseRate ?? 0,
     icon: Clock,
     color: "text-purple-600",
+    link: "/candidate/response-rate" // Added link (placeholder)
   },
 ];
 
@@ -49,7 +53,7 @@ export function QuickStats({ metrics, isLoading = false, error }: QuickStatsProp
   return (
     <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
       {stats.map((item) => (
-        <div key={item.name} className="relative overflow-hidden rounded-lg bg-white px-4 pt-5 pb-12 shadow sm:px-6 sm:pt-6">
+        <a key={item.name} href={item.link} className="relative overflow-hidden rounded-lg bg-white px-4 pt-5 pb-12 shadow sm:px-6 sm:pt-6 hover:bg-gray-100 hover:shadow-md transition duration-300"> {/* Added link and hover effects */}
           <dt>
             <div className={`absolute rounded-md p-3 ${item.color} bg-opacity-10`}>
               <item.icon className={`h-6 w-6 ${item.color}`} aria-hidden="true" />
@@ -70,7 +74,7 @@ export function QuickStats({ metrics, isLoading = false, error }: QuickStatsProp
               </div>
             </div>
           </dd>
-        </div>
+        </a>
       ))}
     </div>
   );

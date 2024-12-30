@@ -12,9 +12,13 @@ export function MetricCard({
   value,
   icon: Icon,
   description,
-}: MetricCardProps) {
+  link,
+}: MetricCardProps & { link?: string }) {
+  const Component = link ? 'a' : 'div';
   return (
-    <div className="bg-white rounded-lg shadow p-6">
+    <Component 
+      href={link}
+      className="bg-white rounded-lg shadow p-6 transition-all duration-200 hover:shadow-lg hover:scale-[1.02] cursor-pointer"
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm font-medium text-gray-600">{title}</p>
