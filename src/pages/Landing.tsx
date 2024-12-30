@@ -1,9 +1,6 @@
+
 import { Link } from "react-router-dom";
-<<<<<<< HEAD
 import { ArrowRight, Briefcase, Users, BarChart, BookOpen, TrendingUp } from "lucide-react";
-=======
-import { ArrowRight, Briefcase, Users, BarChart } from "lucide-react";
->>>>>>> aa4d41776c51bd92f7cee234f5c7d9190d9ee791
 import { Logo } from "../components/branding/Logo";
 
 export function Landing() {
@@ -13,14 +10,7 @@ export function Landing() {
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex justify-between items-center">
           <div className="flex items-center">
-<<<<<<< HEAD
             <Logo className="h-48 w-auto" />
-=======
-            <Logo className="h-10 w-auto" />
-            <span className="ml-2 text-xl font-bold text-gray-900">
-              TalentTrack
-            </span>
->>>>>>> aa4d41776c51bd92f7cee234f5c7d9190d9ee791
           </div>
           <div className="flex items-center space-x-4">
             <Link
@@ -192,7 +182,7 @@ export function Landing() {
                 </div>
               </Link>
 
-              <Link to="/employer/analytics" className="pt-6 block transition-all duration-200"> {/*Corrected this link*/}
+              <Link to="/employer/analytics" className="pt-6 block transition-all duration-200">
                 <div className="flow-root bg-white rounded-lg px-6 pb-8 hover:shadow-lg transition-shadow duration-200">
                   <div className="-mt-6">
                     <div>
