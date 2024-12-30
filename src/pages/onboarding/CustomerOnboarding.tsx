@@ -201,6 +201,7 @@ export default function CustomerOnboarding() {
                     ? "Complete Setup"
                     : "Next Step"}
               </button>
+              {success && setTimeout(() => navigate('/dashboard'), 1500)}
             </div>
           </form>
         </div>

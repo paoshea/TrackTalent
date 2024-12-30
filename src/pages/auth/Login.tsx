@@ -18,7 +18,10 @@ export default function Login() {
 
     try {
       await signIn(email, password);
-      navigate("/", { replace: true });
+      setSuccess(true);
+      setTimeout(() => {
+        navigate("/dashboard", { replace: true });
+      }, 1500);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to sign in");
     } finally {

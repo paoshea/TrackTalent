@@ -20,6 +20,9 @@ export function ForgotPassword() {
     try {
       await resetPassword(email);
       setIsSuccess(true);
+      setTimeout(() => {
+        navigate("/auth/login");
+      }, 2000);
     } catch (err) {
       setError(
         err instanceof Error
