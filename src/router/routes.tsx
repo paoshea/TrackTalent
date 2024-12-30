@@ -104,7 +104,7 @@ export const routes = [
             element: <Login />,
           },
           {
-            path: "signup",
+            path: "register",
             element: <Register />,
           },
           {
