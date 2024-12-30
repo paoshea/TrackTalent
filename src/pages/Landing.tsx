@@ -23,7 +23,7 @@ export function Landing() {
               Sign in
             </Link>
             <Link
-              to="/employer/messages"
+              to="/employer/dashboard"
               className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700"
             >
               Get started
@@ -166,7 +166,7 @@ export function Landing() {
                 </div>
               </Link>
 
-              <Link to="/employer/messages" className="pt-6 block transition-all duration-200">
+              <Link to="/employer/candidate-management" className="pt-6 block transition-all duration-200">
                 <div className="flow-root bg-white rounded-lg px-6 pb-8 hover:shadow-lg transition-shadow duration-200">
                   <div className="-mt-6">
                     <div>
@@ -185,7 +185,7 @@ export function Landing() {
                 </div>
               </Link>
 
-              <Link to="/employer/profile" className="pt-6 block transition-all duration-200">
+              <Link to="/employer/analytics" className="pt-6 block transition-all duration-200">
                 <div className="flow-root bg-white rounded-lg px-6 pb-8 hover:shadow-lg transition-shadow duration-200">
                   <div className="-mt-6">
                     <div>
