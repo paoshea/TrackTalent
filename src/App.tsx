@@ -22,17 +22,7 @@ function LoadingScreen() {
 }
 
 function App() {
-  const [todos, setTodos] = useState([]);
-
-  useEffect(() => {
-    async function getTodos() {
-      const { data } = await supabase.from('todos').select();
-      if (data && data.length > 0) {
-        setTodos(data);
-      }
-    }
-    getTodos();
-  }, []);
+  
 
   return (
     <AuthProvider>
