@@ -35,24 +35,26 @@ export function JobCard({ job, className = "" }: JobCardProps) {
             </div>
           </div>
           <div className="flex items-center">
-            <span
-              className={`
-              px-2.5 py-0.5 rounded-full text-xs font-medium
-              ${
-                job.type === "full-time"
-                  ? "bg-green-100 text-green-800"
-                  : job.type === "part-time"
-                    ? "bg-blue-100 text-blue-800"
-                    : job.type === "contract"
-                      ? "bg-yellow-100 text-yellow-800"
-                      : "bg-purple-100 text-purple-800"
-              }
-            `}
-            >
-              {job.type
-                .replace("-", " ")
-                .replace(/\b\w/g, (l) => l.toUpperCase())}
-            </span>
+            {job.type && (
+              <span
+                className={`
+                px-2.5 py-0.5 rounded-full text-xs font-medium
+                ${
+                  job.type === "full-time"
+                    ? "bg-green-100 text-green-800"
+                    : job.type === "part-time"
+                      ? "bg-blue-100 text-blue-800"
+                      : job.type === "contract"
+                        ? "bg-yellow-100 text-yellow-800"
+                        : "bg-purple-100 text-purple-800"
+                }
+              `}
+              >
+                {job.type
+                  .replace("-", " ")
+                  .replace(/\b\w/g, (l) => l.toUpperCase())}
+              </span>
+            )}
           </div>
         </div>
 
