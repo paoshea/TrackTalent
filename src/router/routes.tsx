@@ -215,13 +215,7 @@ export const routes = [
   },
   {
     path: "/auth/signout",
-    element: <PublicRoute />,
-    children: [
-      {
-        path: "",
-        element: <Navigate to="/auth/login" replace />
-      }
-    ]
+    element: <Navigate to="/auth/login" replace />
   },
   {
     path: "*",

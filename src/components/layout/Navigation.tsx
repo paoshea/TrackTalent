@@ -46,7 +46,7 @@ export function Navigation({ items }: NavigationProps) {
   const handleSignOut = async () => {
     try {
       await signOut();
-      navigate('/auth/signin', { replace: true });
+      navigate('/auth/login', { replace: true });
     } catch (error) {
       console.error('Sign out failed:', error);
     }
