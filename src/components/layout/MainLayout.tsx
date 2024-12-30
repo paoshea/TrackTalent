@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { LogOut, Menu, X } from "lucide-react";
 import { Button } from "../shared/Button";
 import { useAuth } from "../../contexts/AuthContext";
+import { Footer } from "./Footer";
 import { cn } from "../../utils/cn";
 import { Logo } from "../branding/Logo";
 
@@ -137,6 +138,7 @@ export function MainLayout({ children }: MainLayoutProps) {
             </div>
           </div>
         </main>
+        <Footer />
       </div>
     </div>
   );
