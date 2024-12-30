@@ -23,9 +23,6 @@ import NotFound from "../pages/NotFound";
 import { OnboardingFlow } from "../pages/onboarding/OnboardingFlow";
 import SuccessStories from "../pages/success-stories/SuccessStories";
 import Resources from "../pages/resources/Resources";
-import Apprenticeships from "../pages/partners/Apprenticeships";
-import Mentorship from "../pages/partners/Mentorship";
-import PartnerAnalytics from "../pages/partners/Analytics";
 
 interface ProtectedRouteProps {
   allowedRoles?: UserRole[];
@@ -128,18 +125,6 @@ export const routes = [
         path: "/resources",
         element: <Resources />,
       },
-      {
-        path: "/partners/apprenticeships",
-        element: <Apprenticeships />,
-      },
-      {
-        path: "/partners/mentorship",
-        element: <Mentorship />,
-      },
-      {
-        path: "/partners/analytics",
-        element: <PartnerAnalytics />,
-      },
     ],
   },
   {
@@ -154,63 +139,41 @@ export const routes = [
   },
   {
     path: "/employer",
+    element: <ProtectedRoute allowedRoles={["employer"]} />,
     children: [
       {
         path: "",
-        element: <EmployerFeatures />,
+        element: <EmployerDashboard />,
       },
       {
-        path: "features",
-        element: <EmployerFeatures />,
+        path: "messages",
+        element: <Messages />,
       },
       {
-        path: "solutions",
-        element: <EmployerSolutions />,
+        path: "applications",
+        element: <Applications />,
       },
       {
-        path: "insights",
-        element: <EmployerInsights />,
+        path: "profile",
+        element: <Profile />,
       },
       {
-        element: <ProtectedRoute allowedRoles={["employer"]} />,
-        children: [
-          {
-            path: "dashboard",
-            element: <EmployerDashboard />,
-          },
-          {
-            path: "dashboard",
-            element: <EmployerDashboard />,
-          },
-          {
-            path: "messages",
-            element: <Messages />,
-          },
-          {
-            path: "applications",
-            element: <Applications />,
-          },
-          {
-            path: "profile",
-            element: <Profile />,
-          },
-          {
-            path: "job-postings",
-            element: <JobPostings />,
-          },
-          {
-            path: "candidate-management",
-            element: <CandidateManagement />,
-          },
-          {
-            path: "analytics",
-            element: <Analytics />,
-          },
-          {
-            path: "signout",
-            element: <Navigate to="/auth/login" replace />,
-          },
-        ],
+        path: "job-postings",
+        element: <React.Suspense fallback={<div>Loading...</div>}>
+          <JobPostings />
+        </React.Suspense>,
+      },
+      {
+        path: "candidate-management",
+        element: <React.Suspense fallback={<div>Loading...</div>}>
+          <CandidateManagement />
+        </React.Suspense>,
+      },
+      {
+        path: "analytics",
+        element: <React.Suspense fallback={<div>Loading...</div>}>
+          <Analytics />
+        </React.Suspense>,
       },
     ],
   },
