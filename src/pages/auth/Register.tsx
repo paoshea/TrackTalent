@@ -1,6 +1,5 @@
-
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { Alert } from "../../components/shared/Alert";
 import { Input } from "../../components/shared/Input";
@@ -15,6 +14,7 @@ const roleOptions = [
 
 export default function Register() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams(); // Added to get redirect parameters
   const { signUp } = useAuth();
   const [formData, setFormData] = useState<SignUpData>({
     email: "",
@@ -51,8 +51,13 @@ export default function Register() {
       
       // Add a slight delay to allow context updates
       setTimeout(() => {
-        const redirectPath = formData.role === 'employer' ? '/employer/dashboard' : '/candidate/dashboard';
-        navigate(redirectPath, { replace: true });
+        const redirectTo = searchParams.get('redirect_to'); // Check for redirect parameter
+        if (redirectTo) {
+          window.location.href = decodeURIComponent(redirectTo); // Redirect if available
+        } else {
+          const redirectPath = formData.role === 'employer' ? '/employer/dashboard' : '/candidate/dashboard';
+          navigate(redirectPath, { replace: true }); // Default redirect
+        }
       }, 500);
       
     } catch (err) {
