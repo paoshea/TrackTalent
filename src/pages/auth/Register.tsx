@@ -36,17 +36,19 @@ export function Register() {
     setIsLoading(true);
 
     try {
-      await signUp(formData);
+      const response = await signUp(formData);
       setSuccess(true);
-      // Show success message for 2 seconds before redirecting
-      setTimeout(() => {
+      
+      if (response.confirmEmail) {
+        await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds
         navigate("/auth/verify-email", { 
           state: { 
             email: formData.email,
             fromRegistration: true 
-          } 
+          },
+          replace: true // Prevent going back to registration
         });
-      }, 2000);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to sign up");
     } finally {
