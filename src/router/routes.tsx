@@ -4,6 +4,8 @@ import { useAuth } from "../hooks/useAuth";
 import Jobs from "../pages/jobs/Jobs";
 import type { UserRole, User } from "../types/auth";
 import JobPostings from "../pages/employer/JobPostings";
+import CandidateManagement from "../pages/employer/CandidateManagement";
+import Analytics from "../pages/employer/Analytics";
 
 import AdminDashboard from "../pages/admin/Dashboard";
 import CustomerDashboard from "../pages/customer/Dashboard";
