@@ -135,7 +135,7 @@ export const routes = [
   },
   {
     path: "/employer",
-    element: <ProtectedRoute allowedRoles={["employer"]} />,
+    element: <Outlet />,
     children: [
       {
         path: "",
