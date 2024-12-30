@@ -19,9 +19,24 @@ export function Navigation({ items }: NavigationProps) {
 
   if (!user || !user.role) return null;
 
+  const getBaseRoute = (role: UserRole) => {
+    switch (role) {
+      case 'employer':
+        return '/employer';
+      case 'candidate':
+        return '/candidate';
+      default:
+        return '/';
+    }
+  };
+
+  const baseRoute = getBaseRoute(user.role as UserRole);
   const filteredItems = items.filter(
     (item) => !item.roles || item.roles.includes(user.role as UserRole),
-  );
+  ).map(item => ({
+    ...item,
+    href: item.href.startsWith('/') ? `${baseRoute}${item.href}` : item.href
+  }));
 
   return (
     <nav className="space-y-1">
