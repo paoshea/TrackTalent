@@ -6,6 +6,7 @@ import { JobList } from '../../components/jobs/JobList';
 import { JobForm } from '../../components/jobs/JobForm';
 
 export default function JobPostings() {
+  const navigate = useNavigate();
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative">
       <button
