@@ -154,39 +154,60 @@ export const routes = [
   },
   {
     path: "/employer",
-    element: <ProtectedRoute allowedRoles={["employer"]} />,
     children: [
       {
         path: "",
         element: <EmployerDashboard />,
       },
       {
-        path: "messages",
-        element: <Messages />,
-      },
-      {
-        path: "applications",
-        element: <Applications />,
-      },
-      {
-        path: "profile",
-        element: <Profile />,
-      },
-      {
-        path: "job-postings",
+        path: "features",
         element: <JobPostings />,
       },
       {
-        path: "candidate-management",
+        path: "solutions",
         element: <CandidateManagement />,
       },
       {
-        path: "analytics",
+        path: "insights",
         element: <Analytics />,
       },
       {
-        path: "signout",
-        element: <Navigate to="/auth/login" replace />,
+        // Protected routes requiring authentication
+        element: <ProtectedRoute allowedRoles={["employer"]} />,
+        children: [
+          {
+            path: "dashboard",
+            element: <EmployerDashboard />,
+          },
+          {
+            path: "messages",
+            element: <Messages />,
+          },
+          {
+            path: "applications",
+            element: <Applications />,
+          },
+          {
+            path: "profile",
+            element: <Profile />,
+          },
+          {
+            path: "job-postings",
+            element: <JobPostings />,
+          },
+          {
+            path: "candidate-management",
+            element: <CandidateManagement />,
+          },
+          {
+            path: "analytics",
+            element: <Analytics />,
+          },
+          {
+            path: "signout",
+            element: <Navigate to="/auth/login" replace />,
+          },
+        ],
       },
     ],
   },
