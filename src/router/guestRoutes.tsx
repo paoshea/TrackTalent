@@ -1,4 +1,3 @@
-
 import { RouteObject } from "react-router-dom";
 import Jobs from "../pages/jobs/Jobs";
 import Resources from "../pages/resources/Resources";
