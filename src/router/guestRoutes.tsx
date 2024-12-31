@@ -3,7 +3,7 @@ import Landing from "../pages/Landing";
 import Jobs from "../pages/jobs/Jobs";
 import Resources from "../pages/resources/Resources";
 import SuccessStories from "../pages/success-stories/SuccessStories";
-import PartnerAnalytics from "../pages/partners/Analytics";
+import Analytics from "../pages/partners/Analytics";
 import Apprenticeships from "../pages/partners/Apprenticeships";
 import Mentorship from "../pages/partners/Mentorship";
 import { PublicRoute } from "../components/auth/ProtectedRoute";
@@ -39,7 +39,7 @@ const guestRoutes: RouteObject[] = [
         children: [
           {
             path: "analytics",
-            element: <PartnerAnalytics />,
+            element: <Analytics />,
           },
           {
             path: "apprenticeships",
