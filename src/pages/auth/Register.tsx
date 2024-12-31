@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState, FormEvent } from "react";
 import { useAuth } from "../../hooks/useAuth";
-import type { UserRole } from "../../types/auth";
+import type { UserRole, SignUpData } from "../../types/auth";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -51,18 +51,25 @@ export default function Register() {
       return;
     }
 
+    if (!formData.role) {
+      setError("Please select your role");
+      return;
+    }
+
     try {
       setError(null);
       setIsLoading(true);
 
-      await signUp({
+      const signUpData: SignUpData = {
         email: formData.email,
         password: formData.password,
         role: formData.role as UserRole,
         full_name: `${formData.firstName} ${formData.lastName}`.trim(),
-        title: formData.title,
-        location: formData.location
-      });
+        title: formData.title || undefined,
+        location: formData.location || undefined
+      };
+
+      await signUp(signUpData);
 
       // Redirect based on role
       switch (formData.role) {
