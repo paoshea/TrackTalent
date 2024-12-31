@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";

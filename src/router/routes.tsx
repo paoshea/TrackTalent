@@ -4,7 +4,7 @@ import { guestRoutes } from "./guestRoutes";
 import { authenticatedRoutes } from "./authenticatedRoutes";
 import NotFound from "../pages/NotFound";
 
-export const routes: RouteObject[] = [
+const routes: RouteObject[] = [
   ...guestRoutes,
   ...authenticatedRoutes,
   {
@@ -12,3 +12,5 @@ export const routes: RouteObject[] = [
     element: <NotFound />,
   },
 ];
+
+export { routes };
