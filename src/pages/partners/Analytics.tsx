@@ -1,5 +1,6 @@
 import React from 'react';
 import { BarChart, Users, Award, ArrowLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Analytics() {
   const metrics = [
