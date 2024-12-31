@@ -2,7 +2,7 @@
 import { RouteObject } from "react-router-dom";
 import { Landing } from "../pages/Landing";
 import { Jobs } from "../pages/jobs/Jobs";
-import { Resources } from "../pages/resources/Resources";
+import Resources from "../pages/resources/Resources";
 import { SuccessStories } from "../pages/success-stories/SuccessStories";
 import { PartnerAnalytics } from "../pages/partners/Analytics";
 import { Apprenticeships } from "../pages/partners/Apprenticeships";
