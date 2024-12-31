@@ -1,40 +1,15 @@
 
-import React from "react";
-import { Navigate, Outlet, RouteObject } from "react-router-dom";
+import { RouteObject } from "react-router-dom";
 import { Landing } from "../pages/Landing";
-import Login from "../pages/auth/Login";
-import Register from "../pages/auth/Register";
-import { ForgotPassword } from "../pages/auth/ForgotPassword";
-import { ResetPassword } from "../pages/auth/ResetPassword";
-import Jobs from "../pages/jobs/Jobs";
-import Resources from "../pages/resources/Resources";
-import SuccessStories from "../pages/success-stories/SuccessStories";
-import PartnerAnalytics from "../pages/partners/Analytics";
-import Apprenticeships from "../pages/partners/Apprenticeships";
-import Mentorship from "../pages/partners/Mentorship";
-import { useAuth } from "../hooks/useAuth";
-import type { UserRole } from "../types/auth";
-
-function PublicRoute() {
-  const { user, isLoading } = useAuth();
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (user) {
-    const role = user.user_metadata?.role as UserRole;
-    const dashboardPaths: Record<UserRole, string> = {
-      admin: "/admin",
-      employer: "/employer",
-      candidate: "/candidate",
-    };
-
-    return <Navigate to={dashboardPaths[role] || "/"} replace />;
-  }
-
-  return <Outlet />;
-}
+import { Jobs } from "../pages/jobs/Jobs";
+import { Resources } from "../pages/resources/Resources";
+import { SuccessStories } from "../pages/success-stories/SuccessStories";
+import { PartnerAnalytics } from "../pages/partners/Analytics";
+import { Apprenticeships } from "../pages/partners/Apprenticeships";
+import { Mentorship } from "../pages/partners/Mentorship";
+import { PublicRoute } from "../components/auth/ProtectedRoute";
+import { Login, Register, ForgotPassword, ResetPassword } from "../pages/auth";
+import { Outlet, Navigate } from "react-router-dom";
 
 const guestRoutes: RouteObject[] = [
   {
