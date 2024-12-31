@@ -1,65 +1,69 @@
 import { Briefcase, Star, Users, Clock } from 'lucide-react';
+import { useTranslation } from '../../contexts/TranslationContext';
 import type { QuickStatsMetrics } from '../../types/dashboard';
+import type { TranslationKey } from '../../contexts/TranslationContext';
 
 interface QuickStatsProps {
-  metrics?: QuickStatsMetrics;
+  metrics: QuickStatsMetrics | null | undefined;
   isLoading?: boolean;
-  error?: string; // Added error handling
+  error?: string;
 }
 
 const stats = [
   {
-    name: "Active Jobs",
-    value: (m?: QuickStatsMetrics) => m?.activeJobs ?? 0,
-    trend: (m?: QuickStatsMetrics) => m?.trends?.jobs ?? 0,
+    translationKey: "stats.activeJobs" as TranslationKey,
+    value: (m?: QuickStatsMetrics | null) => m?.activeJobs ?? 0,
+    trend: (m?: QuickStatsMetrics | null) => m?.trends?.jobs ?? 0,
     icon: Briefcase,
     color: "text-blue-600",
     link: "/candidate/jobs"
   },
   {
-    name: "Applications",
-    value: (m?: QuickStatsMetrics) => m?.applications ?? 0,
-    trend: (m?: QuickStatsMetrics) => m?.trends?.applications ?? 0,
+    translationKey: "stats.applications" as TranslationKey,
+    value: (m?: QuickStatsMetrics | null) => m?.applications ?? 0,
+    trend: (m?: QuickStatsMetrics | null) => m?.trends?.applications ?? 0,
     icon: Star,
     color: "text-yellow-600",
     link: "/candidate/applications"
   },
   {
-    name: "Interviews",
-    value: (m?: QuickStatsMetrics) => m?.interviews ?? 0,
-    trend: (m?: QuickStatsMetrics) => m?.trends?.interviews ?? 0,
+    translationKey: "stats.interviews" as TranslationKey,
+    value: (m?: QuickStatsMetrics | null) => m?.interviews ?? 0,
+    trend: (m?: QuickStatsMetrics | null) => m?.trends?.interviews ?? 0,
     icon: Users,
     color: "text-green-600",
-    link: "/candidate/interviews" // Added link
+    link: "/candidate/interviews"
   },
   {
-    name: "Response Rate",
-    value: (m?: QuickStatsMetrics) => `${m?.responseRate ?? 0}%`,
-    trend: (m?: QuickStatsMetrics) => m?.trends?.responseRate ?? 0,
+    translationKey: "stats.responseRate" as TranslationKey,
+    value: (m?: QuickStatsMetrics | null) => `${m?.responseRate ?? 0}%`,
+    trend: (m?: QuickStatsMetrics | null) => m?.trends?.responseRate ?? 0,
     icon: Clock,
     color: "text-purple-600",
-    link: "/candidate/response-rate" // Added link (placeholder)
+    link: "/candidate/response-rate"
   },
 ];
 
 export function QuickStats({ metrics, isLoading = false, error }: QuickStatsProps) {
+  const { translate } = useTranslation();
+
   if (isLoading) {
     return <div className="animate-pulse">Loading stats...</div>;
   }
   if (error) {
-    return <div className="text-red-500">Error loading stats: {error}</div>; //Added error display
+    return <div className="text-red-500">Error loading stats: {error}</div>;
   }
 
   return (
     <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
       {stats.map((item) => (
-        <a key={item.name} href={item.link} className="relative overflow-hidden rounded-lg bg-white px-4 pt-5 pb-12 shadow sm:px-6 sm:pt-6 hover:bg-gray-100 hover:shadow-md transition duration-300"> {/* Added link and hover effects */}
+        <a key={item.translationKey} href={item.link} className="relative overflow-hidden rounded-lg bg-white px-4 pt-5 pb-12 shadow sm:px-6 sm:pt-6 hover:bg-gray-100 hover:shadow-md transition duration-300">
           <dt>
             <div className={`absolute rounded-md p-3 ${item.color} bg-opacity-10`}>
               <item.icon className={`h-6 w-6 ${item.color}`} aria-hidden="true" />
             </div>
             <p className="ml-16 truncate text-sm font-medium text-gray-500">
-              {item.name}
+              {translate(item.translationKey)}
             </p>
           </dt>
           <dd className="ml-16 flex items-baseline pb-6 sm:pb-7">

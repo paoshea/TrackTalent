@@ -1,4 +1,4 @@
-import React from "react";
+//import React from "react";
 import { Navigate, Outlet, RouteObject } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import type { UserRole } from "../types/auth";
@@ -6,7 +6,7 @@ import AdminDashboard from "../pages/admin/Dashboard";
 import EmployerDashboard from "../pages/employer/Dashboard";
 import CandidateDashboard from "../pages/candidate/Dashboard";
 import Applications from "../pages/candidate/Applications";
-import Messages from "../pages/messages/Messages";
+import { MessagesPage as Messages } from "../pages/messages/Messages";
 import Profile from "../pages/candidate/Profile";
 import JobPostings from "../pages/employer/JobPostings";
 import CandidateManagement from "../pages/employer/CandidateManagement";

@@ -3,9 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { LogOut, Menu, X } from "lucide-react";
 import { Button } from "../shared/Button";
 import { useAuth } from "../../contexts/AuthContext";
+import { useTranslation } from "../../contexts/TranslationContext";
 import { Footer } from "./Footer";
 import { cn } from "../../utils/cn";
 import { Logo } from "../branding/Logo";
+import { LanguageToggle } from "../shared/LanguageToggle";
+import type { TranslationKey } from "../../contexts/TranslationContext";
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -15,19 +18,12 @@ export function MainLayout({ children }: MainLayoutProps) {
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const { translate } = useTranslation();
 
   const handleSignOut = async () => {
     await signOut();
     navigate("/signin");
   };
-
-  const navigation = [
-    { name: "Dashboard", href: "/" },
-    { name: "Jobs", href: "/jobs" },
-    { name: "Applications", href: "/applications" },
-    { name: "Messages", href: "/messages" },
-    { name: "Profile", href: "/profile" },
-  ];
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -58,20 +54,7 @@ export function MainLayout({ children }: MainLayoutProps) {
           </div>
 
           <div className="flex flex-shrink-0 items-center px-4">
-            <Logo className="h-12 w-auto" />
-          </div>
-          <div className="mt-5 h-0 flex-1 overflow-y-auto">
-            <nav className="space-y-1 px-2">
-              {navigation.map((item) => (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  className="group flex items-center rounded-md px-2 py-2 text-base font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                >
-                  {item.name}
-                </a>
-              ))}
-            </nav>
+            <Logo className="h-48 w-auto" />
           </div>
         </div>
       </div>
@@ -80,20 +63,7 @@ export function MainLayout({ children }: MainLayoutProps) {
       <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col">
         <div className="flex min-h-0 flex-1 flex-col border-r border-gray-200 bg-white">
           <div className="flex h-16 flex-shrink-0 items-center px-4">
-            <Logo className="h-12 w-auto" />
-          </div>
-          <div className="flex flex-1 flex-col overflow-y-auto">
-            <nav className="flex-1 space-y-1 px-2 py-4">
-              {navigation.map((item) => (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  className="group flex items-center rounded-md px-2 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                >
-                  {item.name}
-                </a>
-              ))}
-            </nav>
+            <Logo className="h-48 w-auto" />
           </div>
         </div>
       </div>
@@ -111,8 +81,19 @@ export function MainLayout({ children }: MainLayoutProps) {
             <Menu className="h-6 w-6" aria-hidden="true" />
           </button>
           <div className="flex flex-1 justify-between px-4">
-            <div className="flex flex-1"></div>
+            <div className="flex flex-1">
+              <button
+                onClick={() => navigate(-1)}
+                className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
+                </svg>
+                {translate('nav.back' as TranslationKey)}
+              </button>
+            </div>
             <div className="ml-4 flex items-center gap-4">
+              <LanguageToggle />
               {user && (
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-gray-700">{user.email}</span>
@@ -122,7 +103,7 @@ export function MainLayout({ children }: MainLayoutProps) {
                     icon={LogOut}
                     onClick={handleSignOut}
                   >
-                    Sign out
+                    {translate('nav.signout' as TranslationKey)}
                   </Button>
                 </div>
               )}

@@ -1,42 +1,52 @@
-import { useState, useEffect, useCallback } from "react";
-import { applications as applicationsService } from "../services/applications";
-import type { Application, ApplicationStatus } from "../types/applications";
+import { useState, useEffect } from "react";
+import { supabase } from "../lib/supabase";
+import { getMockApplications } from "../services/mockApplications";
+import type { Application } from "../types/applications";
 
-interface UseApplicationsOptions {
-  userId?: string;
-  jobId?: string;
-  status?: ApplicationStatus;
-}
-
-export function useApplications({
-  userId,
-  jobId,
-  status,
-}: UseApplicationsOptions = {}) {
-  const [applicationList, setApplicationList] = useState<Application[]>([]);
+export function useApplications() {
+  const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const loadApplications = useCallback(async () => {
-    try {
-      const data = await applicationsService.getAll({ userId, jobId, status });
-      setApplicationList(data);
-    } catch (err) {
-      setError("Failed to load applications");
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  }, [userId, jobId, status]);
-
   useEffect(() => {
-    loadApplications();
-  }, [loadApplications]);
+    async function fetchApplications() {
+      try {
+        setLoading(true);
+        
+        if (import.meta.env.DEV) {
+          // Use mock data in development
+          const mockData = await getMockApplications();
+          setApplications(mockData);
+        } else {
+          // Fetch applications from Supabase in production
+          const { data, error: fetchError } = await supabase
+            .from('applications')
+            .select(`
+              *,
+              job:jobs (
+                id,
+                title,
+                company:companies (
+                  id,
+                  name,
+                  logo
+                )
+              )
+            `)
+            .order('applied_at', { ascending: false });
 
-  return {
-    applications: applicationList,
-    loading,
-    error,
-    refresh: loadApplications,
-  };
+          if (fetchError) throw fetchError;
+          setApplications(data || []);
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to fetch applications");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchApplications();
+  }, []);
+
+  return { applications, loading, error };
 }

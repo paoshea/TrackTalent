@@ -1,23 +1,30 @@
-
-import React from 'react';
-import { Button } from './Button';
-import { useTranslation } from '../../contexts/TranslationContext';
+import { useTranslation } from "../../contexts/TranslationContext";
 
 export function LanguageToggle() {
   const { language, setLanguage } = useTranslation();
 
-  const toggleLanguage = () => {
-    setLanguage(language === 'en' ? 'es' : 'en');
-  };
-
   return (
-    <Button
-      variant="ghost"
-      size="sm"
-      onClick={toggleLanguage}
-      className="flex items-center gap-2 text-sm font-medium"
-    >
-      {language === 'en' ? 'ES' : 'EN'}
-    </Button>
+    <div className="flex items-center space-x-2">
+      <button
+        onClick={() => setLanguage('en')}
+        className={`px-2 py-1 rounded ${
+          language === 'en' 
+            ? 'bg-indigo-100 text-indigo-600' 
+            : 'text-gray-500 hover:text-gray-700'
+        }`}
+      >
+        EN
+      </button>
+      <button
+        onClick={() => setLanguage('es')}
+        className={`px-2 py-1 rounded ${
+          language === 'es' 
+            ? 'bg-indigo-100 text-indigo-600' 
+            : 'text-gray-500 hover:text-gray-700'
+        }`}
+      >
+        ES
+      </button>
+    </div>
   );
 }

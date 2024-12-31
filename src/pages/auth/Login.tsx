@@ -17,11 +17,14 @@ export default function Login() {
     setIsLoading(true);
 
     try {
-      await signIn(email, password);
-      setSuccess(true);
-      setTimeout(() => {
-        navigate("/dashboard", { replace: true });
-      }, 1500);
+      const { user } = await signIn(email, password);
+      const userRole = user.user_metadata?.role as 'candidate' | 'employer' | 'admin';
+      const redirectPath = {
+        candidate: "/candidate",
+        employer: "/employer",
+        admin: "/admin"
+      }[userRole] || "/";
+      navigate(redirectPath, { replace: true });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to sign in");
     } finally {

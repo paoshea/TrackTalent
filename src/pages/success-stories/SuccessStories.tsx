@@ -1,58 +1,14 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Logo } from '../../components/branding/Logo';
-import { Award, Briefcase, TrendingUp, User } from 'lucide-react';
-import { MainLayout } from '../../components/layout/MainLayout';
-
-interface SuccessStory {
-  id: string;
-  name: string;
-  previousRole: string;
-  newRole: string;
-  company: string;
-  salaryIncrease: string;
-  timeToTransition: string;
-  story: string;
-}
+// import React from "react";
+import { useNavigate } from "react-router-dom";
+import { Logo } from "../../components/branding/Logo";
+import { mockSuccessStories } from "../../services/mockData";
 
 export default function SuccessStories() {
   const navigate = useNavigate();
-  const stories: SuccessStory[] = [
-    {
-      id: '1',
-      name: 'Sarah Chen',
-      previousRole: 'Marketing Coordinator',
-      newRole: 'Product Manager',
-      company: 'TechCorp',
-      salaryIncrease: '45%',
-      timeToTransition: '8 months',
-      story: 'Through targeted skill development and mentorship, I successfully transitioned into product management.'
-    },
-    {
-      id: '2',
-      name: 'Michael Rodriguez',
-      previousRole: 'Sales Representative',
-      newRole: 'Technical Account Manager',
-      company: 'CloudSolutions',
-      salaryIncrease: '35%',
-      timeToTransition: '6 months',
-      story: 'The structured learning path and certification programs helped me bridge the technical knowledge gap.'
-    },
-    {
-      id: '3',
-      name: 'Emma Thompson',
-      previousRole: 'Teacher',
-      newRole: 'UX Designer',
-      company: 'DesignHub',
-      salaryIncrease: '50%',
-      timeToTransition: '12 months',
-      story: 'Leveraging my teaching background and new design skills, I found my perfect role in UX.'
-    }
-  ];
 
   return (
-    <MainLayout>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative">
+    <div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative">
         <button
           onClick={() => navigate('/')}
           className="absolute top-4 left-4 inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
@@ -62,60 +18,43 @@ export default function SuccessStories() {
           </svg>
           Back
         </button>
-        <div className="text-center mb-12">
-          <Logo className="h-48 w-auto mx-auto mb-6" />
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">Success Stories</h1>
-          <p className="text-lg text-gray-600">
-            Real stories of successful career transitions from our community
-          </p>
-        </div>
-
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {stories.map((story) => (
-            <div
+        <Logo className="h-48 w-auto mx-auto mb-6" />
+        <h1 className="text-3xl font-bold text-center mb-12">Success Stories</h1>
+        
+        <div className="grid md:grid-cols-2 gap-8">
+          {mockSuccessStories.map((story) => (
+            <div 
               key={story.id}
-              className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200"
+              className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
             >
               <div className="p-6">
-                <div className="flex items-center mb-4">
-                  <div className="p-2 bg-indigo-100 rounded-full">
-                    <User className="h-6 w-6 text-indigo-600" />
+                <div className="flex items-center space-x-4 mb-4">
+                  <div
+                    className="h-16 w-16 rounded-full bg-indigo-600 flex items-center justify-center text-white text-2xl font-semibold"
+                  >
+                    {story.name.charAt(0)}
                   </div>
-                  <div className="ml-4">
-                    <h3 className="text-lg font-medium text-gray-900">{story.name}</h3>
-                    <p className="text-sm text-gray-500">{story.company}</p>
+                  <div>
+                    <h3 className="text-xl font-semibold">{story.name}</h3>
+                    <p className="text-gray-600">{story.company}</p>
                   </div>
                 </div>
-
-                <div className="space-y-4">
-                  <div className="flex items-center text-sm">
-                    <Briefcase className="h-5 w-5 text-gray-400 mr-2" />
-                    <span className="text-gray-600">
-                      {story.previousRole} → {story.newRole}
-                    </span>
+                <h4 className="text-lg font-medium mb-3 text-blue-600">{story.title}</h4>
+                <p className="text-gray-600 mb-4">{story.story}</p>
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <div className="flex items-center">
+                    <svg className="h-5 w-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    <span className="text-green-700 font-medium">Outcome:</span>
                   </div>
-
-                  <div className="flex items-center text-sm">
-                    <TrendingUp className="h-5 w-5 text-green-500 mr-2" />
-                    <span className="text-green-600">
-                      {story.salaryIncrease} salary increase
-                    </span>
-                  </div>
-
-                  <div className="flex items-center text-sm">
-                    <Award className="h-5 w-5 text-indigo-400 mr-2" />
-                    <span className="text-gray-600">
-                      {story.timeToTransition} transition time
-                    </span>
-                  </div>
-
-                  <p className="text-gray-600 mt-4">{story.story}</p>
+                  <p className="text-green-600 mt-1">{story.outcome}</p>
                 </div>
               </div>
             </div>
           ))}
         </div>
       </div>
-    </MainLayout>
+    </div>
   );
 }

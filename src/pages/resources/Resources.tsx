@@ -1,69 +1,14 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Logo } from '../../components/branding/Logo';
-import { BookOpen, PlayCircle, Award, ExternalLink } from 'lucide-react';
-import { MainLayout } from '../../components/layout/MainLayout';
-
-interface Resource {
-  id: string;
-  title: string;
-  type: 'course' | 'video' | 'certification';
-  provider: string;
-  duration: string;
-  link: string;
-}
+//import React from "react";
+import { useNavigate } from "react-router-dom";
+import { Logo } from "../../components/branding/Logo";
+import { mockResources } from "../../services/mockData";
 
 export default function Resources() {
   const navigate = useNavigate();
-  const resources: Resource[] = [
-    {
-      id: '1',
-      title: 'Advanced JavaScript Concepts',
-      type: 'course',
-      provider: 'Udemy',
-      duration: '12 hours',
-      link: '#'
-    },
-    {
-      id: '2',
-      title: 'System Design for Frontend Engineers',
-      type: 'video',
-      provider: 'Frontend Masters',
-      duration: '4 hours',
-      link: '#'
-    },
-    {
-      id: '3',
-      title: 'AWS Solutions Architect',
-      type: 'certification',
-      provider: 'Amazon',
-      duration: '3 months',
-      link: '#'
-    },
-    {
-      id: '4',
-      title: 'React Performance Optimization',
-      type: 'course',
-      provider: 'Coursera',
-      duration: '8 hours',
-      link: '#'
-    }
-  ];
-
-  const getIcon = (type: Resource['type']) => {
-    switch (type) {
-      case 'course':
-        return <BookOpen className="h-5 w-5" />;
-      case 'video':
-        return <PlayCircle className="h-5 w-5" />;
-      case 'certification':
-        return <Award className="h-5 w-5" />;
-    }
-  };
 
   return (
-    <MainLayout>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative">
+    <div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative">
         <button
           onClick={() => navigate('/')}
           className="absolute top-4 left-4 inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
@@ -73,48 +18,37 @@ export default function Resources() {
           </svg>
           Back
         </button>
-        <div className="text-center mb-12">
-          <Logo className="h-48 w-auto mx-auto mb-6" />
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">Learning Resources</h1>
-          <p className="text-lg text-gray-600">
-            Enhance your skills with our curated learning materials
-          </p>
-        </div>
-
-        <div className="space-y-4">
-          {resources.map((resource) => (
-            <div
+        <Logo className="h-48 w-auto mx-auto mb-6" />
+        <h1 className="text-3xl font-bold text-center mb-12">Learning Resources</h1>
+        
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {mockResources.map((resource) => (
+            <div 
               key={resource.id}
-              className="flex items-start space-x-4 p-4 rounded-lg border border-gray-200 hover:border-indigo-200 bg-white"
+              className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
             >
-              <div className="p-2 bg-indigo-50 rounded-lg text-indigo-600">
-                {getIcon(resource.type)}
-              </div>
-
-              <div className="flex-1 min-w-0">
-                <h3 className="text-sm font-medium text-gray-900">
-                  {resource.title}
-                </h3>
-                <div className="mt-1 flex items-center text-sm text-gray-500">
-                  <span>{resource.provider}</span>
-                  <span className="mx-2">&bull;</span>
-                  <span>{resource.duration}</span>
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                    {resource.type}
+                  </span>
+                  <span className="text-sm text-gray-500">{resource.duration}</span>
+                </div>
+                <h3 className="text-xl font-semibold mb-2">{resource.title}</h3>
+                <p className="text-gray-600 mb-4">{resource.description}</p>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-gray-500">
+                    Provider: {resource.provider}
+                  </span>
+                  <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700">
+                    Learn More
+                  </button>
                 </div>
               </div>
-
-              <a
-                href={resource.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center text-sm text-indigo-600 hover:text-indigo-500"
-              >
-                View Resource
-                <ExternalLink className="ml-1 h-4 w-4" />
-              </a>
             </div>
           ))}
         </div>
       </div>
-    </MainLayout>
+    </div>
   );
 }

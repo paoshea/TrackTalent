@@ -1,5 +1,18 @@
 import type { LucideIcon } from "lucide-react";
 
+export interface QuickStatsMetrics {
+  activeJobs: number;
+  applications: number;
+  interviews: number;
+  responseRate: number;
+  trends: {
+    jobs: number;
+    applications: number;
+    interviews: number;
+    responseRate: number;
+  };
+}
+
 export interface ActivityUser {
   id: string;
   name: string;
