@@ -1,4 +1,3 @@
-// import React from "react";
 import { Link, Outlet } from "react-router-dom";
 import { Logo } from "../branding/Logo";
 import { Footer } from "./Footer";
@@ -7,14 +6,20 @@ export function GuestLayout() {
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Top header */}
-      <div className="sticky top-0 z-10 flex h-16 flex-shrink-0 bg-white shadow">
-        <div className="flex flex-1 justify-between px-4">
+      <div className="sticky top-0 z-10 flex h-28 flex-shrink-0 bg-white shadow">
+        <div className="flex flex-1 justify-between px-6">
           <div className="flex items-center">
             <Link to="/">
-              <Logo className="h-12 w-auto" />
+              <Logo className="h-24 w-auto" />
             </Link>
           </div>
           <div className="flex items-center space-x-4">
+            <Link
+              to="/employer"
+              className="text-base font-medium text-gray-500 hover:text-gray-900"
+            >
+              For Employers
+            </Link>
             <Link
               to="/auth/login"
               className="text-base font-medium text-gray-500 hover:text-gray-900"

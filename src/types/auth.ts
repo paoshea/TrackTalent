@@ -1,78 +1,47 @@
-export type UserRole = "candidate" | "employer" | "admin";
+export type UserRole = 'candidate' | 'employer' | 'admin';
 
-export interface UserMetadata {
-  onboardingCompleted?: boolean;
-  preferences?: {
-    notifications?: {
-      email?: boolean;
-      push?: boolean;
-      sms?: boolean;
-    };
-    theme?: "light" | "dark" | "system";
-    language?: string;
-  };
-  customFields?: Record<string, string | number | boolean | null>;
+export interface User {
+  id: string;
+  email: string;
+  role: UserRole;
+  created_at?: string;
+  updated_at?: string;
+  last_login?: string;
+  is_active?: boolean;
+  email_verified?: boolean;
 }
 
-export interface AuthCredentials {
-  email: string;
-  password: string;
+export interface Profile {
+  id: string;
+  user_id: string;
+  full_name: string;
+  title?: string;
+  bio?: string;
+  location?: string;
+  avatar_url?: string;
+  resume_url?: string;
+  experience_years?: number;
+  phone?: string;
+  website?: string;
+  linkedin_url?: string;
+  github_url?: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface SignUpData {
   email: string;
   password: string;
-  firstName: string;
-  lastName: string;
   role: UserRole;
-  companyName?: string;
-}
-
-export interface User {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  role: UserRole;
-  companyName?: string;
-  emailVerified: boolean;
-  createdAt: string;
-  updatedAt: string;
-  lastLoginAt?: string;
-  metadata?: UserMetadata;
+  full_name: string;
+  title?: string;
+  location?: string;
 }
 
 export interface AuthContextType {
   user: User | null;
   isLoading: boolean;
-  error: string | null;
+  error: Error | null;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
-  signUp: (data: SignUpData) => Promise<void>;
-  sendPasswordResetEmail: (email: string) => Promise<void>;
-  updatePassword: (password: string) => Promise<void>;
-  verifyEmail: (token: string) => Promise<void>;
-}
-
-export interface AuthState {
-  user: User | null;
-  isLoading: boolean;
-  error: string | null;
-}
-
-export type AuthAction =
-  | { type: "SET_USER"; payload: User | null }
-  | { type: "SET_LOADING"; payload: boolean }
-  | { type: "SET_ERROR"; payload: string | null }
-  | { type: "SIGN_OUT" };
-
-export interface PasswordResetData {
-  email: string;
-  token: string;
-  newPassword: string;
-}
-
-export interface EmailVerificationData {
-  email: string;
-  token: string;
 }

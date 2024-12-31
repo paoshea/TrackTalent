@@ -1,9 +1,6 @@
-
-//import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { useUserRole } from "../../hooks/useUserRole";
 import type { UserRole } from "../../types/auth";
-import { GuestLayout } from "../layout/GuestLayout";
 
 export function PublicRoute() {
   const { role: userRole, isLoading } = useUserRole();
@@ -16,11 +13,7 @@ export function PublicRoute() {
     return <Navigate to="/dashboard" replace />;
   }
 
-  return (
-    <GuestLayout>
-      <Outlet />
-    </GuestLayout>
-  );
+  return <Outlet />;
 }
 
 export function ProtectedRoute({ allowedRoles }: { allowedRoles?: UserRole[] }) {

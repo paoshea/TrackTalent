@@ -1,20 +1,11 @@
-
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import { FormProvider } from "./contexts/FormContext";
 import { TranslationProvider } from "./contexts/TranslationContext";
 import { GuestLayout } from "./components/layout/GuestLayout";
-import { Routes, Route } from "react-router-dom";
-import Landing from "./pages/Landing";
-import Login from "./pages/auth/Login";
-import Jobs from "./pages/jobs/Jobs";
-import Resources from "./pages/resources/Resources";
-import SuccessStories from "./pages/success-stories/SuccessStories";
-import Analytics from "./pages/partners/Analytics";
-import Apprenticeships from "./pages/partners/Apprenticeships";
-import Mentorship from "./pages/partners/Mentorship";
-import NotFound from "./pages/NotFound";
+import guestRoutes from "./router/guestRoutes";
 import authenticatedRoutes from "./router/authenticatedRoutes";
+import NotFound from "./pages/NotFound";
 
 function App() {
   const handleFormSubmit = async (data: any) => {
@@ -27,32 +18,46 @@ function App() {
         <FormProvider onSubmit={handleFormSubmit}>
           <TranslationProvider>
             <Routes>
+              <Route element={<GuestLayout />}>
+                {guestRoutes.map((route) => {
+                  if (route.children) {
+                    return (
+                      <Route key={route.path} path={route.path}>
+                        {route.children.map((childRoute) => (
+                          <Route
+                            key={`${route.path}-${childRoute.path}`}
+                            path={childRoute.path}
+                            element={childRoute.element}
+                          />
+                        ))}
+                      </Route>
+                    );
+                  }
+                  return (
+                    <Route
+                      key={route.path}
+                      path={route.path}
+                      element={route.element}
+                    />
+                  );
+                })}
+                <Route path="*" element={<NotFound />} />
+              </Route>
               {authenticatedRoutes.map((route) => (
                 <Route
                   key={route.path}
                   path={route.path}
                   element={route.element}
                 >
-                  {route.children?.map((child) => (
+                  {route.children?.map((childRoute) => (
                     <Route
-                      key={child.path}
-                      path={child.path}
-                      element={child.element}
+                      key={`${route.path}-${childRoute.path}`}
+                      path={`${route.path}/${childRoute.path}`}
+                      element={childRoute.element}
                     />
                   ))}
                 </Route>
               ))}
-              <Route element={<GuestLayout />}>
-                <Route path="/" element={<Landing />} />
-                <Route path="/auth/login" element={<Login />} />
-                <Route path="/jobs" element={<Jobs />} />
-                <Route path="/resources" element={<Resources />} />
-                <Route path="/success-stories" element={<SuccessStories />} />
-                <Route path="/partners/analytics" element={<Analytics />} />
-                <Route path="/partners/apprenticeships" element={<Apprenticeships />} />
-                <Route path="/partners/mentorship" element={<Mentorship />} />
-                <Route path="*" element={<NotFound />} />
-              </Route>
             </Routes>
           </TranslationProvider>
         </FormProvider>

@@ -1,37 +1,9 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ArrowRight, Briefcase, Users, BarChart, BookOpen, TrendingUp } from "lucide-react";
-import { LanguageToggle } from "../components/shared/LanguageToggle";
-import { Logo } from "../components/branding/Logo";
 
 export default function Landing() {
   return (
     <div className="min-h-screen bg-white">
-      {/* Navigation */}
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <div className="flex justify-between items-center">
-          <div className="flex items-center">
-            <Logo className="h-48 w-auto" />
-          </div>
-          <div className="flex items-center space-x-4">
-            <LanguageToggle 
-              onLanguageChange={(lang) => console.log('Language changed to:', lang)} 
-            />
-            <Link
-              to="/auth/login"
-              className="text-base font-medium text-gray-500 hover:text-gray-900"
-            >
-              Sign in
-            </Link>
-            <Link
-              to="/auth/register"
-              className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700"
-            >
-              Get started
-            </Link>
-          </div>
-        </div>
-      </nav>
-
       {/* Hero Section */}
       <div className="relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
@@ -48,7 +20,7 @@ export default function Landing() {
             <div className="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
               <div className="rounded-md shadow">
                 <Link
-                  to="/employer/messages"
+                  to="/employer/landing"
                   className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10"
                 >
                   Get started
@@ -215,7 +187,7 @@ export default function Landing() {
 
           <div className="mt-12">
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              <Link to="/auth/register" className="pt-6 block transition-all duration-200">
+              <Link to="/employer/landing" className="pt-6 block transition-all duration-200">
                 <div className="flow-root bg-white rounded-lg px-6 pb-8 hover:shadow-lg transition-shadow duration-200">
                   <div className="-mt-6">
                     <div>
@@ -234,7 +206,7 @@ export default function Landing() {
                 </div>
               </Link>
 
-              <Link to="/auth/register" className="pt-6 block transition-all duration-200">
+              <Link to="/employer/landing" className="pt-6 block transition-all duration-200">
                 <div className="flow-root bg-white rounded-lg px-6 pb-8 hover:shadow-lg transition-shadow duration-200">
                   <div className="-mt-6">
                     <div>
@@ -253,7 +225,7 @@ export default function Landing() {
                 </div>
               </Link>
 
-              <Link to="/auth/register" className="pt-6 block transition-all duration-200">
+              <Link to="/employer/landing" className="pt-6 block transition-all duration-200">
                 <div className="flow-root bg-white rounded-lg px-6 pb-8 hover:shadow-lg transition-shadow duration-200">
                   <div className="-mt-6">
                     <div>
@@ -304,9 +276,9 @@ export default function Landing() {
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-4">For Employers</h3>
               <ul className="space-y-2">
-                <li><Link to="/auth/register" className="text-gray-600 hover:text-indigo-600">Post a Job</Link></li>
-                <li><Link to="/auth/register" className="text-gray-600 hover:text-indigo-600">Candidate Management</Link></li>
-                <li><Link to="/auth/register" className="text-gray-600 hover:text-indigo-600">Analytics</Link></li>
+                <li><Link to="/employer/landing" className="text-gray-600 hover:text-indigo-600">Post a Job</Link></li>
+                <li><Link to="/employer/landing" className="text-gray-600 hover:text-indigo-600">Candidate Management</Link></li>
+                <li><Link to="/employer/landing" className="text-gray-600 hover:text-indigo-600">Analytics</Link></li>
               </ul>
             </div>
 

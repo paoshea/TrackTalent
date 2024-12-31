@@ -1,4 +1,3 @@
-
 import { RouteObject } from "react-router-dom";
 import Jobs from "../pages/jobs/Jobs";
 import Resources from "../pages/resources/Resources";
@@ -8,6 +7,8 @@ import Apprenticeships from "../pages/partners/Apprenticeships";
 import Mentorship from "../pages/partners/Mentorship";
 import Landing from "../pages/Landing";
 import Login from "../pages/auth/Login";
+import Register from "../pages/auth/Register";
+import EmployerLanding from "../pages/employer/Landing";
 
 const guestRoutes: RouteObject[] = [
   {
@@ -17,6 +18,10 @@ const guestRoutes: RouteObject[] = [
   {
     path: "/auth/login",
     element: <Login />,
+  },
+  {
+    path: "/auth/register",
+    element: <Register />,
   },
   {
     path: "/jobs",
@@ -41,6 +46,19 @@ const guestRoutes: RouteObject[] = [
   {
     path: "/partners/mentorship",
     element: <Mentorship />,
+  },
+  {
+    path: "employer",
+    children: [
+      {
+        path: "",
+        element: <EmployerLanding />,
+      },
+      {
+        path: "landing",
+        element: <EmployerLanding />,
+      }
+    ]
   }
 ];
 

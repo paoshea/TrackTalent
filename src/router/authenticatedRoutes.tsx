@@ -1,4 +1,3 @@
-//import React from "react";
 import { Navigate, Outlet, RouteObject } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import type { UserRole } from "../types/auth";
@@ -12,8 +11,16 @@ import JobPostings from "../pages/employer/JobPostings";
 import CandidateManagement from "../pages/employer/CandidateManagement";
 import Analytics from "../pages/employer/Analytics";
 import { OnboardingFlow } from "../pages/onboarding/OnboardingFlow";
+import { CandidateLayout } from "../components/layout/CandidateLayout";
+import { EmployerLayout } from "../components/layout/EmployerLayout";
+import { PartnerLayout } from "../components/layout/PartnerLayout";
 
-function ProtectedRoute({ allowedRoles }: { allowedRoles?: UserRole[] }) {
+interface ProtectedRouteProps {
+  allowedRoles?: UserRole[];
+  children?: React.ReactNode;
+}
+
+function ProtectedRoute({ allowedRoles, children }: ProtectedRouteProps) {
   const { user, isLoading } = useAuth();
 
   if (isLoading) {
@@ -30,7 +37,7 @@ function ProtectedRoute({ allowedRoles }: { allowedRoles?: UserRole[] }) {
     return <Navigate to="/" replace />;
   }
 
-  return <Outlet />;
+  return children ? <>{children}</> : <Outlet />;
 }
 
 const authenticatedRoutes: RouteObject[] = [
@@ -46,7 +53,11 @@ const authenticatedRoutes: RouteObject[] = [
   },
   {
     path: "/employer",
-    element: <ProtectedRoute allowedRoles={["employer"]} />,
+    element: (
+      <ProtectedRoute allowedRoles={["employer"]}>
+        <EmployerLayout />
+      </ProtectedRoute>
+    ),
     children: [
       {
         path: "",
@@ -55,14 +66,6 @@ const authenticatedRoutes: RouteObject[] = [
       {
         path: "messages",
         element: <Messages />,
-      },
-      {
-        path: "applications",
-        element: <Applications />,
-      },
-      {
-        path: "profile",
-        element: <Profile />,
       },
       {
         path: "job-postings",
@@ -80,7 +83,11 @@ const authenticatedRoutes: RouteObject[] = [
   },
   {
     path: "/candidate",
-    element: <ProtectedRoute allowedRoles={["candidate"]} />,
+    element: (
+      <ProtectedRoute allowedRoles={["candidate"]}>
+        <CandidateLayout />
+      </ProtectedRoute>
+    ),
     children: [
       {
         path: "",
@@ -97,6 +104,32 @@ const authenticatedRoutes: RouteObject[] = [
       {
         path: "profile",
         element: <Profile />,
+      }
+    ],
+  },
+  {
+    path: "/partner",
+    element: (
+      <ProtectedRoute allowedRoles={["partner"]}>
+        <PartnerLayout />
+      </ProtectedRoute>
+    ),
+    children: [
+      {
+        path: "",
+        element: <div>Partner Dashboard</div>,
+      },
+      {
+        path: "programs",
+        element: <div>Partner Programs</div>,
+      },
+      {
+        path: "analytics",
+        element: <div>Partner Analytics</div>,
+      },
+      {
+        path: "messages",
+        element: <Messages />,
       }
     ],
   },

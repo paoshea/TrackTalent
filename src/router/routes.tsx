@@ -1,22 +1,21 @@
-
 import { RouteObject } from "react-router-dom";
-import { PublicRoute } from "../components/auth/ProtectedRoute";
+import { GuestLayout } from "../components/layout/GuestLayout";
 import guestRoutes from "./guestRoutes";
 import authenticatedRoutes from "./authenticatedRoutes";
 import NotFound from "../pages/NotFound";
 
 const routes: RouteObject[] = [
   {
-    element: <PublicRoute />,
+    element: <GuestLayout />,
     children: [
       ...guestRoutes,
-      ...authenticatedRoutes,
       {
         path: "*",
         element: <NotFound />,
       },
     ],
   },
+  ...authenticatedRoutes,
 ];
 
 export default routes;

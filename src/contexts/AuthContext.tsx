@@ -125,10 +125,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         password: data.password,
         options: {
           data: {
-            firstName: data.firstName,
-            lastName: data.lastName,
             role: data.role,
-            companyName: data.companyName,
           },
           emailRedirectTo: `${window.location.origin}/auth/verify-email`,
         }
@@ -139,16 +136,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
       if (!userData?.user?.id) {
         throw new Error('Failed to create user account');
       }
-      
+
+      // Create user profile
       const { error: profileError } = await supabase.from("profiles").insert({
         id: userData.user.id,
-        first_name: data.firstName,
-        last_name: data.lastName,
-        role: data.role,
-        company_name: data.companyName,
+        user_id: userData.user.id,
+        full_name: data.full_name,
+        title: data.title,
+        location: data.location,
         email: data.email,
       });
       if (profileError) throw profileError;
+
     } catch (error) {
       setState((prev) => ({
         ...prev,
