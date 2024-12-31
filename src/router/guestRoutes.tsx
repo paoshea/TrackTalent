@@ -1,4 +1,3 @@
-
 import { RouteObject } from "react-router-dom";
 import Landing from "../pages/Landing";
 import Jobs from "../pages/jobs/Jobs";
