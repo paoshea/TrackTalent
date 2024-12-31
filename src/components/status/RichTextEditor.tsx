@@ -9,6 +9,7 @@ import {
   type ExtendedMentionSuggestion,
 } from "../../hooks/useMentionSuggestions";
 import { cn } from "../../utils/cn";
+import { sanitizePlainText, formatMentionsAndHashtags } from "../../utils/sanitize";
 
 export function RichTextEditor({
   content,
@@ -29,50 +30,32 @@ export function RichTextEditor({
     select,
   } = useMentionSuggestions();
 
-  // Initialize editor with mentions and hashtags
+  // Initialize editor with sanitized content, mentions, and hashtags
   useEffect(() => {
     if (editorRef.current && content) {
-      let formattedContent = content;
-
-      // Format mentions
-      mentions.forEach((mention: StatusMention) => {
-        const regex = new RegExp(`@${mention.name}\\b`, "g");
-        formattedContent = formattedContent.replace(
-          regex,
-          `<span class="text-blue-600">@${mention.name}</span>`,
-        );
-      });
-
-      // Format hashtags
-      hashtags.forEach((tag: StatusHashtag) => {
-        const regex = new RegExp(`#${tag.tag}\\b`, "g");
-        formattedContent = formattedContent.replace(
-          regex,
-          `<span class="text-blue-600">#${tag.tag}</span>`,
-        );
-      });
-
-      editorRef.current.innerHTML = formattedContent;
+      const safeContent = formatMentionsAndHashtags(content, mentions, hashtags);
+      editorRef.current.innerHTML = safeContent;
     }
   }, [content, mentions, hashtags]);
 
   const handleInput = useCallback(() => {
     if (!editorRef.current || disabled) return;
-    const content = editorRef.current.innerText;
+    const rawContent = editorRef.current.innerText;
+    const safeContent = sanitizePlainText(rawContent);
 
-    if (maxLength && content.length > maxLength) {
-      editorRef.current.innerText = content.slice(0, maxLength);
+    if (maxLength && safeContent.length > maxLength) {
+      editorRef.current.innerText = safeContent.slice(0, maxLength);
       return;
     }
 
-    onChange(content);
+    onChange(safeContent);
 
     // Handle mentions and hashtags
-    const words = content.split(/\s+/);
+    const words = safeContent.split(/\s+/);
     const lastWord = words[words.length - 1];
 
     if (lastWord.startsWith("@") && onMentionSearch) {
-      const query = lastWord.slice(1);
+      const query = sanitizePlainText(lastWord.slice(1));
       if (query) {
         onMentionSearch(query);
       }
@@ -85,14 +68,15 @@ export function RichTextEditor({
 
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
-        const content = editorRef.current?.innerText || "";
+        const rawContent = editorRef.current?.innerText || "";
+        const safeContent = sanitizePlainText(rawContent);
 
         // Handle hashtag creation on Enter
-        const words = content.split(/\s+/);
+        const words = safeContent.split(/\s+/);
         const lastWord = words[words.length - 1];
 
         if (lastWord.startsWith("#") && onHashtagSearch) {
-          const hashtag = lastWord.slice(1);
+          const hashtag = sanitizePlainText(lastWord.slice(1));
           if (hashtag) {
             onHashtagSearch(hashtag);
           }
@@ -106,12 +90,14 @@ export function RichTextEditor({
     (suggestion: ExtendedMentionSuggestion) => {
       if (!editorRef.current || disabled) return;
 
-      const content = editorRef.current.innerText;
-      const words = content.split(/\s+/);
+      const rawContent = editorRef.current.innerText;
+      const safeContent = sanitizePlainText(rawContent);
+      const words = safeContent.split(/\s+/);
       const lastWord = words[words.length - 1];
 
       if (lastWord.startsWith("@")) {
-        words[words.length - 1] = `@${suggestion.name}`;
+        const safeName = sanitizePlainText(suggestion.name);
+        words[words.length - 1] = `@${safeName}`;
         const newContent = words.join(" ");
 
         editorRef.current.innerText = newContent;
@@ -134,7 +120,6 @@ export function RichTextEditor({
           disabled ? "bg-gray-100 cursor-not-allowed" : "bg-white",
           suggestionsError ? "border-red-300" : "border-gray-300",
         )}
-        dangerouslySetInnerHTML={{ __html: content }}
         aria-placeholder={placeholder}
         role="textbox"
         aria-multiline="true"
@@ -142,7 +127,7 @@ export function RichTextEditor({
       />
 
       {suggestionsError && (
-        <p className="mt-1 text-sm text-red-600">{suggestionsError}</p>
+        <p className="mt-1 text-sm text-red-600">{sanitizePlainText(suggestionsError)}</p>
       )}
 
       {maxLength && (
@@ -167,16 +152,16 @@ export function RichTextEditor({
                   <div className="flex items-center">
                     {suggestion.avatar && (
                       <img
-                        src={suggestion.avatar}
-                        alt={suggestion.name}
+                        src={sanitizePlainText(suggestion.avatar)}
+                        alt={sanitizePlainText(suggestion.name)}
                         className="w-6 h-6 rounded-full mr-2"
                       />
                     )}
                     <div>
-                      <div className="font-medium">{suggestion.name}</div>
+                      <div className="font-medium">{sanitizePlainText(suggestion.name)}</div>
                       {suggestion.subtitle && (
                         <div className="text-sm text-gray-500">
-                          {suggestion.subtitle}
+                          {sanitizePlainText(suggestion.subtitle)}
                         </div>
                       )}
                     </div>
