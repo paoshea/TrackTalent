@@ -1,15 +1,21 @@
-import React from "react";
-import { Navigate } from "react-router-dom";
-import { useUserRole, type UserRole } from "../../hooks/useUserRole";
 
-interface Props {
-  children: React.ReactNode;
-  roles?: UserRole[];
+import React from "react";
+import { Navigate, Outlet } from "react-router-dom";
+import { useUserRole } from "../../hooks/useUserRole";
+import type { UserRole } from "../../types/auth";
+
+export function PublicRoute() {
+  const { role: userRole } = useUserRole();
+  
+  if (userRole) {
+    return <Navigate to="/" replace />;
+  }
+
+  return <Outlet />;
 }
 
-export function ProtectedRoute({ children, roles }: Props) {
+export function ProtectedRoute({ allowedRoles }: { allowedRoles?: UserRole[] }) {
   const { role: userRole, isLoading, error } = useUserRole();
-  const isAuthenticated = true; // TODO: Replace with actual auth check
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -19,14 +25,13 @@ export function ProtectedRoute({ children, roles }: Props) {
     return <Navigate to="/error" replace />;
   }
 
-  if (!isAuthenticated) {
-    return <Navigate to="/signin" replace />;
+  if (!userRole) {
+    return <Navigate to="/auth/login" replace />;
   }
 
-  if (roles && roles.length > 0 && !roles.includes(userRole)) {
-    // Redirect to appropriate dashboard based on user's role
+  if (allowedRoles && !allowedRoles.includes(userRole)) {
     return <Navigate to="/" replace />;
   }
 
-  return <>{children}</>;
+  return <Outlet />;
 }
