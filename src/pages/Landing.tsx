@@ -3,7 +3,7 @@ import { ArrowRight, Briefcase, Users, BarChart, BookOpen, TrendingUp } from "lu
 import { LanguageToggle } from "../components/shared/LanguageToggle";
 import { Logo } from "../components/branding/Logo";
 
-export function Landing() {
+export default function Landing() {
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation */}
