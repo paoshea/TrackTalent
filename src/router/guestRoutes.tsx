@@ -7,10 +7,13 @@ import Register from "../pages/auth/Register";
 import { ForgotPassword } from "../pages/auth/ForgotPassword";
 import { ResetPassword } from "../pages/auth/ResetPassword";
 import Jobs from "../pages/jobs/Jobs";
-import SuccessStories from "../pages/success-stories/SuccessStories";
 import Resources from "../pages/resources/Resources";
-import type { UserRole } from "../types/auth";
+import SuccessStories from "../pages/success-stories/SuccessStories";
+import PartnerAnalytics from "../pages/partners/Analytics";
+import Apprenticeships from "../pages/partners/Apprenticeships";
+import Mentorship from "../pages/partners/Mentorship";
 import { useAuth } from "../hooks/useAuth";
+import type { UserRole } from "../types/auth";
 
 function PublicRoute() {
   const { user, isLoading } = useAuth();
@@ -44,11 +47,32 @@ export const guestRoutes = [
       },
       {
         path: "jobs",
-        element: (
-          <React.Suspense fallback={<div>Loading...</div>}>
-            <Jobs />
-          </React.Suspense>
-        ),
+        element: <Jobs />,
+      },
+      {
+        path: "resources",
+        element: <Resources />,
+      },
+      {
+        path: "success-stories",
+        element: <SuccessStories />,
+      },
+      {
+        path: "partners",
+        children: [
+          {
+            path: "analytics",
+            element: <PartnerAnalytics />,
+          },
+          {
+            path: "apprenticeships",
+            element: <Apprenticeships />,
+          },
+          {
+            path: "mentorship",
+            element: <Mentorship />,
+          }
+        ]
       },
       {
         path: "auth",
@@ -70,15 +94,11 @@ export const guestRoutes = [
             path: "reset-password",
             element: <ResetPassword />,
           },
+          {
+            path: "signout",
+            element: <Navigate to="/auth/login" replace />,
+          }
         ],
-      },
-      {
-        path: "success-stories",
-        element: <SuccessStories />,
-      },
-      {
-        path: "/resources",
-        element: <Resources />,
       },
     ],
   },

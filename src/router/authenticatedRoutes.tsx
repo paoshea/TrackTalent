@@ -1,15 +1,15 @@
 
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import type { UserRole, User } from "../types/auth";
 import { useAuth } from "../hooks/useAuth";
+import type { UserRole } from "../types/auth";
+
 import AdminDashboard from "../pages/admin/Dashboard";
 import EmployerDashboard from "../pages/employer/Dashboard";
 import CandidateDashboard from "../pages/candidate/Dashboard";
 import Applications from "../pages/candidate/Applications";
-import Messages from "../pages/candidate/Messages";
+import Messages from "../pages/messages/Messages";
 import Profile from "../pages/candidate/Profile";
-import Jobs from "../pages/jobs/Jobs";
 import JobPostings from "../pages/employer/JobPostings";
 import CandidateManagement from "../pages/employer/CandidateManagement";
 import Analytics from "../pages/employer/Analytics";
@@ -35,15 +35,6 @@ function ProtectedRoute({ allowedRoles }: { allowedRoles?: UserRole[] }) {
   return <Outlet />;
 }
 
-const getDashboardPath = (role?: UserRole): string => {
-  const dashboardPaths: Record<UserRole, string> = {
-    admin: "/admin",
-    employer: "/employer",
-    candidate: "/candidate",
-  };
-  return role ? dashboardPaths[role] : "/";
-};
-
 export const authenticatedRoutes = [
   {
     path: "/admin",
@@ -52,7 +43,7 @@ export const authenticatedRoutes = [
       {
         path: "",
         element: <AdminDashboard />,
-      },
+      }
     ],
   },
   {
@@ -76,23 +67,17 @@ export const authenticatedRoutes = [
         element: <Profile />,
       },
       {
-        path: "jobs",
-        element: <React.Suspense fallback={<div>Loading...</div>}>
-          <JobPostings />
-        </React.Suspense>,
+        path: "job-postings",
+        element: <JobPostings />,
       },
       {
-        path: "candidates",
-        element: <React.Suspense fallback={<div>Loading...</div>}>
-          <CandidateManagement />
-        </React.Suspense>,
+        path: "candidate-management",
+        element: <CandidateManagement />,
       },
       {
         path: "analytics",
-        element: <React.Suspense fallback={<div>Loading...</div>}>
-          <Analytics />
-        </React.Suspense>,
-      },
+        element: <Analytics />,
+      }
     ],
   },
   {
@@ -117,8 +102,8 @@ export const authenticatedRoutes = [
       },
       {
         path: "jobs",
-        element: <Jobs />,
-      },
+        element: <Jobs />
+      }
     ],
   },
   {
@@ -127,16 +112,8 @@ export const authenticatedRoutes = [
     children: [
       {
         path: "",
-        element: (
-          <OnboardingFlow
-            onComplete={(user: User) => getDashboardPath(user.role)}
-          />
-        ),
-      },
+        element: <OnboardingFlow />,
+      }
     ],
-  },
-  {
-    path: "/auth/signout",
-    element: <Navigate to="/auth/login" replace />
-  },
+  }
 ];
