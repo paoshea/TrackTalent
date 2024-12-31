@@ -8,7 +8,10 @@ import { PartnerAnalytics } from "../pages/partners/Analytics";
 import { Apprenticeships } from "../pages/partners/Apprenticeships";
 import { Mentorship } from "../pages/partners/Mentorship";
 import { PublicRoute } from "../components/auth/ProtectedRoute";
-import { Login, Register, ForgotPassword, ResetPassword } from "../pages/auth";
+import Login from "../pages/auth/Login";
+import Register from "../pages/auth/Register";
+import { ForgotPassword } from "../pages/auth/ForgotPassword";
+import { ResetPassword } from "../pages/auth/ResetPassword";
 import { Outlet, Navigate } from "react-router-dom";
 
 const guestRoutes: RouteObject[] = [
