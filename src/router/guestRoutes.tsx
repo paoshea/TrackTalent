@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, RouteObject } from "react-router-dom";
 import { Landing } from "../pages/Landing";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
@@ -36,7 +36,7 @@ function PublicRoute() {
   return <Outlet />;
 }
 
-export const guestRoutes = [
+const guestRoutes: RouteObject[] = [
   {
     path: "/",
     element: <Outlet />,
@@ -103,3 +103,5 @@ export const guestRoutes = [
     ],
   },
 ];
+
+export { guestRoutes };

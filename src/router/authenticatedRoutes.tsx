@@ -1,9 +1,8 @@
 
 import React from "react";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, RouteObject } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import type { UserRole } from "../types/auth";
-
 import AdminDashboard from "../pages/admin/Dashboard";
 import EmployerDashboard from "../pages/employer/Dashboard";
 import CandidateDashboard from "../pages/candidate/Dashboard";
@@ -35,7 +34,7 @@ function ProtectedRoute({ allowedRoles }: { allowedRoles?: UserRole[] }) {
   return <Outlet />;
 }
 
-export const authenticatedRoutes = [
+const authenticatedRoutes: RouteObject[] = [
   {
     path: "/admin",
     element: <ProtectedRoute allowedRoles={["admin"]} />,
@@ -99,10 +98,6 @@ export const authenticatedRoutes = [
       {
         path: "profile",
         element: <Profile />,
-      },
-      {
-        path: "jobs",
-        element: <Jobs />
       }
     ],
   },
@@ -117,3 +112,5 @@ export const authenticatedRoutes = [
     ],
   }
 ];
+
+export { authenticatedRoutes };
