@@ -113,4 +113,4 @@ const authenticatedRoutes: RouteObject[] = [
   }
 ];
 
-export { authenticatedRoutes };
+export default authenticatedRoutes;
