@@ -1,26 +1,21 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { resolve } from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, 'src'),
+    },
+  },
   server: {
     port: 3000,
-    strictPort: true,
-    hmr: {
-      overlay: true
-    }
+    strictPort: false, // Allow Vite to try other ports if 3000 is taken
   },
-  build: {
-    outDir: 'dist',
-    sourcemap: true,
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          'vendor-core': ['react', 'react-dom', 'react-router-dom'],
-          'vendor-icons': ['lucide-react']
-        }
-      }
-    }
+  preview: {
+    port: 3000,
+    strictPort: false, // Also apply to preview server
   }
 });
