@@ -104,4 +104,4 @@ const guestRoutes: RouteObject[] = [
   },
 ];
 
-export { guestRoutes };
+export default guestRoutes;
