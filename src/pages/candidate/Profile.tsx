@@ -1,6 +1,6 @@
 
 import { MainLayout } from "../../components/layout/MainLayout";
-import { CandidateProfile } from "../../components/profile/CandidateProfile";
+import { CandidateProfile } from "../../components/profile";
 
 export default function Profile() {
   return (

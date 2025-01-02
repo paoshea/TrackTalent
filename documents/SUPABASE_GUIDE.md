@@ -1,676 +1,225 @@
-# Supabase Guide for TalentTrack
+# Supabase Integration Guide
 
-## Overview
-This guide provides comprehensive information about managing the TalentTrack platform's Supabase implementation, including schema updates, maintenance procedures, and best practices.
+This guide explains how to set up and use Supabase in both development and production environments.
 
-## Pending Tidy Up to thsi document
-I notice several issues in the SUPABASE_GUIDE.md that need to be fixed:
-- Duplicate sections (Environment Setup, Database Schema Management)
-- Inconsistent heading levels (some ### 3. sections that should be #### 3.)
-- Some sections are out of order
-- Some content is repeated
+## Quick Start
 
-## Environment Setup
-
-### Required Environment Variables
+1. Initialize the development environment:
 ```bash
-# .env file
-VITE_SUPABASE_URL=your_project_url
-VITE_SUPABASE_ANON_KEY=your_anon_key
+./scripts/setup-supabase.sh
 ```
 
-### Client Configuration
-```typescript
-// src/lib/supabase.ts
-import { createClient } from "@supabase/supabase-js";
-
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error(
-    "Missing Supabase environment variables. Please check your .env file.",
-  );
-}
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
-```
-
-### Environment Management
-1. Development
-   ```bash
-   # Local development
-   cp .env.example .env.local
-   # Edit .env.local with development credentials
-   ```
-
-2. Staging
-   ```bash
-   # Staging environment
-   cp .env.example .env.staging
-   # Edit .env.staging with staging credentials
-   ```
-
-3. Production
-   ```bash
-   # Production environment
-   cp .env.example .env.production
-   # Edit .env.production with production credentials
-   ```
-
-### Security Considerations
-1. Environment Variables
-   - Never commit .env files
-   - Use different keys per environment
-   - Rotate keys periodically
-   - Monitor key usage
-
-2. Access Control
-   - Use appropriate service roles
-   - Implement RLS policies
-   - Monitor access patterns
-   - Regular security audits
-
-## Database Schema Management
-
-### Current Schema Structure
-The database schema is organized into several key areas:
-1. Core Tables (users, profiles, companies)
-2. Job-Related Tables (jobs, applications, interviews)
-3. Profile Enhancement Tables (skills, experience, education)
-4. Communication Tables (messages, notifications)
-5. Analytics Tables (activity_log, analytics_events)
-
-### Schema Update Process
-
-#### 1. Development Environment
+2. Start the development server:
 ```bash
-# Create new migration
-supabase migration new add_new_feature
-
-# Apply migrations
-supabase db reset
-
-# Generate types
-supabase gen types typescript --local > src/types/supabase.ts
+npm run dev
 ```
 
-#### 2. Testing Environment
-```bash
-# Push changes to testing
-supabase db push --db-url=[TEST_DATABASE_URL]
+## Development Environment
 
-# Verify changes
-supabase db diff --db-url=[TEST_DATABASE_URL]
-```
+### Port Configuration
 
-#### 3. Production Environment
-```bash
-# Review production migration
-supabase db diff --db-url=[PROD_DATABASE_URL]
+The development environment uses dynamic port allocation to avoid conflicts:
 
-# Apply to production
-supabase db push --db-url=[PROD_DATABASE_URL]
-```
+- API: Default 54321 (falls back to next available)
+- Database: Default 54322 (falls back to next available)
+- Studio: Default 54323 (falls back to next available)
+- Inbucket: Default 54324 (falls back to next available)
+- SMTP: Default 54325 (falls back to next available)
+- POP3: Default 54326 (falls back to next available)
+- Analytics: Default 54327 (falls back to next available)
+- Vector: Default 54328 (falls back to next available)
 
-### Adding New Tables
+The development server (Vite) runs on port 3000 by default and will automatically find the next available port if 3000 is in use.
 
-1. Create Migration File
-```sql
--- supabase/migrations/[timestamp]_add_new_table.sql
-CREATE TABLE new_table (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-  -- Add other columns
-);
+### Setup Process
 
--- Add indexes
-CREATE INDEX new_table_field_idx ON new_table(field_name);
+The setup script (`scripts/setup-supabase.sh`) handles:
 
--- Add RLS policies
-ALTER TABLE new_table ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Users can view their own data"
-  ON new_table
-  FOR SELECT
-  USING (auth.uid() = user_id);
-```
+1. Dynamic port allocation
+2. Container cleanup
+3. Database initialization
+4. Schema migration
+5. Seed data population
 
-2. Update TypeScript Types
-```typescript
-// src/types/supabase.ts
-export interface NewTable {
-  id: string;
-  created_at: string;
-  updated_at: string;
-  // Add other fields
-}
-```
+### Available Endpoints
 
-3. Create Database Functions
-```sql
--- Create triggers for updated_at
-CREATE TRIGGER set_updated_at
-  BEFORE UPDATE ON new_table
-  FOR EACH ROW
-  EXECUTE FUNCTION update_updated_at_column();
-```
+After setup, the following endpoints are available:
 
-## Daily Maintenance Tasks
+- API: http://localhost:[API_PORT]
+- GraphQL: http://localhost:[API_PORT]/graphql/v1
+- Studio: http://localhost:[STUDIO_PORT]
+- Inbucket: http://localhost:[INBUCKET_PORT]
+- Database: postgresql://postgres:postgres@localhost:[DB_PORT]/postgres
 
-### 1. Monitoring
-```sql
--- Check table sizes
-SELECT 
-  schemaname AS schema,
-  relname AS table,
-  pg_size_pretty(pg_total_relation_size(relid)) AS total_size,
-  pg_size_pretty(pg_relation_size(relid)) AS data_size,
-  pg_size_pretty(pg_total_relation_size(relid) - pg_relation_size(relid)) AS external_size
-FROM pg_catalog.pg_statio_user_tables
-ORDER BY pg_total_relation_size(relid) DESC;
+### Demo Accounts
 
--- Monitor active connections
-SELECT * FROM pg_stat_activity WHERE state = 'active';
+Pre-configured demo accounts for testing:
 
--- Check index usage
-SELECT 
-  schemaname,
-  tablename,
-  indexname,
-  idx_scan,
-  idx_tup_read,
-  idx_tup_fetch
-FROM pg_stat_user_indexes;
-```
+- Candidate: candidate@demo.com
+- Employer: employer@demo.com
+- Partner: partner@demo.com
 
-### 2. Performance Optimization
-```sql
--- Analyze tables
-ANALYZE table_name;
+## Database Structure
 
--- Update statistics
-VACUUM ANALYZE table_name;
+### Core Tables
 
--- Identify slow queries
-SELECT 
-  query,
-  calls,
-  total_time,
-  mean_time
-FROM pg_stat_statements
-ORDER BY total_time DESC
-LIMIT 10;
-```
+1. profiles
+   - Created automatically via trigger on auth.users
+   - Stores user profile information
+   - Links to auth.users via foreign key
 
-### 3. Backup Verification
-```bash
-# Verify backup status
-supabase db dump -f backup.sql
+2. companies
+   - Stores company information
+   - Used by employers and partners
 
-# Test restore in development
-supabase db reset --db-url=[DEV_DATABASE_URL]
-psql [DEV_DATABASE_URL] < backup.sql
-```
+3. jobs
+   - Stores job listings
+   - Links to companies
 
-## Weekly Maintenance
+4. applications
+   - Tracks job applications
+   - Links candidates to jobs
+   - Includes timeline events
 
-### 1. Schema Review
-- Check for unused indexes
-- Analyze query patterns
-- Review RLS policies
-- Update documentation
+### Migrations
 
-### 2. Performance Tuning
-- Analyze slow queries
-- Optimize indexes
-- Update statistics
-- Review connection pools
+Located in `supabase/migrations/`:
+- 20240101000000_create_profiles.sql
+- 20240101000001_create_companies.sql
+- 20240101000002_create_jobs.sql
+- 20240101000003_create_applications.sql
 
-### 3. Security Audit
-- Review access patterns
-- Check policy effectiveness
-- Monitor auth logs
-- Update permissions
+### Seed Data
 
-## Monthly Tasks
-
-### 1. Capacity Planning
-- Review storage usage
-- Analyze growth patterns
-- Plan scaling needs
-- Update resource limits
-
-### 2. Compliance Check
-- Audit data retention
-- Verify encryption
-- Check access logs
-- Update documentation
-
-## Best Practices
-
-### 1. Schema Design
-- Use UUIDs for primary keys
-- Include created_at/updated_at
-- Implement proper indexing
-- Follow naming conventions
-
-### 2. Security
-- Always use RLS policies
-- Implement least privilege
-- Use parameterized queries
-- Regular security audits
-
-### 3. Performance
-- Optimize queries
-- Use appropriate indexes
-- Regular VACUUM
-- Monitor query plans
-
-### 4. Development Workflow
-- Use migrations for changes
-- Test in development first
-- Document all changes
-- Regular backups
+Located in `supabase/seed.sql`:
+- Creates demo users in auth.users
+- Updates profiles via trigger
+- Adds sample companies and jobs
+- Creates demo applications
 
 ## Troubleshooting
 
 ### Common Issues
 
-1. Slow Queries
-```sql
--- Identify slow queries
-SELECT * FROM pg_stat_statements
-WHERE mean_time > 1000
-ORDER BY mean_time DESC;
+1. Port Conflicts
+   - The setup script automatically finds available ports
+   - Check running Docker containers if ports are blocked
+   - Use `docker ps` to identify conflicting services
 
--- Analyze query plan
-EXPLAIN ANALYZE problematic_query;
-```
+2. Database Connection Issues
+   - Ensure Docker is running
+   - Check container status with `docker ps`
+   - Verify port availability
 
-2. Connection Issues
-```sql
--- Check current connections
-SELECT count(*) FROM pg_stat_activity;
+3. Migration Failures
+   - Check migration order in supabase/migrations/
+   - Verify foreign key relationships
+   - Check for duplicate records in seed data
 
--- Kill hanging connections
-SELECT pg_terminate_backend(pid)
-FROM pg_stat_activity
-WHERE state = 'idle' AND state_change < now() - interval '1 hour';
-```
+### Reset Process
 
-3. Replication Lag
-```sql
--- Check replication status
-SELECT * FROM pg_stat_replication;
+If you need to reset the development environment:
 
--- Monitor lag time
-SELECT now() - pg_last_xact_replay_timestamp() AS replication_lag;
-```
-
-## Emergency Procedures
-
-### 1. Database Recovery
+1. Stop all services:
 ```bash
-# Quick backup
-supabase db dump -f emergency_backup.sql
+supabase stop
+```
 
-# Restore from backup
+2. Clean up Docker resources:
+```bash
+docker rm -f $(docker ps -a -q --filter name=supabase)
+docker volume rm $(docker volume ls -q --filter name=supabase)
+```
+
+3. Run setup script:
+```bash
+./scripts/setup-supabase.sh
+```
+
+## Production Setup
+
+### Environment Variables
+
+Production requires different environment variables:
+
+```env
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your-production-anon-key
+```
+
+### Key Differences from Development
+
+1. Authentication
+   - Production uses real email delivery
+   - OAuth providers need proper configuration
+   - JWT secrets are properly secured
+
+2. Database
+   - Connection pooling is enabled
+   - Proper SSL configuration
+   - Regular backups enabled
+
+3. Storage
+   - S3 or equivalent configured
+   - Proper bucket policies
+   - CDN integration if needed
+
+4. Security
+   - Proper RLS policies
+   - SSL/TLS enabled
+   - Rate limiting configured
+
+### Migration Process
+
+1. Test migrations locally:
+```bash
 supabase db reset
-psql [DATABASE_URL] < emergency_backup.sql
 ```
 
-### 2. Performance Issues
-```sql
--- Kill problematic queries
-SELECT pg_cancel_backend(pid)
-FROM pg_stat_activity
-WHERE state = 'active'
-AND now() - query_start > interval '5 minutes';
-
--- Reset statistics
-SELECT pg_stat_statements_reset();
-```
-### Required Environment Variables
+2. Apply to production:
 ```bash
-# .env file
-VITE_SUPABASE_URL=your_project_url
-VITE_SUPABASE_ANON_KEY=your_anon_key
+supabase db push
 ```
 
-### Client Configuration
-```typescript
-// src/lib/supabase.ts
-import { createClient } from "@supabase/supabase-js";
+## Best Practices
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+1. Development Workflow
+   - Always use setup script for consistent environment
+   - Test migrations locally before production
+   - Use seed data for testing
+   - Keep development and production configs separate
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error(
-    "Missing Supabase environment variables. Please check your .env file.",
-  );
-}
+2. Database Management
+   - Follow migration naming convention
+   - Test triggers and functions locally
+   - Backup data before migrations
+   - Use transactions for complex changes
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
-```
-
-### Environment Management
-1. Development
-   ```bash
-   # Local development
-   cp .env.example .env.local
-   # Edit .env.local with development credentials
-   ```
-
-2. Staging
-   ```bash
-   # Staging environment
-   cp .env.example .env.staging
-   # Edit .env.staging with staging credentials
-   ```
-
-3. Production
-   ```bash
-   # Production environment
-   cp .env.example .env.production
-   # Edit .env.production with production credentials
-   ```
-
-### Security Considerations
-1. Environment Variables
-   - Never commit .env files
-   - Use different keys per environment
-   - Rotate keys periodically
-   - Monitor key usage
-
-2. Access Control
-   - Use appropriate service roles
-   - Implement RLS policies
+3. Security
+   - Never commit sensitive keys
+   - Use RLS policies
+   - Test auth flows thoroughly
    - Monitor access patterns
-   - Regular security audits
 
+4. Performance
+   - Index frequently queried columns
+   - Monitor query performance
+   - Use connection pooling
+   - Cache when appropriate
 
-## Database Schema Management
+## Monitoring and Maintenance
 
-### Current Schema Structure
-The database schema is organized into several key areas:
-1. Core Tables (users, profiles, companies)
-2. Job-Related Tables (jobs, applications, interviews)
-3. Profile Enhancement Tables (skills, experience, education)
-4. Communication Tables (messages, notifications)
-5. Analytics Tables (activity_log, analytics_events)
+1. Local Development
+   - Studio provides monitoring interface
+   - Check Docker container health
+   - Monitor database connections
+   - Watch for migration issues
 
-### Schema Update Process
+2. Production
+   - Set up alerts
+   - Monitor performance
+   - Track usage metrics
+   - Regular backups
+   - Update dependencies
 
-#### 1. Development Environment
-```bash
-# Create new migration
-supabase migration new add_new_feature
-
-# Apply migrations
-supabase db reset
-
-# Generate types
-supabase gen types typescript --local > src/types/supabase.ts
-```
-
-#### 2. Testing Environment
-```bash
-# Push changes to testing
-supabase db push --db-url=[TEST_DATABASE_URL]
-
-# Verify changes
-supabase db diff --db-url=[TEST_DATABASE_URL]
-```
-
-### 3. Security Incidents
-```sql
--- Revoke all access
-REVOKE ALL ON ALL TABLES IN SCHEMA public FROM public;
-
--- Reset user permissions
-REASSIGN OWNED BY problem_user TO postgres;
-DROP OWNED BY problem_user;
-DROP USER problem_user;
-
-## Schema Testing & Validation
-
-### Automated Testing
-```bash
-# Run schema tests
-npm run test:schema
-
-# Test specific migration
-npm run test:migration [migration_name]
-
-# Validate types
-npm run validate:types
-```
-
-### Test Cases
-1. Data Integrity
-```typescript
-describe('Schema Integrity', () => {
-  it('should maintain referential integrity', async () => {
-    // Test foreign key constraints
-  });
-  
-  it('should enforce unique constraints', async () => {
-    // Test unique constraints
-  });
-});
-```
-
-2. Migration Reversibility
-```typescript
-describe('Migration Reversibility', () => {
-  it('should successfully rollback changes', async () => {
-    // Test migration down function
-  });
-});
-```
-
-## CI/CD Integration
-
-### GitHub Actions Workflow
-```yaml
-name: Database Schema CI
-
-on:
-  push:
-    paths:
-      - 'supabase/migrations/**'
-      - 'src/types/supabase.ts'
-
-jobs:
-  validate:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Setup Supabase CLI
-        run: npm install -g supabase
-      - name: Run Migrations
-        run: supabase db reset
-      - name: Run Tests
-        run: npm run test:schema
-```
-
-### Deployment Pipeline
-1. Development
-   - Automatic migration application
-   - Type generation
-   - Schema tests
-
-2. Staging
-   - Migration dry run
-   - Performance impact analysis
-   - Data validation
-
-3. Production
-   - Manual approval required
-   - Backup verification
-   - Staged rollout
-
-## Version Control Guidelines
-
-### Branch Strategy
-```
-main
-├── feature/add-new-table
-├── feature/modify-schema
-└── hotfix/fix-index
-```
-
-### Migration Naming
-```
-YYYYMMDDHHMMSS_descriptive_name.sql
-Example: 20240315143022_add_user_preferences.sql
-```
-
-### Commit Messages
-```
-feat(schema): Add user preferences table
-fix(schema): Correct index on applications table
-docs(schema): Update table documentation
-```
-
-## Team Collaboration
-
-### Code Review Process
-1. Schema Changes
-   - Impact assessment
-   - Performance review
-   - Security evaluation
-   - Type safety check
-
-2. Review Checklist
-   - [ ] Migration is reversible
-   - [ ] Types are updated
-   - [ ] Tests are included
-   - [ ] Documentation updated
-   - [ ] Performance impact assessed
-
-### Communication Channels
-- Schema changes: #db-schema Slack channel
-- Urgent issues: @database-team mention
-- Documentation: Wiki updates
-- Review requests: GitHub PR comments
-
-### Change Management
-1. Proposal Phase
-   - RFC document
-   - Team discussion
-   - Impact analysis
-   - Timeline planning
-
-2. Implementation Phase
-   - Development work
-   - Peer review
-   - Testing
-   - Documentation
-
-3. Deployment Phase
-   - Staging verification
-   - Production deployment
-   - Monitoring
-   - Feedback collection
-
-## Documentation Standards
-
-### Schema Documentation
-```sql
--- Table: users
-/*
- * Stores user account information
- * @updated 2024-03-15
- * @author DevTeam
- */
-CREATE TABLE users (
-  -- Unique identifier for the user
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  
-  -- Email address used for authentication
-  email VARCHAR(255) UNIQUE NOT NULL,
-  
-  -- User role determines permissions
-  role VARCHAR(50) NOT NULL CHECK (role IN ('candidate', 'employer', 'admin'))
-);
-```
-
-### Type Documentation
-```typescript
-/**
- * Represents a user in the system
- * @property id - Unique identifier
- * @property email - User's email address
- * @property role - User's role in the system
- */
-export interface User {
-  id: string;
-  email: string;
-  role: 'candidate' | 'employer' | 'admin';
-}
-```
-
-### Migration Documentation
-```sql
--- Migration: add_user_preferences
-/*
- * Adds user preferences table for storing user settings
- * Dependencies: users table
- * Impact: Medium - New table creation
- */
-```
-
-## Monitoring & Alerts
-
-### Performance Monitoring
-```sql
--- Set up performance alerts
-CREATE OR REPLACE FUNCTION alert_on_slow_queries()
-RETURNS trigger AS $$
-BEGIN
-  IF NEW.mean_time > 1000 THEN
-    PERFORM pg_notify(
-      'slow_query_alert',
-      json_build_object(
-        'query', NEW.query,
-        'mean_time', NEW.mean_time
-      )::text
-    );
-  END IF;
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-```
-
-### Health Checks
-```sql
--- Database health check
-CREATE OR REPLACE FUNCTION check_database_health()
-RETURNS json AS $$
-DECLARE
-  result json;
-BEGIN
-  SELECT json_build_object(
-    'connection_count', (SELECT count(*) FROM pg_stat_activity),
-    'database_size', pg_database_size(current_database()),
-    'active_queries', (SELECT count(*) FROM pg_stat_activity WHERE state = 'active')
-  ) INTO result;
-  RETURN result;
-END;
-$$ LANGUAGE plpgsql;
-```
-
-## Contact Information
-
-### Support Channels
-- Supabase Support: support@supabase.io
-- Internal DevOps: devops@talenttrack.com
-- Emergency Contact: emergency@talenttrack.com
-
-### Documentation
-- Supabase Docs: https://supabase.io/docs
-- Internal Wiki: https://wiki.talenttrack.com/supabase
-- Architecture Docs: https://wiki.talenttrack.com/architecture
+Remember to always test changes in development before applying to production.

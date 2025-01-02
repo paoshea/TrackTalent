@@ -1,15 +1,21 @@
 import { useAuth } from "../hooks/useAuth";
-import { useCustomerJobs } from "../hooks/useCustomerJobs";
-import { useDashboardMetrics } from "../hooks/useDashboardMetrics";
-import { useRecentActivity } from "../hooks/useRecentActivity";
+import * as mockHooks from "../services/mockHooks";
+import { useCustomerJobs as realUseCustomerJobs } from "../hooks/useCustomerJobs";
+import { useDashboardMetrics as realUseDashboardMetrics } from "../hooks/useDashboardMetrics";
+import { useRecentActivity as realUseRecentActivity } from "../hooks/useRecentActivity";
 import { MetricsGrid } from "./dashboard/MetricsGrid";
 import { ActiveJobsList } from "./dashboard/ActiveJobsList";
 import { RecentActivity } from "./dashboard/RecentActivity";
 import { StatusUpdates } from "./dashboard/StatusUpdates";
 import { LoadingState } from "./shared/LoadingState";
 
-export function Dashboard() {
+function Dashboard() {
   const { user } = useAuth();
+  const isGuest = user?.id?.startsWith('guest-');
+  const useCustomerJobs = isGuest ? mockHooks.useCustomerJobs : realUseCustomerJobs;
+  const useDashboardMetrics = isGuest ? mockHooks.useDashboardMetrics : realUseDashboardMetrics;
+  const useRecentActivity = isGuest ? mockHooks.useRecentActivity : realUseRecentActivity;
+
   const { jobs, isLoading: jobsLoading } = useCustomerJobs({
     customerId: user?.id || "",
     status: ["published"],
@@ -25,30 +31,43 @@ export function Dashboard() {
     return <LoadingState />;
   }
 
+  // Helper function to handle both real and mock metrics
+  const getMetricValue = (metric: number | { value: number; change: number } | undefined) => {
+    if (metric === undefined) return 0;
+    if (typeof metric === 'number') return metric;
+    return metric.value;
+  };
+
+  const getMetricChange = (metric: number | { value: number; change: number } | undefined) => {
+    if (metric === undefined) return 0;
+    if (typeof metric === 'number') return 0;
+    return metric.change;
+  };
+
   const dashboardMetrics = [
     {
       title: "Active Jobs",
-      value: metrics?.jobs?.active ?? 0,
-      change: metrics?.jobs?.trend ?? 0,
+      value: getMetricValue(metrics?.activeJobs),
+      change: getMetricChange(metrics?.activeJobs),
       description: "Currently active job postings",
     },
     {
-      title: "Total Candidates",
-      value: metrics?.applications?.total ?? 0,
-      change: metrics?.applications?.trend ?? 0,
-      description: "Total candidates in pipeline",
+      title: "Applications",
+      value: getMetricValue(metrics?.applications),
+      change: getMetricChange(metrics?.applications),
+      description: "Total applications received",
     },
     {
-      title: "Placement Rate",
-      value: `${metrics?.placementRate ?? 0}%`,
-      change: metrics?.placementRateChange ?? 0,
-      description: "Successful placements rate",
+      title: "Interviews",
+      value: getMetricValue(metrics?.interviews),
+      change: getMetricChange(metrics?.interviews),
+      description: "Scheduled interviews",
     },
     {
-      title: "Time to Fill",
-      value: metrics?.timeToFill ? `${metrics.timeToFill} days` : "N/A",
-      change: metrics?.timeToFillChange ?? 0,
-      description: "Average days to fill a position",
+      title: "Response Rate",
+      value: `${getMetricValue(metrics?.responseRate)}%`,
+      change: getMetricChange(metrics?.responseRate),
+      description: "Application response rate",
     },
   ];
 
@@ -105,3 +124,5 @@ export function Dashboard() {
     </div>
   );
 }
+
+export default Dashboard;

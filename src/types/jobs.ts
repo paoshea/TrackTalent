@@ -44,6 +44,41 @@ export interface Company {
   logo?: string;
 }
 
+// Base Job interface for simpler use cases
+export interface BaseJob {
+  id: string;
+  title: string;
+  description: string;
+  type: string;
+  location: string;
+  companyId: string;
+  company: {
+    id: string;
+    name: string;
+    logo: string;
+  };
+  compensation: {
+    salary: {
+      min: number;
+      max: number;
+      currency: string;
+      period: string;
+    };
+  };
+  skills: string[];
+  status: 'open' | 'closed' | 'draft';
+  applicantCount: number;
+  publishedAt: string;
+  createdAt: string;
+  updatedAt: string;
+  closedAt?: string;
+  requirements: string[];
+  benefits: string[];
+  department?: string;
+  experienceLevel: string;
+}
+
+// Extended Job interface with additional fields
 export interface Job extends JobFormData {
   id: string;
   companyId: string;
@@ -53,9 +88,22 @@ export interface Job extends JobFormData {
   createdAt: string;
   updatedAt: string;
   publishedAt?: string;
+  closedAt?: string;
   salaryRange: JobSalary;
 }
 
+// Simple job filters interface
+export interface SimpleJobFilters {
+  location: string[];
+  jobType: string;
+  salary: {
+    min?: number;
+    max?: number;
+  };
+  skills: string[];
+}
+
+// Extended job filters interface
 export type JobFilters = JobFilter;
 
 export interface UseCustomerJobsOptions {

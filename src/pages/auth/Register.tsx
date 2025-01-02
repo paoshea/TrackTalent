@@ -1,23 +1,41 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useState, FormEvent } from "react";
-import { useAuth } from "../../hooks/useAuth";
-import type { UserRole, SignUpData } from "../../types/auth";
+import React, { useState, FormEvent } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
+import type { UserRole } from '../../types/auth';
 
-export default function Register() {
-  const navigate = useNavigate();
+const Register: React.FC = () => {
+  const [searchParams] = useSearchParams();
   const { signUp } = useAuth();
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({
+  interface RegisterFormData {
+    firstName: string;
+    lastName: string;
+    email: string;
+    role: string;
+    title: string;
+    location: string;
+    company_name: string;
+    company_size: string;
+    password: string;
+    confirmPassword: string;
+    terms: boolean;
+    submitted?: boolean;
+  }
+
+  const [formData, setFormData] = useState<RegisterFormData>({
     firstName: '',
     lastName: '',
     email: '',
-    role: '',
+    role: searchParams.get('role') || '',
     title: '',
     location: '',
+    company_name: '',
+    company_size: '',
     password: '',
     confirmPassword: '',
-    terms: false
+    terms: false,
+    submitted: false
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -26,7 +44,6 @@ export default function Register() {
       ...prev,
       [name]: value
     }));
-    // Clear error when user starts typing
     setError(null);
   };
 
@@ -60,36 +77,32 @@ export default function Register() {
       setError(null);
       setIsLoading(true);
 
-      const signUpData: SignUpData = {
+      const signupData = {
         email: formData.email,
         password: formData.password,
         role: formData.role as UserRole,
         full_name: `${formData.firstName} ${formData.lastName}`.trim(),
-        title: formData.title || undefined,
-        location: formData.location || undefined
+        title: formData.title,
+        location: formData.location,
+        company_name: formData.company_name,
+        company_size: formData.company_size
       };
 
-      await signUp(signUpData);
+      // Store signup data for email verification
+      localStorage.setItem('signupData', JSON.stringify(signupData));
 
-      // Redirect based on role
-      switch (formData.role) {
-        case 'candidate':
-          navigate('/candidate/dashboard');
-          break;
-        case 'employer':
-          navigate('/employer/dashboard');
-          break;
-        default:
-          navigate('/');
-      }
+      // Attempt signup
+      await signUp(signupData);
+
+      // Store role for later use
+      localStorage.setItem('userRole', formData.role);
+      
+      // Show verification message and prevent further interaction
+      setFormData(prev => ({ ...prev, submitted: true }));
+      setIsLoading(false);
     } catch (err) {
       if (err instanceof Error) {
-        // Handle specific error cases
-        if (err.message.includes('already exists')) {
-          setError('An account with this email already exists. Please try signing in.');
-        } else {
-          setError(err.message);
-        }
+        setError(err.message);
       } else {
         setError('Failed to register. Please try again.');
       }
@@ -97,6 +110,57 @@ export default function Register() {
       setIsLoading(false);
     }
   };
+
+  const showCompanyFields = formData.role === 'employer' || formData.role === 'partner';
+
+  // Show verification message if form was submitted
+  if (formData.submitted) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+        <div className="sm:mx-auto sm:w-full sm:max-w-md">
+          <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+            <div className="text-center">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">Check Your Email</h2>
+              {error ? (
+                <div className="mb-4 p-3 text-sm text-red-700 bg-red-100 rounded-md">
+                  {error}
+                </div>
+              ) : (
+                <p className="text-gray-600 mb-4">
+                  We've sent a verification link to <span className="font-medium">{formData.email}</span>.
+                  Please check your email and click the link to verify your account.
+                </p>
+              )}
+              <p className="text-sm text-gray-500">
+                Didn't receive the email? Check your spam folder or{' '}
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    signUp({
+                      email: formData.email,
+                      password: formData.password,
+                      role: formData.role as UserRole,
+                      full_name: `${formData.firstName} ${formData.lastName}`.trim(),
+                      title: formData.title,
+                      location: formData.location,
+                      company_name: formData.company_name,
+                      company_size: formData.company_size
+                    }).catch(err => {
+                      console.error('Resend verification error:', err);
+                      setError(err instanceof Error ? err.message : 'Failed to resend verification email');
+                    });
+                  }}
+                  className="text-indigo-600 hover:text-indigo-500"
+                >
+                  try again
+                </button>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -117,13 +181,6 @@ export default function Register() {
           {error && (
             <div className="mb-4 p-3 text-sm text-red-700 bg-red-100 rounded-md">
               {error}
-              {error.includes('already exists') && (
-                <div className="mt-2">
-                  <Link to="/auth/login" className="font-medium text-red-700 hover:text-red-800">
-                    Click here to sign in
-                  </Link>
-                </div>
-              )}
             </div>
           )}
           
@@ -138,7 +195,6 @@ export default function Register() {
                     id="firstName"
                     name="firstName"
                     type="text"
-                    autoComplete="given-name"
                     required
                     value={formData.firstName}
                     onChange={handleChange}
@@ -156,7 +212,6 @@ export default function Register() {
                     id="lastName"
                     name="lastName"
                     type="text"
-                    autoComplete="family-name"
                     required
                     value={formData.lastName}
                     onChange={handleChange}
@@ -189,64 +244,65 @@ export default function Register() {
                 I am a
               </label>
               <div className="mt-1">
-                <div className="grid grid-cols-2 gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setFormData(prev => ({ ...prev, role: 'candidate' }))}
-                    className={`${
-                      formData.role === 'candidate'
-                        ? 'bg-indigo-600 text-white'
-                        : 'bg-white text-gray-700 hover:bg-gray-50'
-                    } px-3 py-2 border rounded-md text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
-                  >
-                    Job Seeker
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setFormData(prev => ({ ...prev, role: 'employer' }))}
-                    className={`${
-                      formData.role === 'employer'
-                        ? 'bg-indigo-600 text-white'
-                        : 'bg-white text-gray-700 hover:bg-gray-50'
-                    } px-3 py-2 border rounded-md text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
-                  >
-                    Employer
-                  </button>
+                <select
+                  id="role"
+                  name="role"
+                  required
+                  value={formData.role}
+                  onChange={handleChange}
+                  className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                >
+                  <option value="">Select your role</option>
+                  <option value="candidate">Job Seeker</option>
+                  <option value="employer">Employer</option>
+                  <option value="partner">Partner</option>
+                </select>
+              </div>
+            </div>
+
+            {showCompanyFields && (
+              <>
+                <div>
+                  <label htmlFor="company_name" className="block text-sm font-medium text-gray-700">
+                    Company Name
+                  </label>
+                  <div className="mt-1">
+                    <input
+                      id="company_name"
+                      name="company_name"
+                      type="text"
+                      required
+                      value={formData.company_name}
+                      onChange={handleChange}
+                      className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    />
+                  </div>
                 </div>
-              </div>
-            </div>
 
-            <div>
-              <label htmlFor="title" className="block text-sm font-medium text-gray-700">
-                {formData.role === 'employer' ? 'Job Title' : 'Current Title'}
-              </label>
-              <div className="mt-1">
-                <input
-                  id="title"
-                  name="title"
-                  type="text"
-                  value={formData.title}
-                  onChange={handleChange}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label htmlFor="location" className="block text-sm font-medium text-gray-700">
-                Location
-              </label>
-              <div className="mt-1">
-                <input
-                  id="location"
-                  name="location"
-                  type="text"
-                  value={formData.location}
-                  onChange={handleChange}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
-              </div>
-            </div>
+                <div>
+                  <label htmlFor="company_size" className="block text-sm font-medium text-gray-700">
+                    Company Size
+                  </label>
+                  <div className="mt-1">
+                    <select
+                      id="company_size"
+                      name="company_size"
+                      required
+                      value={formData.company_size}
+                      onChange={handleChange}
+                      className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                    >
+                      <option value="">Select company size</option>
+                      <option value="1-10">1-10 employees</option>
+                      <option value="11-50">11-50 employees</option>
+                      <option value="51-200">51-200 employees</option>
+                      <option value="201-500">201-500 employees</option>
+                      <option value="501+">501+ employees</option>
+                    </select>
+                  </div>
+                </div>
+              </>
+            )}
 
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
@@ -257,7 +313,6 @@ export default function Register() {
                   id="password"
                   name="password"
                   type="password"
-                  autoComplete="new-password"
                   required
                   value={formData.password}
                   onChange={handleChange}
@@ -275,7 +330,6 @@ export default function Register() {
                   id="confirmPassword"
                   name="confirmPassword"
                   type="password"
-                  autoComplete="new-password"
                   required
                   value={formData.confirmPassword}
                   onChange={handleChange}
@@ -309,7 +363,7 @@ export default function Register() {
             <div>
               <button
                 type="submit"
-                disabled={isLoading || !formData.role}
+                disabled={isLoading}
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
               >
                 {isLoading ? 'Creating Account...' : 'Create Account'}
@@ -320,4 +374,6 @@ export default function Register() {
       </div>
     </div>
   );
-}
+};
+
+export default Register;

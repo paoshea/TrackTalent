@@ -2,10 +2,9 @@ import type { ActivityItem } from "../types/analytics";
 import type { Activity, ActivityType, ActivityUser } from "../types/dashboard";
 import type { LucideIcon } from "lucide-react";
 import { Calendar, FileText, Bell } from "lucide-react";
-import type { Database } from "../types/database";
+import type { Database } from "../types/database.types";
 
-type DatabaseActivity =
-  Database["public"]["Tables"]["analytics"]["Row"]["activities"][number];
+type DatabaseActivity = Database["public"]["Tables"]["activities"]["Row"];
 
 const activityTypeMap: Record<DatabaseActivity["type"], ActivityType> = {
   job_posted: "job_posted",
@@ -19,13 +18,30 @@ const activityTypeMap: Record<DatabaseActivity["type"], ActivityType> = {
 };
 
 export function mapDatabaseActivity(activity: DatabaseActivity): ActivityItem {
+  // Cast metadata to the correct type, filtering out any non-matching types
+  const metadata = activity.metadata as Record<string, unknown>;
+  const typedMetadata: Record<string, string | number | boolean | null> = {};
+  
+  if (metadata && typeof metadata === 'object') {
+    Object.entries(metadata).forEach(([key, value]) => {
+      if (
+        typeof value === 'string' ||
+        typeof value === 'number' ||
+        typeof value === 'boolean' ||
+        value === null
+      ) {
+        typedMetadata[key] = value;
+      }
+    });
+  }
+
   return {
     id: activity.id,
     title: activity.title,
     description: activity.description,
     type: activityTypeMap[activity.type],
     snapshotDate: activity.snapshotDate,
-    metadata: activity.metadata,
+    metadata: typedMetadata,
   };
 }
 

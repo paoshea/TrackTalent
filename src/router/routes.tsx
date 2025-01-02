@@ -1,5 +1,5 @@
 import { RouteObject } from "react-router-dom";
-import { GuestLayout } from "../components/layout/GuestLayout";
+import GuestLayout from "../components/layout/GuestLayout";
 import guestRoutes from "./guestRoutes";
 import authenticatedRoutes from "./authenticatedRoutes";
 import NotFound from "../pages/NotFound";

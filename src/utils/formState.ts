@@ -141,11 +141,34 @@ export function isFieldTouched<T extends Record<string, FormValue>>(
   return !!state.touched[field];
 }
 
+export function formatValidationErrors(
+  errors: Record<string, string[]>,
+): Record<string, string> {
+  return Object.entries(errors).reduce(
+    (acc, [field, messages]) => ({
+      ...acc,
+      [field]: messages[0],
+    }),
+    {},
+  );
+}
+
+export function hasErrors(errors: Record<string, string | string[]>): boolean {
+  return Object.keys(errors).length > 0;
+}
+
 export function getFieldError<T extends Record<string, FormValue>>(
   state: FormState<T>,
   field: keyof T,
 ): string | undefined {
   return state.errors[field];
+}
+
+export function getSimpleFieldError(
+  errors: Record<string, string>,
+  field: string,
+): string | undefined {
+  return errors[field];
 }
 
 export function getTouchedFields<T extends Record<string, FormValue>>(

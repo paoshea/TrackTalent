@@ -1,6 +1,6 @@
 import { XCircle } from "lucide-react";
 
-interface ErrorMessageProps {
+export interface ErrorMessageProps {
   message: string;
   className?: string;
 }

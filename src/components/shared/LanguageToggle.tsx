@@ -1,30 +1,19 @@
-import { useTranslation } from "../../contexts/TranslationContext";
+import React from 'react';
+import { useTranslation } from '../../contexts/TranslationContext';
 
-export function LanguageToggle() {
+export const LanguageToggle: React.FC = () => {
   const { language, setLanguage } = useTranslation();
 
+  const toggleLanguage = () => {
+    setLanguage(language === 'en' ? 'es' : 'en');
+  };
+
   return (
-    <div className="flex items-center space-x-2">
-      <button
-        onClick={() => setLanguage('en')}
-        className={`px-2 py-1 rounded ${
-          language === 'en' 
-            ? 'bg-indigo-100 text-indigo-600' 
-            : 'text-gray-500 hover:text-gray-700'
-        }`}
-      >
-        EN
-      </button>
-      <button
-        onClick={() => setLanguage('es')}
-        className={`px-2 py-1 rounded ${
-          language === 'es' 
-            ? 'bg-indigo-100 text-indigo-600' 
-            : 'text-gray-500 hover:text-gray-700'
-        }`}
-      >
-        ES
-      </button>
-    </div>
+    <button
+      onClick={toggleLanguage}
+      className="text-sm text-gray-500 bg-transparent border-none focus:ring-0 cursor-pointer hover:text-gray-700"
+    >
+      {language.toUpperCase()}
+    </button>
   );
-}
+};

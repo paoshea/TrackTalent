@@ -4,6 +4,152 @@
 
 This document outlines the route configuration for TrackTalent, including guest routes, authenticated routes, and role-specific routes for Candidates, Employers, and Partners.
 
+## File structure (ls -R src/pages src/components)
+
+src/components:
+Dashboard.tsx   analytics       branding        dashboard       layout          notifications   shared
+Navigation.tsx  applications    candidate       interviews      messages        onboarding      skills
+admin           auth            customer        jobs            metrics         profile         status
+
+src/components/admin:
+ActivityLog.tsx         SystemHealth.tsx        UserMetrics.tsx         index.ts
+
+src/components/analytics:
+AnalyticsDashboard.tsx  ApplicationsChart.tsx   MetricsTimeline.tsx     ResponseRateChart.tsx
+
+src/components/applications:
+ApplicationCard.tsx     ApplicationList.tsx     ApplicationTimeline.tsx
+ApplicationDetails.tsx  ApplicationStatus.tsx   ApplicationTracker.tsx
+
+src/components/auth:
+EmailVerification.tsx   ProtectedRoute.tsx
+
+src/components/branding:
+BrandingEditor.tsx      BrandingProvider.tsx    Logo.tsx
+
+src/components/candidate:
+Dashboard.tsx   application
+
+src/components/candidate/application:
+ApplicationForm.tsx     ExperienceCard.tsx      PersonalInfo.tsx        skills
+ConfirmationDialog.tsx  ExperienceForm.tsx      SkillsAssessment.tsx    steps
+DraftAlert.tsx          FormProgress.tsx        experience
+
+src/components/candidate/application/experience:
+ExperienceCard.tsx
+
+src/components/candidate/application/skills:
+SkillRating.tsx
+
+src/components/candidate/application/steps:
+StepIndicator.tsx       StepNavigation.tsx
+
+src/components/customer:
+ActiveJobsList.tsx      CandidateStats.tsx      JobListItem.tsx         JobMetrics.tsx          jobs
+
+src/components/customer/jobs:
+JobBasicInfo.tsx        JobCompensation.tsx     JobForm.tsx             JobRequirements.tsx
+
+src/components/dashboard:
+ActiveJobsList.tsx      ActivityGroup.tsx       DashboardLayout.tsx     MetricsGrid.tsx         RecentActivity.tsx
+ActivityFeed.tsx        ActivityItem.tsx        JobRecommendations.tsx  MetricsTrends.tsx       StatusUpdates.tsx
+ActivityFeedFilters.tsx Dashboard.tsx           MetricCard.tsx          QuickStats.tsx
+
+src/components/interviews:
+InterviewScheduler.tsx  TimeSlotPicker.tsx
+
+src/components/jobs:
+JobCard.tsx             JobForm.tsx             JobList.tsx             JobSearch.tsx           JobSearchFilters.tsx
+
+src/components/layout:
+CandidateLayout.tsx     Footer.tsx              MobileNavigation.tsx    ProtectedRoute.tsx      index.ts
+DashboardLayout.tsx     GuestLayout.tsx         Navigation.tsx          ResponsiveContainer.tsx
+EmployerLayout.tsx      MainLayout.tsx          PartnerLayout.tsx       Sidebar.tsx
+
+src/components/messages:
+ConversationList.tsx    MessageBubble.tsx       MessageList.tsx         MessageThread.tsx
+ConversationPreview.tsx MessageInput.tsx        MessagePreview.tsx      RealtimeChat.tsx
+
+src/components/metrics:
+MetricCard.tsx  RoleMetrics.tsx
+
+src/components/notifications:
+NotificationBell.tsx    NotificationCenter.tsx  NotificationItem.tsx    NotificationList.tsx
+
+src/components/onboarding:
+OnboardingFlow.tsx      OnboardingProgress.tsx  OnboardingStep.tsx      StepContent.tsx         steps
+
+src/components/onboarding/steps:
+PreferencesSetup.tsx    ProfileSetup.tsx        RoleSelection.tsx
+
+src/components/profile:
+CandidateProfile.tsx    Profile.tsx             ProfileEditor.tsx       ResumeUploader.tsx
+
+src/components/shared:
+ActivityIcon.tsx        Button.tsx              Input.tsx               LoadingSpinner.tsx      SaveIndicator.tsx
+Alert.tsx               Checkbox.tsx            LanguageToggle.tsx      LoadingState.tsx        Select.tsx
+Avatar.tsx              ErrorMessage.tsx        Loading.tsx             Modal.tsx               TextArea.tsx
+Badge.tsx               FormField.tsx           LoadingOverlay.tsx      RichTextEditor.css      ValidationMessage.tsx
+
+src/components/skills:
+SkillAssessment.tsx     SkillCategory.tsx       SkillRating.tsx         SkillSummary.tsx
+
+src/components/status:
+HashtagList.tsx         RichTextEditor.tsx      StatusEditor.tsx        StatusList.tsx
+MediaUploader.tsx       StatusActions.tsx       StatusFilters.tsx       StatusMetrics.tsx
+MentionList.tsx         StatusComments.tsx      StatusItem.tsx          TrendingHashtags.tsx
+
+src/pages:
+Landing.tsx     admin           auth            customer        jobs            onboarding      partners        success-stories
+NotFound.tsx    application     candidate       employer        messages        partner         resources
+
+src/pages/admin:
+Dashboard.tsx
+
+src/pages/application:
+SuccessPage.tsx
+
+src/pages/auth:
+ForgotPassword.tsx      Register.tsx            SignIn.tsx              VerifyEmail.tsx
+Login.tsx               ResetPassword.tsx       SignUp.tsx
+
+src/pages/candidate:
+ApplicationDetails.tsx  Dashboard.tsx           Profile.tsx
+Applications.tsx        Messages.tsx            Skills.tsx
+
+src/pages/customer:
+Dashboard.tsx
+
+src/pages/employer:
+Analytics.tsx           Dashboard.tsx           EmployerSolutions.tsx   Messages.tsx
+Applications.tsx        EmployerFeatures.tsx    JobPostings.tsx         Profile.tsx
+CandidateManagement.tsx EmployerInsights.tsx    Landing.tsx
+
+src/pages/jobs:
+Jobs.tsx
+
+src/pages/messages:
+Conversation.tsx        Messages.tsx
+
+src/pages/onboarding:
+CustomerOnboarding.tsx  OnboardingFlow.tsx      steps
+
+src/pages/onboarding/steps:
+CompanyInfo.tsx         PreferencesSetup.tsx    ResumeUpload.tsx        TeamSetup.tsx
+JobPreferences.tsx      ProfileSetup.tsx        RoleSelection.tsx
+
+src/pages/partner:
+Dashboard.tsx
+
+src/pages/partners:
+Analytics.tsx           Apprenticeships.tsx     Mentorship.tsx
+
+src/pages/resources:
+Resources.tsx
+
+src/pages/success-stories:
+SuccessStories.tsx
+
 ## Route Structure
 
 ### Guest Routes (Public)

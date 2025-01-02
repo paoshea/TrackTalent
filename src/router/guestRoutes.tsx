@@ -1,4 +1,5 @@
 import { RouteObject } from "react-router-dom";
+import { demoRoutes } from "./demoRoutes";
 import Jobs from "../pages/jobs/Jobs";
 import Resources from "../pages/resources/Resources";
 import SuccessStories from "../pages/success-stories/SuccessStories";
@@ -9,42 +10,44 @@ import Landing from "../pages/Landing";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
 import EmployerLanding from "../pages/employer/Landing";
+import { Features, CandidateFeatures, EmployerFeatures, PartnerFeatures } from "../pages/features";
+import FeaturesLayout from "../components/layout/FeaturesLayout";
 
 const guestRoutes: RouteObject[] = [
   {
-    path: "/",
+    path: "",
     element: <Landing />,
   },
   {
-    path: "/auth/login",
+    path: "auth/login",
     element: <Login />,
   },
   {
-    path: "/auth/register",
+    path: "auth/register",
     element: <Register />,
   },
   {
-    path: "/jobs",
+    path: "jobs",
     element: <Jobs />,
   },
   {
-    path: "/resources",
+    path: "resources",
     element: <Resources />,
   },
   {
-    path: "/success-stories",
+    path: "success-stories",
     element: <SuccessStories />,
   },
   {
-    path: "/partners/analytics",
+    path: "partners/analytics",
     element: <Analytics />,
   },
   {
-    path: "/partners/apprenticeships",
+    path: "partners/apprenticeships",
     element: <Apprenticeships />,
   },
   {
-    path: "/partners/mentorship",
+    path: "partners/mentorship",
     element: <Mentorship />,
   },
   {
@@ -59,7 +62,30 @@ const guestRoutes: RouteObject[] = [
         element: <EmployerLanding />,
       }
     ]
-  }
+  },
+  {
+    path: "features",
+    element: <FeaturesLayout />,
+    children: [
+      {
+        path: "",
+        element: <Features />
+      },
+      {
+        path: "candidate",
+        element: <CandidateFeatures />
+      },
+      {
+        path: "employer",
+        element: <EmployerFeatures />
+      },
+      {
+        path: "partner",
+        element: <PartnerFeatures />
+      }
+    ]
+  },
+  ...demoRoutes
 ];
 
 export default guestRoutes;
