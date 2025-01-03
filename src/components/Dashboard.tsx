@@ -9,21 +9,57 @@ import { RecentActivity } from "./dashboard/RecentActivity";
 import { StatusUpdates } from "./dashboard/StatusUpdates";
 import { LoadingState } from "./shared/LoadingState";
 
+interface User {
+  id: string;
+}
+
+interface MetricCardProps {
+  title: string;
+  value: string | number;
+  change: number;
+  description: string;
+}
+
+interface AuthContextType {
+  user: User | null;
+}
+
+type MetricValue = number | { value: number; change: number };
+
+function getMetricValue(metric: MetricValue): number {
+  return typeof metric === 'number' ? metric : metric.value;
+}
+
+function getMetricChange(metric: MetricValue): number {
+  return typeof metric === 'number' ? 0 : metric.change;
+}
+
 function Dashboard() {
-  const { user } = useAuth();
+  const { user } = useAuth() as AuthContextType;
   const isGuest = user?.id?.startsWith('guest-');
+
+  // Use the real hooks directly, TypeScript will infer the correct types
   const useCustomerJobs = isGuest ? mockHooks.useCustomerJobs : realUseCustomerJobs;
   const useDashboardMetrics = isGuest ? mockHooks.useDashboardMetrics : realUseDashboardMetrics;
   const useRecentActivity = isGuest ? mockHooks.useRecentActivity : realUseRecentActivity;
 
-  const { jobs, isLoading: jobsLoading } = useCustomerJobs({
+  const { jobs, isLoading: jobsLoading, error: jobsError } = useCustomerJobs({
     customerId: user?.id || "",
     status: ["published"],
     limit: 5,
   });
 
-  const { metrics, isLoading: metricsLoading } = useDashboardMetrics();
-  const { activities, isLoading: activitiesLoading } = useRecentActivity();
+  const { 
+    metrics, 
+    isLoading: metricsLoading, 
+    error: metricsError 
+  } = useDashboardMetrics();
+
+  const { 
+    activities, 
+    isLoading: activitiesLoading,
+    error: activitiesError 
+  } = useRecentActivity();
 
   if (!user) return null;
 
@@ -31,42 +67,33 @@ function Dashboard() {
     return <LoadingState />;
   }
 
-  // Helper function to handle both real and mock metrics
-  const getMetricValue = (metric: number | { value: number; change: number } | undefined) => {
-    if (metric === undefined) return 0;
-    if (typeof metric === 'number') return metric;
-    return metric.value;
-  };
+  if (jobsError || metricsError || activitiesError || !metrics) {
+    return <div>Error loading dashboard data</div>;
+  }
 
-  const getMetricChange = (metric: number | { value: number; change: number } | undefined) => {
-    if (metric === undefined) return 0;
-    if (typeof metric === 'number') return 0;
-    return metric.change;
-  };
-
-  const dashboardMetrics = [
+  const dashboardMetrics: MetricCardProps[] = [
     {
       title: "Active Jobs",
-      value: getMetricValue(metrics?.activeJobs),
-      change: getMetricChange(metrics?.activeJobs),
+      value: getMetricValue(metrics.activeJobs),
+      change: getMetricChange(metrics.activeJobs),
       description: "Currently active job postings",
     },
     {
       title: "Applications",
-      value: getMetricValue(metrics?.applications),
-      change: getMetricChange(metrics?.applications),
+      value: getMetricValue(metrics.applications),
+      change: getMetricChange(metrics.applications),
       description: "Total applications received",
     },
     {
       title: "Interviews",
-      value: getMetricValue(metrics?.interviews),
-      change: getMetricChange(metrics?.interviews),
+      value: getMetricValue(metrics.interviews),
+      change: getMetricChange(metrics.interviews),
       description: "Scheduled interviews",
     },
     {
       title: "Response Rate",
-      value: `${getMetricValue(metrics?.responseRate)}%`,
-      change: getMetricChange(metrics?.responseRate),
+      value: `${getMetricValue(metrics.responseRate)}%`,
+      change: getMetricChange(metrics.responseRate),
       description: "Application response rate",
     },
   ];

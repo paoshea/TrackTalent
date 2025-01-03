@@ -2,8 +2,18 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 
+interface User {
+  id: string;
+  role: 'candidate' | 'employer' | 'partner';
+}
+
+interface AuthContextType {
+  user: User | null;
+  signOut: () => void;
+}
+
 export const Navigation: React.FC = () => {
-  const { user, signOut } = useAuth();
+  const { user, signOut } = useAuth() as AuthContextType;
   const location = useLocation();
 
   // Don't show navigation on landing page
