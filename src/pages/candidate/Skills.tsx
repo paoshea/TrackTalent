@@ -21,7 +21,7 @@ export function Skills() {
         <Alert
           type="error"
           title="Error"
-          message={error || "Please sign in to view your skills"}
+          message={error?.message || "Please sign in to view your skills"}
         />
       </MainLayout>
     );

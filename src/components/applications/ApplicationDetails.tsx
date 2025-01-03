@@ -16,12 +16,12 @@ export function ApplicationDetails({ application }: Props) {
         <div className="flex justify-between items-start">
           <div>
             <h2 className="text-2xl font-bold text-gray-900">
-              {application.jobTitle}
+              {application.job.title}
             </h2>
             <div className="mt-2 space-y-2">
               <div className="flex items-center text-gray-600">
                 <Building2 className="h-5 w-5 mr-2" />
-                <span>{application.company}</span>
+                <span>{application.job.company.name}</span>
               </div>
               <div className="flex items-center text-gray-600">
                 <Calendar className="h-5 w-5 mr-2" />
@@ -48,13 +48,20 @@ export function ApplicationDetails({ application }: Props) {
             Schedule Interview
           </h3>
           <InterviewScheduler
-            interviewers={[]} // TODO: Pass actual interviewers
+            interviewers={[{
+              id: 'interviewer-1',
+              name: 'Default Interviewer',
+              availability: [{
+                date: new Date().toISOString().split('T')[0],
+                slots: ['09:00', '10:00', '11:00', '14:00', '15:00']
+              }]
+            }]} // TODO: Replace with actual interviewer data from API
             candidate={{
-              id: application.candidateId,
-              name: "", // TODO: Pass actual candidate name
-              email: "", // TODO: Pass actual candidate email
+              id: application.userId,
+              name: "Candidate", // This should come from a user profile lookup
+              email: "candidate@example.com" // This should come from a user profile lookup
             }}
-            jobTitle={application.jobTitle}
+            jobTitle={application.job.title}
             onSchedule={async ({ date, time, interviewerId }) => {
               // TODO: Implement interview scheduling
               console.log("Schedule interview:", { date, time, interviewerId });

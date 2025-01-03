@@ -148,6 +148,8 @@ function validateAndMapApplication(data: unknown): Application | null {
         id: job.id,
         title: job.title,
         location: job.location || "",
+        type: job.type,
+        experience_level: job.experience_level,
         company: {
           id: company.id,
           name: company.name,
@@ -159,6 +161,7 @@ function validateAndMapApplication(data: unknown): Application | null {
       feedback: typeof apiApp.feedback === 'object' && apiApp.feedback 
         ? (apiApp.feedback as { message?: string }).message || null 
         : null,
+      timeline: timelineEvents,
       metadata
     };
   } catch (error) {

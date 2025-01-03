@@ -1,16 +1,16 @@
 import { useState, useEffect, useCallback } from "react";
-import { getMockMetrics } from "../services/mockMetrics";
-import type { QuickStatsMetrics } from "../types/dashboard";
+import { getMockAdminMetrics } from "../services/mockAdminMetrics";
+import type { DashboardMetrics } from "../types/dashboard";
 
-export interface UseDashboardMetricsResult {
-  metrics: QuickStatsMetrics | null;
+export interface UseAdminDashboardMetricsResult {
+  metrics: DashboardMetrics | null;
   isLoading: boolean;
   error: string | null;
   refetch: () => Promise<void>;
 }
 
-export function useDashboardMetrics(): UseDashboardMetricsResult {
-  const [metrics, setMetrics] = useState<QuickStatsMetrics | null>(null);
+export function useAdminDashboardMetrics(): UseAdminDashboardMetricsResult {
+  const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -21,7 +21,7 @@ export function useDashboardMetrics(): UseDashboardMetricsResult {
 
       // Use mock data for now
       // TODO: Replace with actual API call when backend is ready
-      const mockData = await getMockMetrics();
+      const mockData = await getMockAdminMetrics();
       setMetrics(mockData);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to fetch metrics");

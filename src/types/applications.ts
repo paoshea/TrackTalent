@@ -23,6 +23,8 @@ export interface Job {
   id: string;
   title: string;
   location: string;
+  type: string;
+  experience_level: string;
   company: Company;
 }
 

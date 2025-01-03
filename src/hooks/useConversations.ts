@@ -46,6 +46,7 @@ export function useConversations() {
           (conv) => ({
             id: conv.id,
             participants: conv.participants,
+            recipientId: conv.participants.find((id: string) => id !== "user") || "", // Get the other participant's ID
             messages: (conv.messages as DatabaseMessage[]).map(
               convertDatabaseMessage,
             ),

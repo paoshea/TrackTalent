@@ -5,11 +5,13 @@ export const mockMetrics: QuickStatsMetrics = {
   applications: 25,
   interviews: 8,
   responseRate: 75,
+  connections: 30,
   trends: {
     jobs: 10,
     applications: 15,
     interviews: 20,
-    responseRate: 5
+    responseRate: 5,
+    connections: 8
   }
 };
 

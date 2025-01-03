@@ -5,6 +5,7 @@ import { useAuth } from "../../hooks/useAuth";
 import { supabase } from "../../lib/supabase";
 import { LoadingState } from "../../components/shared/LoadingState";
 import { ErrorMessage } from "../../components/shared/ErrorMessage";
+import type { UserRole } from "../../types/auth";
 
 export function VerifyEmail() {
   const [searchParams] = useSearchParams();
@@ -40,20 +41,35 @@ export function VerifyEmail() {
           throw new Error('User not found after verification');
         }
 
+        // Create base profile data
+        const baseProfile = {
+          id: authData.user.id,
+          username: signupData.email.split('@')[0],
+          full_name: signupData.full_name,
+          email: signupData.email,
+          role: signupData.role as UserRole,
+          avatar_url: null,
+          title: signupData.title || null,
+          location: signupData.location || null,
+          bio: null,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        };
+
+        // Add employer-specific fields if role is employer
+        const profileData = signupData.role === 'employer'
+          ? {
+              ...baseProfile,
+              company_name: signupData.company_name || '',
+              company_size: signupData.company_size || null,
+              industry: null
+            }
+          : baseProfile;
+
         // Create user profile
         const { error: profileError } = await supabase
           .from('profiles')
-          .insert({
-            id: authData.user.id,
-            user_id: authData.user.id,
-            full_name: signupData.full_name,
-            email: signupData.email,
-            role: signupData.role,
-            title: signupData.title || null,
-            location: signupData.location || null,
-            company_name: signupData.company_name || null,
-            company_size: signupData.company_size || null
-          });
+          .insert(profileData);
 
         if (profileError) {
           console.error('Profile creation error:', profileError);

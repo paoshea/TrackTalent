@@ -40,11 +40,13 @@ export function AnalyticsDashboard() {
     applications: metrics.applications.total,
     interviews: metrics.interviews.scheduled,
     responseRate: Math.round((metrics.applications.total / metrics.jobViews) * 100) || 0,
+    connections: metrics.connections,
     trends: {
       jobs: metrics.activeJobsChange,
       applications: metrics.applications.trend,
       interviews: metrics.interviews.trend,
       responseRate: metrics.placementRateChange,
+      connections: 0, // Since there's no trend value in DashboardMetrics for connections, defaulting to 0
     },
   };
 

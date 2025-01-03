@@ -21,6 +21,7 @@ export function useConversation(conversationId: string) {
         company: "TechCorp",
         companyId: "tech-corp-id",
         participants: ["user", "company"],
+        recipientId: "company", // Add recipientId for direct access to recipient
         unreadCount: 1,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),

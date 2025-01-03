@@ -11,6 +11,7 @@ export const mockApplications: Application[] = [
     job: {
       id: "1",
       title: "Senior Software Engineer",
+      location: "San Francisco, CA",
       company: {
         id: "1",
         name: "TechCorp",
@@ -19,7 +20,42 @@ export const mockApplications: Application[] = [
     },
     nextStep: "Technical Interview",
     nextStepDate: "2024-01-20T14:00:00Z",
-    feedback: "Great initial interview, moving forward with technical round."
+    feedback: "Great initial interview, moving forward with technical round.",
+    timeline: [
+      {
+        id: "1",
+        type: "application_submitted",
+        description: "Application submitted",
+        timestamp: "2024-01-10T00:00:00Z"
+      },
+      {
+        id: "2",
+        type: "interview_scheduled",
+        description: "Technical interview scheduled",
+        timestamp: "2024-01-15T00:00:00Z"
+      }
+    ],
+    metadata: {
+      resume_url: "https://example.com/resumes/1.pdf",
+      cover_letter: "I am excited to apply for this position...",
+      skills: ["JavaScript", "React", "TypeScript"],
+      experience: [{
+        company: "Previous Tech",
+        title: "Software Engineer",
+        startDate: "2020-01-01",
+        endDate: "2023-12-31",
+        current: false,
+        description: "Developed web applications using React and TypeScript"
+      }],
+      education: [{
+        institution: "Tech University",
+        degree: "Bachelor's",
+        field: "Computer Science",
+        startDate: "2016-09-01",
+        endDate: "2020-05-31",
+        current: false
+      }]
+    }
   },
   {
     id: "2",
@@ -31,6 +67,7 @@ export const mockApplications: Application[] = [
     job: {
       id: "2",
       title: "Product Designer",
+      location: "New York, NY",
       company: {
         id: "2",
         name: "DesignHub",
@@ -39,7 +76,41 @@ export const mockApplications: Application[] = [
     },
     nextStep: "Portfolio Review",
     nextStepDate: "2024-01-18T15:00:00Z",
-    feedback: "Application under review by the design team."
+    feedback: "Application under review by the design team.",
+    timeline: [
+      {
+        id: "3",
+        type: "application_submitted",
+        description: "Application submitted",
+        timestamp: "2024-01-12T00:00:00Z"
+      },
+      {
+        id: "4",
+        type: "status_update",
+        description: "Application under review",
+        timestamp: "2024-01-14T00:00:00Z"
+      }
+    ],
+    metadata: {
+      resume_url: "https://example.com/resumes/2.pdf",
+      cover_letter: "I am passionate about product design...",
+      skills: ["UI/UX", "Figma", "Adobe XD"],
+      experience: [{
+        company: "Design Agency",
+        title: "UI Designer",
+        startDate: "2021-01-01",
+        current: true,
+        description: "Creating user interfaces for web and mobile applications"
+      }],
+      education: [{
+        institution: "Design School",
+        degree: "Bachelor's",
+        field: "Digital Design",
+        startDate: "2017-09-01",
+        endDate: "2021-05-31",
+        current: false
+      }]
+    }
   },
   {
     id: "3",
@@ -51,6 +122,7 @@ export const mockApplications: Application[] = [
     job: {
       id: "3",
       title: "Full Stack Developer",
+      location: "Remote",
       company: {
         id: "3",
         name: "WebStack",
@@ -59,7 +131,35 @@ export const mockApplications: Application[] = [
     },
     nextStep: "Initial Review",
     nextStepDate: null,
-    feedback: null
+    feedback: null,
+    timeline: [
+      {
+        id: "5",
+        type: "application_submitted",
+        description: "Application submitted",
+        timestamp: "2024-01-15T00:00:00Z"
+      }
+    ],
+    metadata: {
+      resume_url: "https://example.com/resumes/3.pdf",
+      cover_letter: "I am interested in the Full Stack Developer position...",
+      skills: ["Node.js", "React", "PostgreSQL"],
+      experience: [{
+        company: "Startup Inc",
+        title: "Junior Developer",
+        startDate: "2022-01-01",
+        current: true,
+        description: "Full stack development using modern web technologies"
+      }],
+      education: [{
+        institution: "Code Academy",
+        degree: "Certificate",
+        field: "Web Development",
+        startDate: "2021-01-01",
+        endDate: "2021-12-31",
+        current: false
+      }]
+    }
   }
 ];
 

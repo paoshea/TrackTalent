@@ -141,6 +141,64 @@ export interface Database {
           metadata?: Json
         }
       }
+      activity_interactions: {
+        Row: {
+          id: string
+          activity_id: string
+          user_id: string
+          type: string
+          target_id: string
+          target_type: string
+          metadata: Json
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          activity_id: string
+          user_id: string
+          type: string
+          target_id: string
+          target_type: string
+          metadata?: Json
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          activity_id?: string
+          user_id?: string
+          type?: string
+          target_id?: string
+          target_type?: string
+          metadata?: Json
+          created_at?: string
+        }
+      }
+      activities: {
+        Row: {
+          id: string
+          type: 'job_posted' | 'application_received' | 'interview_scheduled' | 'interview_completed' | 'offer_sent' | 'offer_accepted' | 'candidate_hired' | 'status_update'
+          title: string
+          description: string
+          snapshotDate: string
+          metadata: Json
+        }
+        Insert: {
+          id?: string
+          type: 'job_posted' | 'application_received' | 'interview_scheduled' | 'interview_completed' | 'offer_sent' | 'offer_accepted' | 'candidate_hired' | 'status_update'
+          title: string
+          description: string
+          snapshotDate?: string
+          metadata?: Json
+        }
+        Update: {
+          id?: string
+          type?: 'job_posted' | 'application_received' | 'interview_scheduled' | 'interview_completed' | 'offer_sent' | 'offer_accepted' | 'candidate_hired' | 'status_update'
+          title?: string
+          description?: string
+          snapshotDate?: string
+          metadata?: Json
+        }
+      }
       applications: {
         Row: {
           id: string
@@ -198,6 +256,13 @@ export interface Database {
           application_id: string
           event_type: string
           event_data?: Json
+        }
+        Returns: void
+      }
+      append_to_array: {
+        Args: {
+          arr: Json[],
+          new_element: Json
         }
         Returns: void
       }

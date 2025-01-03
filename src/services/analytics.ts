@@ -1,12 +1,6 @@
 import { supabase } from "../lib/supabase";
 import type { StatusMetrics } from "../types/status";
-import type { DashboardMetrics } from "../types/dashboard";
-
-interface MetricSnapshot {
-  id: string;
-  snapshotDate: string;
-  metrics: Partial<DashboardMetrics>;
-}
+import type { AnalyticsData, EngagementStats, AnalyticsFilter, MetricSnapshot } from "../types/analytics";
 
 export async function getStatusEngagementMetrics(statusId: string): Promise<StatusMetrics> {
   try {
@@ -49,21 +43,18 @@ export async function getStatusEngagementMetrics(statusId: string): Promise<Stat
   }
 }
 
-export async function getMetricSnapshots(
-  startDate?: string,
-  endDate?: string
-): Promise<MetricSnapshot[]> {
+export async function getMetricSnapshots(filter: AnalyticsFilter): Promise<MetricSnapshot[]> {
   try {
     let query = supabase
       .from('metric_snapshots')
       .select('*')
       .order('snapshot_date', { ascending: true });
 
-    if (startDate) {
-      query = query.gte('snapshot_date', startDate);
+    if (filter.dateRange?.start) {
+      query = query.gte('snapshot_date', filter.dateRange.start);
     }
-    if (endDate) {
-      query = query.lte('snapshot_date', endDate);
+    if (filter.dateRange?.end) {
+      query = query.lte('snapshot_date', filter.dateRange.end);
     }
 
     const { data, error } = await query;
@@ -71,9 +62,18 @@ export async function getMetricSnapshots(
     if (error) throw error;
 
     return data.map(snapshot => ({
-      id: snapshot.id,
       snapshotDate: snapshot.snapshot_date,
-      metrics: snapshot.metrics
+      metrics: {
+        applications: 0,
+        interviews: 0,
+        offers: 0,
+        hires: 0,
+        ...(typeof snapshot.metrics === 'object' && snapshot.metrics !== null
+          ? Object.fromEntries(
+              Object.entries(snapshot.metrics).filter(([_, value]) => typeof value === 'number')
+            )
+          : {})
+      }
     }));
   } catch (error) {
     console.error('Error fetching metric snapshots:', error);
@@ -95,6 +95,90 @@ export async function trackStatusView(statusId: string) {
     console.error('Error tracking status view:', error);
     throw error;
   }
+}
+
+export async function getEngagementStats(_filter: AnalyticsFilter): Promise<EngagementStats> {
+  // Mock implementation - filter would be used in real implementation
+  return {
+    views: 100,
+    interactions: 50,
+    conversionRate: 2.8,
+    averageTimeSpent: 180,
+    bounceRate: 25
+  };
+}
+
+export async function getAnalytics(_filter: AnalyticsFilter): Promise<AnalyticsData> {
+  // Mock implementation - filter would be used in real implementation
+  return {
+    metrics: {
+      messages: 0,
+      recentActivities: [],
+      systemAlerts: [],
+      userGrowth: {
+        total: 0,
+        trend: 0,
+        byPeriod: {
+          daily: 0,
+          weekly: 0,
+          monthly: 0
+        },
+        byType: {
+          candidates: 0,
+          employers: 0
+        },
+        retention: 0,
+        churnRate: 0
+      },
+      jobs: {
+        total: 0,
+        active: 0,
+        trend: 0
+      },
+      applications: {
+        total: 0,
+        pending: 0,
+        trend: 0
+      },
+      interviews: {
+        total: 0,
+        scheduled: 0,
+        completed: 0,
+        byOutcome: {
+          offered: 0,
+          rejected: 0,
+          pending: 0
+        },
+        trend: 0
+      },
+      timeToHire: {
+        average: 0,
+        trend: 0
+      },
+      activeJobsChange: 0,
+      totalCandidates: 0,
+      candidatesChange: 0,
+      placementRate: 0,
+      placementRateChange: 0,
+      timeToFill: 0,
+      timeToFillChange: 0,
+      connections: 0,
+      jobViews: 0,
+      savedJobs: 0,
+      matchScore: 0,
+      profileViews: 0
+    },
+    activities: [],
+    trends: {
+      daily: [],
+      weekly: [],
+      monthly: []
+    },
+    comparisons: {
+      previousPeriod: 0,
+      industryAverage: 0
+    }
+  };
 }
 
 export async function trackStatusInteraction(

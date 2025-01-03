@@ -10,7 +10,7 @@ import type { User as AuthUser, SignUpData, UserProfile, AuthContextValue } from
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 
 // Convert Supabase user to our User type
-function mapSupabaseUser(user: SupabaseUser): AuthUser {
+export function mapSupabaseUser(user: SupabaseUser): AuthUser {
   return {
     id: user.id,
     email: user.email || '',
@@ -24,7 +24,7 @@ function mapSupabaseUser(user: SupabaseUser): AuthUser {
   };
 }
 
-interface AuthState {
+export interface AuthState {
   user: AuthUser | null;
   profile: UserProfile | null;
   isLoading: boolean;

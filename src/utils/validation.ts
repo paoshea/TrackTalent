@@ -5,8 +5,28 @@ export function validatePersonalInfo(
 ): Record<string, string> {
   const errors: Record<string, string> = {};
 
+  if (!data.coverLetter) {
+    errors.coverLetter = "Cover letter is required";
+  }
+
   if (!data.resume) {
     errors.resume = "Resume is required";
+  }
+
+  if (!data.answers || Object.keys(data.answers).length === 0) {
+    errors.answers = "Application answers are required";
+  }
+
+  if (!data.skills || data.skills.length === 0) {
+    errors.skills = "At least one skill is required";
+  }
+
+  if (!data.experience || data.experience.length === 0) {
+    errors.experience = "At least one experience entry is required";
+  }
+
+  if (!data.education || data.education.length === 0) {
+    errors.education = "At least one education entry is required";
   }
 
   return errors;
@@ -48,7 +68,7 @@ export function validateExperience(
 
 export function validateEducation(
   education: Array<{
-    school: string;
+    institution: string;
     degree: string;
     field: string;
     startDate: string;
@@ -59,8 +79,8 @@ export function validateEducation(
   const errors: Record<string, string> = {};
 
   education?.forEach((edu, index) => {
-    if (!edu.school) {
-      errors[`education.${index}.school`] = "School name is required";
+    if (!edu.institution) {
+      errors[`education.${index}.institution`] = "Institution name is required";
     }
     if (!edu.degree) {
       errors[`education.${index}.degree`] = "Degree is required";
@@ -80,52 +100,14 @@ export function validateEducation(
   return errors;
 }
 
-export function validateSkillAssessment(
-  skills: Array<{
-    name: string;
-    level: "beginner" | "intermediate" | "advanced" | "expert";
-    yearsOfExperience?: number;
-  }>,
+export function validateSkills(
+  skills: string[],
 ): Record<string, string> {
   const errors: Record<string, string> = {};
 
   skills?.forEach((skill, index) => {
-    if (!skill.name) {
-      errors[`skills.${index}.name`] = "Skill name is required";
-    }
-    if (!skill.level) {
-      errors[`skills.${index}.level`] = "Proficiency level is required";
-    }
-    if (skill.yearsOfExperience && skill.yearsOfExperience < 0) {
-      errors[`skills.${index}.yearsOfExperience`] =
-        "Years of experience must be positive";
-    }
-  });
-
-  return errors;
-}
-
-export function validateCertifications(
-  certifications: Array<{
-    name: string;
-    issuer: string;
-    issueDate: string;
-    expiryDate?: string;
-    credentialId?: string;
-  }>,
-): Record<string, string> {
-  const errors: Record<string, string> = {};
-
-  certifications?.forEach((cert, index) => {
-    if (!cert.name) {
-      errors[`certifications.${index}.name`] = "Certification name is required";
-    }
-    if (!cert.issuer) {
-      errors[`certifications.${index}.issuer`] =
-        "Issuing organization is required";
-    }
-    if (!cert.issueDate) {
-      errors[`certifications.${index}.issueDate`] = "Issue date is required";
+    if (!skill || !skill.trim()) {
+      errors[`skills.${index}`] = "Skill name is required";
     }
   });
 
@@ -137,9 +119,8 @@ export function validateAllSections(
 ): Record<string, string> {
   return {
     ...validatePersonalInfo(data),
-    ...validateExperience(data.experiences || []),
+    ...validateExperience(data.experience || []),
     ...validateEducation(data.education || []),
-    ...validateSkillAssessment(data.skills || []),
-    ...validateCertifications(data.certifications || []),
+    ...validateSkills(data.skills || [])
   };
 }

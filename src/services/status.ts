@@ -94,10 +94,14 @@ export async function getStatusMetrics(id: string): Promise<StatusMetrics> {
   }
 
   return {
-    likes: data.likes,
-    comments: data.comments,
-    shares: data.shares,
-    views: data.views,
-    engagementRate: data.engagement_rate,
+    likes: data.likes || 0,
+    comments: data.comments || 0,
+    shares: data.shares || 0,
+    views: data.views || 0,
+    engagementRate: data.engagement_rate || 0,
+    avgTimeSpent: data.avg_time_spent || 0,
+    uniqueViewers: data.unique_viewers || 0,
+    peakViewers: data.peak_viewers || 0,
+    totalInteractions: data.total_interactions || 0
   };
 }

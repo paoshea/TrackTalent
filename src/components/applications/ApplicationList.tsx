@@ -22,9 +22,9 @@ export function ApplicationList() {
             <div className="flex items-center justify-between">
               <div className="flex-1 min-w-0">
                 <h4 className="text-lg font-medium text-gray-900 truncate">
-                  {application.jobTitle}
+                  {application.job.title}
                 </h4>
-                <p className="text-sm text-gray-500">{application.company}</p>
+                <p className="text-sm text-gray-500">{application.job.company.name}</p>
               </div>
               <ApplicationStatus status={application.status} />
             </div>

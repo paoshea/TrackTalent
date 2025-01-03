@@ -20,10 +20,10 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
     if (!metrics) return null;
 
     return {
-      applications: metrics.applications?.total || 0,
-      interviews: metrics.interviews?.total || 0,
+      applications: metrics.applications || 0,
+      interviews: metrics.interviews || 0,
       connections: metrics.connections || 0,
-      messages: metrics.messages || 0,
+      activeJobs: metrics.activeJobs || 0,
     };
   }, [metrics]);
 
@@ -76,8 +76,8 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                 icon={Briefcase}
               />
               <MetricCard
-                label="Messages"
-                value={userMetrics.messages}
+                label="Active Jobs"
+                value={userMetrics.activeJobs}
                 icon={TrendingUp}
               />
             </div>
@@ -92,23 +92,37 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
               </h2>
               <div className="bg-white shadow overflow-hidden sm:rounded-md">
                 <ul className="divide-y divide-gray-200">
-                  {activities.map((activity) => (
-                    <li key={activity.id} className="px-4 py-4">
-                      <div className="flex items-center space-x-4">
-                        <div className="flex-shrink-0">{activity.icon}</div>
-                        <div>
-                          <p className="text-sm font-medium text-gray-900">
-                            {activity.message}
-                          </p>
-                          {activity.content && (
-                            <p className="text-sm text-gray-500">
-                              {activity.content}
+                  {activities.map((activity) => {
+                    const activityItem = {
+                      id: activity.id,
+                      type: activity.type,
+                      userId: activity.userId,
+                      userName: activity.userId, // Should be replaced with actual user name lookup
+                      targetId: activity.id,
+                      targetType: "status",
+                      action: activity.type,
+                      timestamp: activity.timestamp,
+                      content: activity.content,
+                      metadata: activity.metadata
+                    };
+                    return (
+                      <li key={activityItem.id} className="px-4 py-4">
+                        <div className="flex items-center space-x-4">
+                          <div className="flex-shrink-0">{activity.icon}</div>
+                          <div>
+                            <p className="text-sm font-medium text-gray-900">
+                              {activity.message}
                             </p>
-                          )}
+                            {activityItem.content && (
+                              <p className="text-sm text-gray-500">
+                                {activityItem.content}
+                              </p>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    </li>
-                  ))}
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             </div>

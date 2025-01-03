@@ -1,8 +1,8 @@
 import { CalendarClock } from "lucide-react";
-import type { ApplicationEvent } from "../../types/applications";
+import type { TimelineEvent } from "../../types/applications";
 
 interface Props {
-  events: ApplicationEvent[];
+  events: TimelineEvent[];
 }
 
 export function ApplicationTimeline({ events }: Props) {

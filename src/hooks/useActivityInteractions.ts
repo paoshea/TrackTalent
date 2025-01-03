@@ -29,8 +29,8 @@ export function useActivityInteractions({
         const { data: existingLike } = await supabase
           .from("activity_interactions")
           .select("id")
-          .eq("activityId", activityId)
-          .eq("userId", user.id)
+          .eq("activity_id", activityId)
+          .eq("user_id", user.id)
           .eq("type", "like")
           .single();
 
@@ -51,22 +51,33 @@ export function useActivityInteractions({
         .from("activity_interactions")
         .insert({
           type,
-          targetId: activityId,
-          targetType: "status", // Default to status type
-          userId: user.id,
+          target_id: activityId,
+          target_type: "status", // Default to status type
+          user_id: user.id,
           metadata,
         });
 
       if (insertError) throw insertError;
 
       // Update activity metrics
-      const { error: updateError } = await supabase.rpc(
-        "increment_activity_count",
-        {
-          activity_id: activityId,
-          interaction_type: type,
-        },
-      );
+      const { data: activity } = await supabase
+        .from('activities')
+        .select('metadata')
+        .eq('id', activityId)
+        .single();
+
+      const metrics = activity?.metadata?.metrics || {};
+      metrics[type] = (metrics[type] || 0) + 1;
+
+      const { error: updateError } = await supabase
+        .from('activities')
+        .update({
+          metadata: {
+            ...activity?.metadata,
+            metrics
+          }
+        })
+        .eq('id', activityId);
 
       if (updateError) throw updateError;
     } catch (err) {

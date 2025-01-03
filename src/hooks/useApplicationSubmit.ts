@@ -161,17 +161,24 @@ export function useApplicationSubmit(
       setProgress(75);
 
       // Add application timeline event
-      const { error: timelineError } = await supabase.rpc(
-        "add_application_timeline_event",
-        {
-          application_id: application.id,
-          event_type: "submitted",
-          event_data: {
-            submitted_by: user.id,
-            submitted_at: new Date().toISOString()
-          }
-        }
-      );
+      // Update application with new timeline event
+      const { error: timelineError } = await supabase
+        .from('applications')
+        .update({
+          timeline: [
+            ...(application.timeline || []),
+            {
+              id: crypto.randomUUID(),
+              type: "submitted",
+              description: "Application submitted",
+              timestamp: new Date().toISOString(),
+              metadata: {
+                user_id: user.id
+              }
+            }
+          ]
+        })
+        .eq('id', application.id);
 
       if (timelineError) {
         throw new Error(timelineError.message);

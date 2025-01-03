@@ -1,6 +1,20 @@
 import { supabase } from "../lib/supabase";
 import type { Profile, ProfileUpdateData } from "../types/profile";
+import type { UserRole } from "../types/auth";
 
+// Database schema type matching actual table structure
+interface DbUser {
+  id: string;
+  updated_at: string | null;
+  username: string | null;
+  full_name: string | null;
+  avatar_url: string | null;
+  role: UserRole | null;
+  email: string;
+  created_at: string;
+}
+
+// Application User type
 export interface User {
   id: string;
   name: string;
@@ -10,7 +24,7 @@ export interface User {
   bio?: string;
   location?: string;
   company?: string;
-  role?: string;
+  role?: UserRole;
   skills?: string[];
   social?: {
     linkedin?: string;
@@ -20,31 +34,53 @@ export interface User {
   };
 }
 
+// Transform database user to application user
+function transformDbToUser(dbUser: DbUser): User {
+  return {
+    id: dbUser.id,
+    name: dbUser.full_name || '',
+    email: dbUser.email,
+    avatar: dbUser.avatar_url || undefined,
+    role: dbUser.role || undefined
+  };
+}
+
 export async function searchUsers(query: string): Promise<User[]> {
   try {
-    const { data, error } = await supabase
+    const result = await supabase
       .from("profiles")
       .select(
         `
         id,
-        name,
-        email,
-        title,
-        avatar,
-        bio,
-        location,
-        company,
+        updated_at,
+        username,
+        full_name,
+        avatar_url,
         role,
-        skills,
-        social
+        email,
+        created_at
       `,
       )
-      .or(`name.ilike.%${query}%,email.ilike.%${query}%`)
+      .or(`full_name.ilike.%${query}%,email.ilike.%${query}%`)
       .limit(5);
 
-    if (error) throw error;
+    if (result.error) throw result.error;
 
-    return data || [];
+    // Type guard to ensure each item has required DbUser properties
+  const isValidDbUser = (item: unknown): item is DbUser => {
+    if (!item || typeof item !== 'object') return false;
+    const obj = item as Record<string, unknown>;
+    return (
+      typeof obj.id === 'string' &&
+      typeof obj.email === 'string' &&
+      (obj.role === null || ['candidate', 'employer', 'partner'].includes(obj.role as string))
+    );
+  };
+
+    // Filter out any invalid items and transform valid ones
+    return (result.data || [])
+      .filter(isValidDbUser)
+      .map(transformDbToUser);
   } catch (error) {
     console.error("Error searching users:", error);
     throw new Error("Failed to search users");
@@ -56,18 +92,12 @@ function transformUserToProfile(user: User): Profile {
     id: user.id,
     user_id: user.id,
     full_name: user.name,
-    title: user.title || "",
-    bio: user.bio || "",
-    location: user.location || "",
+    title: user.title || '',
+    bio: user.bio || '',
+    location: user.location || '',
     avatar_url: user.avatar,
-    skills: (user.skills || []).map((skillName) => ({
-      id: `${user.id}-${skillName}`,
-      name: skillName,
-      category: "default",
-      level: "beginner",
-      endorsements: 0,
-      yearsOfExperience: 0,
-    })),
+    resume_url: undefined,
+    skills: [],
     experience_years: 0,
     education: [],
     created_at: new Date().toISOString(),
@@ -75,43 +105,51 @@ function transformUserToProfile(user: User): Profile {
   };
 }
 
-function transformProfileToUser(profile: ProfileUpdateData): Partial<User> {
+function transformProfileToUser(profile: ProfileUpdateData): Partial<DbUser> {
   return {
-    name: profile.full_name,
-    title: profile.title,
-    bio: profile.bio,
-    location: profile.location,
-    avatar: profile.avatar_url,
-    skills: profile.skills?.map((skill) => skill.name),
+    full_name: profile.full_name || null,
+    avatar_url: profile.avatar_url || null
   };
 }
 
 export async function getProfile(userId: string): Promise<Profile> {
   try {
-    const { data, error } = await supabase
+    const result = await supabase
       .from("profiles")
       .select(
         `
         id,
-        name,
-        email,
-        title,
-        avatar,
-        bio,
-        location,
-        company,
+        updated_at,
+        username,
+        full_name,
+        avatar_url,
         role,
-        skills,
-        social
+        email,
+        created_at
       `,
       )
       .eq("id", userId)
       .single();
 
-    if (error) throw error;
-    if (!data) throw new Error("Profile not found");
+    if (result.error) throw result.error;
+    if (!result.data) throw new Error("Profile not found");
 
-    return transformUserToProfile(data);
+    // Type guard to ensure we have a valid DbUser
+  const isValidDbUser = (item: unknown): item is DbUser => {
+    if (!item || typeof item !== 'object') return false;
+    const obj = item as Record<string, unknown>;
+    return (
+      typeof obj.id === 'string' &&
+      typeof obj.email === 'string' &&
+      (obj.role === null || ['candidate', 'employer', 'partner'].includes(obj.role as string))
+    );
+  };
+
+    if (!isValidDbUser(result.data)) {
+      throw new Error("Invalid profile data");
+    }
+
+    return transformUserToProfile(transformDbToUser(result.data));
   } catch (error) {
     console.error("Error fetching profile:", error);
     throw new Error("Failed to fetch profile");
@@ -123,18 +161,35 @@ export async function updateProfile(
   profile: ProfileUpdateData,
 ): Promise<Profile> {
   try {
-    const userUpdate = transformProfileToUser(profile);
-    const { data, error } = await supabase
+    // Convert profile update to database fields
+    const dbUpdate = transformProfileToUser(profile);
+
+    const result = await supabase
       .from("profiles")
-      .update(userUpdate)
+      .update(dbUpdate)
       .eq("id", userId)
       .select()
       .single();
 
-    if (error) throw error;
-    if (!data) throw new Error("Profile not found");
+    if (result.error) throw result.error;
+    if (!result.data) throw new Error("Profile not found");
 
-    return transformUserToProfile(data);
+    // Type guard to ensure we have a valid DbUser
+    const isValidDbUser = (item: unknown): item is DbUser => {
+      if (!item || typeof item !== 'object') return false;
+      const obj = item as Record<string, unknown>;
+      return (
+        typeof obj.id === 'string' &&
+        typeof obj.email === 'string' &&
+        (obj.role === null || ['candidate', 'employer', 'partner'].includes(obj.role as string))
+      );
+    };
+
+    if (!isValidDbUser(result.data)) {
+      throw new Error("Invalid profile data");
+    }
+
+    return transformUserToProfile(transformDbToUser(result.data));
   } catch (error) {
     console.error("Error updating profile:", error);
     throw new Error("Failed to update profile");

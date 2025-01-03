@@ -1,11 +1,11 @@
 // import React from "react";
 import { MainLayout } from "../../components/layout/MainLayout";
-import { useDashboardMetrics } from "../../hooks/useDashboardMetrics";
+import { useAdminDashboardMetrics } from "../../hooks/useAdminDashboardMetrics";
 import { MetricCard } from "../../components/metrics/MetricCard";
 import { Users, Briefcase, CheckCircle, TrendingUp } from "lucide-react";
 
 const AdminDashboard = () => {
-  const { metrics, isLoading, error } = useDashboardMetrics();
+  const { metrics, isLoading, error } = useAdminDashboardMetrics();
 
   if (isLoading) {
     return (
@@ -21,7 +21,7 @@ const AdminDashboard = () => {
     return (
       <MainLayout>
         <div className="bg-red-50 border border-red-200 rounded-md p-4">
-          <p className="text-red-600">{error}</p>
+          <p className="text-red-600">{error || "Failed to load dashboard metrics"}</p>
         </div>
       </MainLayout>
     );
@@ -37,17 +37,17 @@ const AdminDashboard = () => {
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           <MetricCard
             label="Total Applications"
-            value={metrics?.applications?.total || 0}
+            value={metrics?.applications.total ?? 0}
             icon={CheckCircle}
           />
           <MetricCard
             label="Active Users"
-            value={metrics?.connections || 0}
+            value={metrics?.totalCandidates ?? 0}
             icon={Users}
           />
           <MetricCard
             label="Active Jobs"
-            value={metrics?.jobViews || 0}
+            value={metrics?.jobs.active ?? 0}
             icon={Briefcase}
           />
           <MetricCard

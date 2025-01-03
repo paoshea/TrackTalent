@@ -1,4 +1,4 @@
-import { User, UserRole, UserProfile } from '../types/auth';
+import { User, UserRole, UserProfile, EmployerProfile } from '../types/auth';
 
 // Mock user data
 const mockUsers: Record<string, User> = {
@@ -9,10 +9,12 @@ const mockUsers: Record<string, User> = {
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
     app_metadata: {
-      role: 'candidate'
+      role: 'candidate',
+      provider: 'mock'
     },
     user_metadata: {
-      full_name: 'Guest Candidate'
+      full_name: 'Guest Candidate',
+      avatar_url: null
     },
     aud: 'authenticated',
     email_confirmed_at: new Date().toISOString()
@@ -24,10 +26,12 @@ const mockUsers: Record<string, User> = {
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
     app_metadata: {
-      role: 'employer'
+      role: 'employer',
+      provider: 'mock'
     },
     user_metadata: {
-      full_name: 'Guest Employer'
+      full_name: 'Guest Employer',
+      avatar_url: null
     },
     aud: 'authenticated',
     email_confirmed_at: new Date().toISOString()
@@ -39,10 +43,12 @@ const mockUsers: Record<string, User> = {
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
     app_metadata: {
-      role: 'partner'
+      role: 'partner',
+      provider: 'mock'
     },
     user_metadata: {
-      full_name: 'Guest Partner'
+      full_name: 'Guest Partner',
+      avatar_url: null
     },
     aud: 'authenticated',
     email_confirmed_at: new Date().toISOString()
@@ -53,14 +59,13 @@ const mockUsers: Record<string, User> = {
 const mockProfiles: Record<string, UserProfile> = {
   'guest-candidate': {
     id: 'guest-candidate',
-    user_id: 'guest-candidate',
+    username: 'guest.candidate',
     full_name: 'Guest Candidate',
     email: 'guest.candidate@example.com',
     role: 'candidate',
+    avatar_url: null,
     title: 'Software Engineer',
     location: 'San Francisco, CA',
-    company_name: null,
-    company_size: null,
     bio: 'Experienced software engineer looking for new opportunities',
     experience_years: 5,
     created_at: new Date().toISOString(),
@@ -68,30 +73,36 @@ const mockProfiles: Record<string, UserProfile> = {
   },
   'guest-employer': {
     id: 'guest-employer',
-    user_id: 'guest-employer',
+    username: 'guest.employer',
     full_name: 'Guest Employer',
     email: 'guest.employer@example.com',
     role: 'employer',
+    avatar_url: null,
     title: 'HR Manager',
     location: 'San Francisco, CA',
+    bio: 'HR Manager at Tech Corp with expertise in tech recruitment',
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
     company_name: 'Tech Corp',
     company_size: '50-100',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString()
-  },
+    industry: 'Technology'
+  } as EmployerProfile,
   'guest-partner': {
     id: 'guest-partner',
-    user_id: 'guest-partner',
+    username: 'guest.partner',
     full_name: 'Guest Partner',
     email: 'guest.partner@example.com',
     role: 'partner',
+    avatar_url: null,
     title: 'Recruitment Partner',
     location: 'San Francisco, CA',
+    bio: 'Helping companies find the best talent',
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
     company_name: 'Talent Solutions Inc',
     company_size: '10-50',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString()
-  }
+    industry: 'Recruitment'
+  } as EmployerProfile
 };
 
 export class MockAuthService {
@@ -140,8 +151,14 @@ export class MockAuthService {
       role: data.role,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
-      app_metadata: {},
-      user_metadata: {},
+      app_metadata: {
+        provider: 'mock',
+        role: data.role
+      },
+      user_metadata: {
+        full_name: data.full_name,
+        avatar_url: null
+      },
       aud: 'authenticated',
       email_confirmed_at: undefined
     };
@@ -149,14 +166,14 @@ export class MockAuthService {
     // Create mock profile
     const newProfile: UserProfile = {
       id: userId,
-      user_id: userId,
+      username: data.email.split('@')[0],
       full_name: data.full_name,
       email: data.email,
       role: data.role,
-      title: null,
-      location: null,
-      company_name: null,
-      company_size: null,
+      avatar_url: null,
+      title: undefined,
+      bio: undefined,
+      location: undefined,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     };

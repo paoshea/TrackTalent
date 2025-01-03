@@ -37,22 +37,22 @@ const CustomerDashboard = () => {
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           <MetricCard
             label="Active Jobs"
-            value={metrics?.jobViews || 0}
+            value={metrics?.activeJobs || 0}
             icon={Briefcase}
           />
           <MetricCard
             label="Total Applications"
-            value={metrics?.applications?.total || 0}
+            value={metrics?.applications || 0}
             icon={CheckCircle}
           />
           <MetricCard
             label="Scheduled Interviews"
-            value={metrics?.interviews?.total || 0}
+            value={metrics?.interviews || 0}
             icon={Users}
           />
           <MetricCard
-            label="Profile Views"
-            value={metrics?.profileViews || 0}
+            label="Connections"
+            value={metrics?.connections || 0}
             icon={TrendingUp}
           />
         </div>

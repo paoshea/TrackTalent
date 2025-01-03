@@ -38,7 +38,7 @@ interface EmployerData {
   }>;
 }
 
-interface AdminData {
+interface PartnerData {
   metrics: DashboardMetrics;
   systemHealth: {
     status: "healthy" | "warning" | "error";
@@ -54,7 +54,7 @@ interface AdminData {
 type RoleData = {
   candidate: CandidateData;
   employer: EmployerData;
-  admin: AdminData;
+  partner: PartnerData;
 };
 
 export function useRoleSpecificData() {
@@ -244,7 +244,7 @@ function getMockDataForRole(role: UserRole): RoleData[UserRole] {
         ],
       };
 
-    case "admin":
+    case "partner":
       return {
         metrics: {
           messages: 1200,

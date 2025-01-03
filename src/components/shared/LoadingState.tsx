@@ -1,7 +1,11 @@
 // import React from 'react';
 
-export const LoadingState = () => (
-  <div className="flex items-center justify-center min-h-screen">
-    <div className="text-lg text-gray-600">Loading...</div>
+interface LoadingStateProps {
+  message?: string;
+}
+
+export const LoadingState = ({ message = "Loading..." }: LoadingStateProps) => (
+  <div className="flex items-center justify-center">
+    <div className="text-lg text-gray-600">{message}</div>
   </div>
 );

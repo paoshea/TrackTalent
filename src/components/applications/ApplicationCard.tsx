@@ -13,17 +13,17 @@ export function ApplicationCard({ application }: Props) {
       <div className="flex justify-between items-start">
         <div>
           <h3 className="text-lg font-medium text-gray-900">
-            {application.jobTitle}
+            {application.job.title}
           </h3>
           <div className="mt-2 space-y-2">
             <div className="flex items-center text-gray-600">
               <Building2 className="h-4 w-4 mr-2" />
-              <span>{application.company}</span>
+              <span>{application.job.company.name}</span>
             </div>
             <div className="flex items-center text-gray-600">
               <Calendar className="h-4 w-4 mr-2" />
               <span>
-                Applied {new Date(application.createdAt).toLocaleDateString()}
+                Applied {new Date(application.appliedAt).toLocaleDateString()}
               </span>
             </div>
             <div className="flex items-center text-gray-600">
