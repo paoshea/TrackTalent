@@ -2,6 +2,7 @@ import { useState } from "react";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "./useAuth";
 import type { Experience } from "../types/candidate";
+import type { PostgrestError } from "@supabase/supabase-js";
 
 export interface ApplicationData extends Record<string, unknown> {
   jobId: string;
@@ -60,6 +61,12 @@ interface UseApplicationSubmitOptions {
   onProgress?: (progress: number) => void;
 }
 
+interface SubmitError extends Error {
+  code?: string;
+  details?: string;
+  hint?: string;
+}
+
 export function useApplicationSubmit(
   options: UseApplicationSubmitOptions = {},
 ) {
@@ -82,27 +89,32 @@ export function useApplicationSubmit(
       const { data: application, error: applicationError } = await supabase
         .from("applications")
         .insert({
-          jobId: data.jobId,
-          candidateId: user.id,
+          job_id: data.jobId,
+          candidate_id: user.id,
           status: "submitted",
-          coverLetter: data.coverLetter,
-          resumeUrl: data.resumeUrl,
-          portfolioUrl: data.portfolioUrl,
-          linkedinUrl: data.linkedinUrl,
-          githubUrl: data.githubUrl,
-          websiteUrl: data.websiteUrl,
-          additionalInfo: data.additionalInfo,
-          expectedSalary: data.expectedSalary,
+          cover_letter: data.coverLetter,
+          resume_url: data.resumeUrl,
+          portfolio_url: data.portfolioUrl,
+          linkedin_url: data.linkedinUrl,
+          github_url: data.githubUrl,
+          website_url: data.websiteUrl,
+          additional_info: data.additionalInfo,
+          expected_salary: data.expectedSalary,
           availability: data.availability,
           skills: data.skills,
           experience: data.experience,
           education: data.education,
           certifications: data.certifications,
+          metadata: {
+            submitted_at: new Date().toISOString()
+          }
         })
         .select()
         .single();
 
-      if (applicationError) throw applicationError;
+      if (applicationError) {
+        throw new Error(applicationError.message);
+      }
 
       setProgress(25);
 
@@ -112,12 +124,19 @@ export function useApplicationSubmit(
           .from("application_references")
           .insert(
             data.references.map((ref) => ({
-              applicationId: application.id,
-              ...ref,
+              application_id: application.id,
+              name: ref.name,
+              position: ref.position,
+              company: ref.company,
+              email: ref.email,
+              phone: ref.phone,
+              relationship: ref.relationship
             })),
           );
 
-        if (referencesError) throw referencesError;
+        if (referencesError) {
+          throw new Error(referencesError.message);
+        }
       }
 
       setProgress(50);
@@ -128,37 +147,53 @@ export function useApplicationSubmit(
           .from("application_responses")
           .insert(
             Object.entries(data.questions).map(([questionId, response]) => ({
-              applicationId: application.id,
-              questionId,
+              application_id: application.id,
+              question_id: questionId,
               response,
             })),
           );
 
-        if (questionsError) throw questionsError;
+        if (questionsError) {
+          throw new Error(questionsError.message);
+        }
       }
 
       setProgress(75);
 
-      // Update job metrics
-      const { error: metricsError } = await supabase.rpc(
-        "increment_job_applications",
+      // Add application timeline event
+      const { error: timelineError } = await supabase.rpc(
+        "add_application_timeline_event",
         {
-          job_id: data.jobId,
-        },
+          application_id: application.id,
+          event_type: "submitted",
+          event_data: {
+            submitted_by: user.id,
+            submitted_at: new Date().toISOString()
+          }
+        }
       );
 
-      if (metricsError) throw metricsError;
+      if (timelineError) {
+        throw new Error(timelineError.message);
+      }
 
       setProgress(100);
       options.onSuccess?.(data);
       return application;
     } catch (err) {
-      const error = new Error(
-        err instanceof Error ? err.message : "Failed to submit application",
-      );
-      setError(error.message);
-      options.onError?.(error);
-      throw error;
+      const submitError: SubmitError = err instanceof Error 
+        ? err 
+        : new Error("Failed to submit application");
+
+      if ((err as PostgrestError)?.code) {
+        submitError.code = (err as PostgrestError).code;
+        submitError.details = (err as PostgrestError).details;
+        submitError.hint = (err as PostgrestError).hint;
+      }
+
+      setError(submitError.message);
+      options.onError?.(submitError);
+      throw submitError;
     } finally {
       setIsSubmitting(false);
     }

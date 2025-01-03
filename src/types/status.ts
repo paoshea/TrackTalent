@@ -6,11 +6,15 @@ export type StatusType =
   | "alert";
 
 export interface StatusMetrics {
+  views: number;
   likes: number;
   comments: number;
   shares: number;
-  views: number;
   engagementRate: number;
+  avgTimeSpent: number;
+  uniqueViewers: number;
+  peakViewers: number;
+  totalInteractions: number;
 }
 
 export interface CreateStatusParams {

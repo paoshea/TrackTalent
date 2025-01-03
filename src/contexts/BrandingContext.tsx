@@ -22,7 +22,7 @@ const defaultBranding: BrandingState = {
   companyName: 'TrackTalent'
 };
 
-const BrandingContext = createContext<BrandingContextType | undefined>(undefined);
+export const BrandingContext = createContext<BrandingContextType | undefined>(undefined);
 
 interface BrandingProviderProps {
   children: ReactNode;

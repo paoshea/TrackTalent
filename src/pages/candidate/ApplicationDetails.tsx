@@ -6,6 +6,7 @@ import { Alert } from "../../components/shared/Alert";
 import { Button } from "../../components/shared/Button";
 import { Badge } from "../../components/shared/Badge";
 import { formatDate } from "../../utils/dateUtils";
+import type { TimelineEvent } from "../../types/applications";
 
 export function ApplicationDetails() {
   const { id } = useParams<{ id: string }>();
@@ -35,7 +36,7 @@ export function ApplicationDetails() {
     );
   }
 
-  const timeline = application.timeline || [];
+  const timeline = application.metadata?.timeline || [];
   const hasTimeline = timeline.length > 0;
 
   return (
@@ -45,10 +46,10 @@ export function ApplicationDetails() {
         <div className="flex items-start justify-between">
           <div>
             <h1 className="text-2xl font-semibold text-gray-900">
-              {application.jobTitle}
+              {application.job.title}
             </h1>
             <p className="mt-1 text-sm text-gray-500">
-              {application.company} • {application.location}
+              {application.job.company.name} • {application.job.location}
             </p>
           </div>
           <Badge
@@ -88,26 +89,28 @@ export function ApplicationDetails() {
                   {formatDate(application.updatedAt)}
                 </dd>
               </div>
-              <div>
-                <dt className="text-sm font-medium text-gray-500">Resume</dt>
-                <dd className="mt-1 text-sm text-gray-900">
-                  <Button
-                    variant="link"
-                    onClick={() =>
-                      window.open(application.resume.url, "_blank")
-                    }
-                  >
-                    {application.resume.name}
-                  </Button>
-                </dd>
-              </div>
-              {application.coverLetter && (
+              {application.metadata?.resume_url && (
+                <div>
+                  <dt className="text-sm font-medium text-gray-500">Resume</dt>
+                  <dd className="mt-1 text-sm text-gray-900">
+                    <Button
+                      variant="link"
+                      onClick={() =>
+                        window.open(application.metadata?.resume_url, "_blank")
+                      }
+                    >
+                      View Resume
+                    </Button>
+                  </dd>
+                </div>
+              )}
+              {application.metadata?.cover_letter && (
                 <div>
                   <dt className="text-sm font-medium text-gray-500">
                     Cover Letter
                   </dt>
-                  <dd className="mt-1 text-sm text-gray-900">
-                    {application.coverLetter}
+                  <dd className="mt-1 text-sm text-gray-900 whitespace-pre-wrap">
+                    {application.metadata.cover_letter}
                   </dd>
                 </div>
               )}
@@ -120,7 +123,7 @@ export function ApplicationDetails() {
               <h3 className="text-lg font-medium text-gray-900">Timeline</h3>
               <div className="mt-4 flow-root">
                 <ul className="-mb-8">
-                  {timeline.map((event, eventIdx) => (
+                  {timeline.map((event: TimelineEvent, eventIdx: number) => (
                     <li key={event.id}>
                       <div className="relative pb-8">
                         {eventIdx !== timeline.length - 1 && (

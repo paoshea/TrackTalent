@@ -1,33 +1,79 @@
-import type { QuickStatsMetrics } from "../types/dashboard";
+import { supabase } from "../lib/supabase";
+import type { StatusMetrics } from "../types/status";
 
-interface AnalyticsParams {
-  dateRange: {
-    start: string;
-    end: string;
-  };
+export async function getStatusEngagementMetrics(statusId: string): Promise<StatusMetrics> {
+  try {
+    const { data, error } = await supabase
+      .from('status_metrics')
+      .select(`
+        views,
+        likes,
+        comments,
+        shares,
+        engagement_rate,
+        avg_time_spent,
+        unique_viewers,
+        peak_viewers,
+        total_interactions
+      `)
+      .eq('status_id', statusId)
+      .single();
+
+    if (error) throw error;
+
+    if (!data) {
+      throw new Error('No metrics found for this status');
+    }
+
+    return {
+      views: data.views || 0,
+      likes: data.likes || 0,
+      comments: data.comments || 0,
+      shares: data.shares || 0,
+      engagementRate: data.engagement_rate || 0,
+      avgTimeSpent: data.avg_time_spent || 0,
+      uniqueViewers: data.unique_viewers || 0,
+      peakViewers: data.peak_viewers || 0,
+      totalInteractions: data.total_interactions || 0
+    };
+  } catch (error) {
+    console.error('Error fetching status metrics:', error);
+    throw error;
+  }
 }
 
-// Mock analytics data for demonstration
-const mockMetrics: QuickStatsMetrics = {
-  activeJobs: 15,
-  applications: 25,
-  interviews: 8,
-  responseRate: 75,
-  trends: {
-    jobs: 10,
-    applications: 15,
-    interviews: 20,
-    responseRate: 5
-  }
-};
+export async function trackStatusView(statusId: string) {
+  try {
+    const { error } = await supabase
+      .from('status_views')
+      .insert({
+        status_id: statusId,
+        viewed_at: new Date().toISOString()
+      });
 
-export async function getAnalytics(_params: AnalyticsParams): Promise<{ metrics: QuickStatsMetrics }> {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  
-  // In a real app, we would use the params to filter the data
-  // For now, just return mock data
-  return {
-    metrics: mockMetrics
-  };
+    if (error) throw error;
+  } catch (error) {
+    console.error('Error tracking status view:', error);
+    throw error;
+  }
+}
+
+export async function trackStatusInteraction(
+  statusId: string,
+  interactionType: 'like' | 'comment' | 'share'
+) {
+  try {
+    const { error } = await supabase
+      .from('status_interactions')
+      .insert({
+        status_id: statusId,
+        type: interactionType,
+        interacted_at: new Date().toISOString()
+      });
+
+    if (error) throw error;
+  } catch (error) {
+    console.error('Error tracking status interaction:', error);
+    throw error;
+  }
 }

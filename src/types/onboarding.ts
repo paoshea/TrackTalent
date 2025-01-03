@@ -58,6 +58,42 @@ export interface ProfileData {
   location?: string;
   bio?: string;
   avatar?: string;
+  resume?: File;
+  resumeUrl?: string;
+  skills?: string[];
+  experience?: Array<{
+    title: string;
+    company: string;
+    startDate: string;
+    endDate?: string;
+    current: boolean;
+    description: string;
+  }>;
+  education?: Array<{
+    institution: string;
+    degree: string;
+    field: string;
+    startDate: string;
+    endDate?: string;
+    current: boolean;
+  }>;
+}
+
+export interface SupabaseProfile {
+  id: string;
+  email: string;
+  username?: string | null;
+  full_name: string;
+  avatar_url?: string | null;
+  role?: "candidate" | "employer" | "partner";
+  updated_at?: string | null;
+  created_at?: string;
+  resume_url?: string | null;
+  skills?: string[] | null;
+  experience?: Record<string, unknown>[] | null;
+  education?: Record<string, unknown>[] | null;
+  preferences?: string[] | null;
+  environment?: string;
 }
 
 export interface ProfileSetupProps extends OnboardingStepProps {
