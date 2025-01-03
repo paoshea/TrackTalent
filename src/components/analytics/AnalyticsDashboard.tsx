@@ -39,7 +39,7 @@ export function AnalyticsDashboard() {
     activeJobs: metrics.jobs.active,
     applications: metrics.applications.total,
     interviews: metrics.interviews.scheduled,
-    responseRate: Math.round((metrics.applications.total / metrics.jobViews) * 100) || 0,
+    responseRate: metrics.jobViews ? Math.round((metrics.applications.total / metrics.jobViews) * 100) : 0,
     connections: metrics.connections,
     trends: {
       jobs: metrics.activeJobsChange,

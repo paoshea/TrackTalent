@@ -6,10 +6,10 @@
     "module": "ESNext",
     "skipLibCheck": true,
     "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
+    "allowImportingTsExtensions": true,
     "jsx": "react-jsx",
     "strict": true,
     "noUnusedLocals": true,
@@ -34,8 +34,11 @@
   "include": [
     "src",
     "Storyboard/**/*.tsx",
-    "Storyboard/**/*.ts",
-    "postcss.config.js"
+    "Storyboard/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
   ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

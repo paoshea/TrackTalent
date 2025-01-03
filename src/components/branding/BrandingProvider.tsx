@@ -1,7 +1,9 @@
 import React from "react";
 import { useBranding } from "../../hooks/useBranding";
 
-interface CSSVariables extends React.CSSProperties {
+type CSSVariables = {
+  [key: string]: string | undefined;
+} & {
   "--primary-color": string;
   "--secondary-color": string;
   "--font-family"?: string;
@@ -11,7 +13,7 @@ interface CSSVariables extends React.CSSProperties {
   "--button-radius"?: string;
   "--button-padding"?: string;
   "--button-font-weight"?: string;
-}
+};
 
 export function BrandingWrapper({ children }: { children: React.ReactNode }) {
   const { theme, isLoading, error } = useBranding();
@@ -41,7 +43,7 @@ export function BrandingWrapper({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <div className="min-h-screen" style={cssVariables}>
+    <div className="min-h-screen" style={cssVariables as React.CSSProperties}>
       {children}
     </div>
   );

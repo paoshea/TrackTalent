@@ -3,13 +3,15 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import './RichTextEditor.css';
 
+import type { ReactQuillProps } from 'react-quill';
+
 interface RichTextEditorProps {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
   className?: string;
   readOnly?: boolean;
-  modules?: any;
+  modules?: ReactQuillProps['modules'];
   formats?: string[];
 }
 

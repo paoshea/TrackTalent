@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from '../types/database';
-import type { User as AuthUser, UserProfile } from '../types/auth';
+import type { User as AuthUser, UserProfile, UserRole } from '../types/auth';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -47,20 +47,35 @@ export async function getTypedSession() {
   };
 }
 
-export function validateProfile(data: any): UserProfile {
-  if (!data.id || !data.email || !data.role) {
+type ProfileDataInput = Partial<{
+  id: string;
+  email: string;
+  role: UserRole | null;
+  username: string | null;
+  full_name: string | null;
+  avatar_url: string | null;
+  created_at: string;
+  updated_at: string | null;
+  title: string;
+  location: string;
+  bio: string;
+  experience_years: number;
+}>;
+
+export function validateProfile(data: ProfileDataInput): UserProfile {
+  if (!data.id || !data.email) {
     throw new Error('Invalid profile data');
   }
 
   return {
     id: data.id,
     email: data.email,
-    role: data.role,
-    username: data.username,
-    full_name: data.full_name,
-    avatar_url: data.avatar_url,
-    created_at: data.created_at,
-    updated_at: data.updated_at,
+    role: data.role ?? 'candidate',
+    username: data.username ?? null,
+    full_name: data.full_name ?? null,
+    avatar_url: data.avatar_url ?? null,
+    created_at: data.created_at ?? new Date().toISOString(),
+    updated_at: data.updated_at ?? null,
     title: data.title,
     location: data.location,
     bio: data.bio,

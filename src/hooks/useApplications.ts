@@ -61,7 +61,7 @@ function parseTimelineEvents(timeline: Json[]): TimelineEvent[] {
       };
 
       // Handle optional metadata
-      const { id, type, description, timestamp, ...rest } = event;
+      const { ...rest } = event;
       if (Object.keys(rest).length > 0) {
         timelineEvent.metadata = rest;
       }
