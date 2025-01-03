@@ -1,20 +1,28 @@
+import { lazy } from "react";
 import { RouteObject } from "react-router-dom";
 import { demoRoutes } from "./demoRoutes";
-import Jobs from "../pages/jobs/Jobs";
-import Resources from "../pages/resources/Resources";
-import SuccessStories from "../pages/success-stories/SuccessStories";
-import Analytics from "../pages/partners/Analytics";
-import Apprenticeships from "../pages/partners/Apprenticeships";
-import Mentorship from "../pages/partners/Mentorship";
-import Landing from "../pages/Landing";
-import Login from "../pages/auth/Login";
-import Register from "../pages/auth/Register";
-import EmployerLanding from "../pages/employer/Landing";
-import JobPostings from "../pages/employer/JobPostings";
-import EmployerApplications from "../pages/employer/Applications";
-import EmployerAnalytics from "../pages/employer/Analytics";
-import { Features, CandidateFeatures, EmployerFeatures, PartnerFeatures } from "../pages/features";
 import FeaturesLayout from "../components/layout/FeaturesLayout";
+
+// Lazy load page components
+const Jobs = lazy(() => import("../pages/jobs/Jobs"));
+const Resources = lazy(() => import("../pages/resources/Resources"));
+const SuccessStories = lazy(() => import("../pages/success-stories/SuccessStories"));
+const Analytics = lazy(() => import("../pages/partners/Analytics"));
+const Apprenticeships = lazy(() => import("../pages/partners/Apprenticeships"));
+const Mentorship = lazy(() => import("../pages/partners/Mentorship"));
+const Landing = lazy(() => import("../pages/Landing"));
+const Login = lazy(() => import("../pages/auth/Login"));
+const Register = lazy(() => import("../pages/auth/Register"));
+const EmployerLanding = lazy(() => import("../pages/employer/Landing"));
+const JobPostings = lazy(() => import("../pages/employer/JobPostings"));
+const EmployerApplications = lazy(() => import("../pages/employer/Applications"));
+const EmployerAnalytics = lazy(() => import("../pages/employer/Analytics"));
+
+// Lazy load feature pages
+const Features = lazy(() => import("../pages/features").then(m => ({ default: m.Features })));
+const CandidateFeatures = lazy(() => import("../pages/features").then(m => ({ default: m.CandidateFeatures })));
+const EmployerFeatures = lazy(() => import("../pages/features").then(m => ({ default: m.EmployerFeatures })));
+const PartnerFeatures = lazy(() => import("../pages/features").then(m => ({ default: m.PartnerFeatures })));
 
 const guestRoutes: RouteObject[] = [
   {

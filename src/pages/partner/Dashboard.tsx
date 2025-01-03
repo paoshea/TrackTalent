@@ -1,17 +1,18 @@
-import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import type { PartnerProfile } from '../../types/auth';
 
-const PartnerDashboard: React.FC = () => {
+const PartnerDashboard = () => {
   const { profile } = useAuth();
+  const partnerProfile = profile as PartnerProfile | null;
 
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
           <h1 className="text-3xl font-bold text-gray-900">Partner Dashboard</h1>
-          {profile?.company_name && (
-            <p className="mt-1 text-sm text-gray-500">{profile.company_name}</p>
+          {partnerProfile?.company_name && (
+            <p className="mt-1 text-sm text-gray-500">{partnerProfile.company_name}</p>
           )}
         </div>
       </header>

@@ -132,6 +132,8 @@ function validateAndMapApplication(data: unknown): Application | null {
         id: job.id,
         title: job.title,
         location: job.location || "",
+        type: "full-time", // Default value, should come from API
+        experience_level: "mid", // Default value, should come from API
         company: {
           id: company.id,
           name: company.name,

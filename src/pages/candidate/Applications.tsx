@@ -5,9 +5,9 @@ import { LoadingState } from "../../components/shared/LoadingState";
 import { useApplications } from "../../hooks/useApplications";
 
 export default function Applications() {
-  const { isLoading } = useApplications();
+  const { loading } = useApplications();
 
-  if (isLoading) {
+  if (loading) {
     return <LoadingState />;
   }
   

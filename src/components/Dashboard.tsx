@@ -8,6 +8,9 @@ import { ActiveJobsList } from "./dashboard/ActiveJobsList";
 import { RecentActivity } from "./dashboard/RecentActivity";
 import { StatusUpdates } from "./dashboard/StatusUpdates";
 import { LoadingState } from "./shared/LoadingState";
+import type { Job } from "../types/jobs";
+import type { Activity } from "../types/dashboard";
+import { LucideIcon } from "lucide-react";
 
 interface User {
   id: string;
@@ -43,7 +46,7 @@ function Dashboard() {
   const useDashboardMetrics = isGuest ? mockHooks.useDashboardMetrics : realUseDashboardMetrics;
   const useRecentActivity = isGuest ? mockHooks.useRecentActivity : realUseRecentActivity;
 
-  const { jobs, isLoading: jobsLoading, error: jobsError } = useCustomerJobs({
+  const { jobs: hookJobs, isLoading: jobsLoading, error: jobsError } = useCustomerJobs({
     customerId: user?.id || "",
     status: ["published"],
     limit: 5,
@@ -56,10 +59,78 @@ function Dashboard() {
   } = useDashboardMetrics();
 
   const { 
-    activities, 
+    activities: hookActivities, 
     isLoading: activitiesLoading,
     error: activitiesError 
   } = useRecentActivity();
+
+  // Convert hook jobs to dashboard jobs
+  const jobs: Job[] = hookJobs.map(hookJob => ({
+    id: hookJob.id,
+    title: hookJob.title,
+    location: hookJob.location,
+    type: "full-time",
+    experience_level: "mid",
+    companyId: "default",
+    company: {
+      id: "default",
+      name: typeof hookJob.company === 'string' ? hookJob.company : hookJob.company.name,
+      logo: ""
+    },
+    status: (hookJob.status === "published" || hookJob.status === "draft" || hookJob.status === "closed") 
+      ? hookJob.status 
+      : "published",
+    applicantCount: 0,
+    createdAt: typeof hookJob.created_at === 'string' ? hookJob.created_at : new Date().toISOString(),
+    updatedAt: typeof hookJob.created_at === 'string' ? hookJob.created_at : new Date().toISOString(),
+    description: hookJob.description || "",
+    department: "",
+    requirements: hookJob.requirements || [],
+    benefits: [],
+    experienceLevel: "mid",
+    compensation: {
+      salary: {
+        min: 0,
+        max: 0,
+        currency: "USD",
+        period: "yearly"
+      }
+    },
+    skills: [],
+    salaryRange: {
+      min: 0,
+      max: 0,
+      currency: "USD",
+      period: "yearly"
+    },
+    remote: {
+      allowed: false,
+      type: "occasional"
+    }
+  }));
+
+  // Convert hook activities to dashboard activities
+  const activities: Activity[] = hookActivities.map(hookActivity => ({
+    id: hookActivity.id,
+    type: hookActivity.type === 'application' ? 'job_posted' : 
+          hookActivity.type === 'interview' ? 'interview_scheduled' :
+          hookActivity.type === 'offer' ? 'offer_sent' : 'status_update',
+    title: hookActivity.type,
+    description: hookActivity.type,
+    icon: (() => null) as unknown as LucideIcon,
+    timestamp: new Date().toISOString(),
+    content: "",
+    user: {
+      id: "",
+      name: "",
+    },
+    action: hookActivity.type,
+    target: "",
+    metadata: {
+      ...hookActivity.metadata,
+      description: hookActivity.type
+    }
+  }));
 
   if (!user) return null;
 

@@ -1,21 +1,24 @@
+import { lazy } from "react";
 import { Navigate, Outlet, RouteObject } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import type { UserRole } from "../types/auth";
-import EmployerDashboard from "../pages/employer/Dashboard";
-import CandidateDashboard from "../pages/candidate/Dashboard";
-import Applications from "../pages/candidate/Applications";
-import { MessagesPage as Messages } from "../pages/messages/Messages";
-import Profile from "../pages/candidate/Profile";
-import JobPostings from "../pages/employer/JobPostings";
-import EmployerApplications from "../pages/employer/Applications";
-import Analytics from "../pages/employer/Analytics";
-import Apprenticeships from "../pages/partners/Apprenticeships";
-import Mentorship from "../pages/partners/Mentorship";
-import PartnerAnalytics from "../pages/partners/Analytics";
-import { OnboardingFlow } from "../pages/onboarding/OnboardingFlow";
 import { CandidateLayout } from "../components/layout/CandidateLayout";
 import { EmployerLayout } from "../components/layout/EmployerLayout";
 import { PartnerLayout } from "../components/layout/PartnerLayout";
+
+// Lazy load page components
+const EmployerDashboard = lazy(() => import("../pages/employer/Dashboard"));
+const CandidateDashboard = lazy(() => import("../pages/candidate/Dashboard"));
+const Applications = lazy(() => import("../pages/candidate/Applications"));
+const Messages = lazy(() => import("../pages/messages/Messages").then(m => ({ default: m.MessagesPage })));
+const Profile = lazy(() => import("../pages/candidate/Profile"));
+const JobPostings = lazy(() => import("../pages/employer/JobPostings"));
+const EmployerApplications = lazy(() => import("../pages/employer/Applications"));
+const Analytics = lazy(() => import("../pages/employer/Analytics"));
+const Apprenticeships = lazy(() => import("../pages/partners/Apprenticeships"));
+const Mentorship = lazy(() => import("../pages/partners/Mentorship"));
+const PartnerAnalytics = lazy(() => import("../pages/partners/Analytics"));
+const OnboardingFlow = lazy(() => import("../pages/onboarding/OnboardingFlow").then(m => ({ default: m.OnboardingFlow })));
 
 interface ProtectedRouteProps {
   allowedRoles?: UserRole[];

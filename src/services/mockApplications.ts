@@ -9,14 +9,16 @@ export const mockApplications: Application[] = [
     appliedAt: "2024-01-10T00:00:00Z",
     updatedAt: "2024-01-15T00:00:00Z",
     job: {
-      id: "1",
-      title: "Senior Software Engineer",
+      id: "job-1",
+      title: "Senior Frontend Developer",
       location: "San Francisco, CA",
+      type: "full-time",
+      experience_level: "senior",
       company: {
-        id: "1",
+        id: "company-1",
         name: "TechCorp",
-        logo: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%234F46E5"/><text x="50" y="50" font-size="40" fill="white" text-anchor="middle" dy=".3em">T</text></svg>`
-      }
+        logo: "/logos/techcorp.png"
+      },
     },
     nextStep: "Technical Interview",
     nextStepDate: "2024-01-20T14:00:00Z",
@@ -65,14 +67,16 @@ export const mockApplications: Application[] = [
     appliedAt: "2024-01-12T00:00:00Z",
     updatedAt: "2024-01-14T00:00:00Z",
     job: {
-      id: "2",
-      title: "Product Designer",
+      id: "job-2",
+      title: "Product Manager",
       location: "New York, NY",
+      type: "full-time",
+      experience_level: "senior",
       company: {
-        id: "2",
-        name: "DesignHub",
-        logo: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23EC4899"/><text x="50" y="50" font-size="40" fill="white" text-anchor="middle" dy=".3em">D</text></svg>`
-      }
+        id: "company-2",
+        name: "InnovateCo",
+        logo: "/logos/innovateco.png"
+      },
     },
     nextStep: "Portfolio Review",
     nextStepDate: "2024-01-18T15:00:00Z",
@@ -120,14 +124,16 @@ export const mockApplications: Application[] = [
     appliedAt: "2024-01-15T00:00:00Z",
     updatedAt: "2024-01-15T00:00:00Z",
     job: {
-      id: "3",
-      title: "Full Stack Developer",
+      id: "job-3",
+      title: "DevOps Engineer",
       location: "Remote",
+      type: "full-time",
+      experience_level: "mid",
       company: {
-        id: "3",
-        name: "WebStack",
-        logo: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%2310B981"/><text x="50" y="50" font-size="40" fill="white" text-anchor="middle" dy=".3em">W</text></svg>`
-      }
+        id: "company-3",
+        name: "CloudTech",
+        logo: "/logos/cloudtech.png"
+      },
     },
     nextStep: "Initial Review",
     nextStepDate: null,

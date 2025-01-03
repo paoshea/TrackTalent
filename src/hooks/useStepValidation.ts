@@ -31,8 +31,8 @@ export function useStepValidation<T extends ValidatableData>() {
           break;
 
         case "experience":
-          if ("experiences" in data && Array.isArray(data.experiences)) {
-            Object.assign(errors, validateExperience(data.experiences));
+          if ("experience" in data && Array.isArray(data.experience)) {
+            Object.assign(errors, validateExperience(data.experience));
           }
           break;
 

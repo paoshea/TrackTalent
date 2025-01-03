@@ -1,12 +1,19 @@
-import React from 'react';
+import { lazy } from 'react';
 import { Navigate, RouteObject } from 'react-router-dom';
 import { mockAuth } from '../services/mockAuth';
-import CandidateDashboard from '../pages/candidate/Dashboard';
-import EmployerDashboard from '../pages/employer/Dashboard';
-import PartnerDashboard from '../pages/partner/Dashboard';
+
+// Lazy load dashboard components
+const CandidateDashboard = lazy(() => import('../pages/candidate/Dashboard'));
+const EmployerDashboard = lazy(() => import('../pages/employer/Dashboard'));
+const PartnerDashboard = lazy(() => import('../pages/partner/Dashboard'));
 
 // Demo route wrapper that sets up mock auth
-const DemoRoute: React.FC<{ role: 'candidate' | 'employer' | 'partner', children: React.ReactNode }> = ({ role, children }) => {
+interface DemoRouteProps {
+  role: 'candidate' | 'employer' | 'partner';
+  children: React.ReactNode;
+}
+
+const DemoRoute = ({ role, children }: DemoRouteProps) => {
   // Set up mock auth data
   const { user } = mockAuth.getMockData(role);
   if (!user) {

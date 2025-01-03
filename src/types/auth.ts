@@ -53,6 +53,14 @@ export interface EmployerProfile extends UserProfile {
   industry?: string;
 }
 
+export interface PartnerProfile extends UserProfile {
+  company_name: string;
+  company_size?: string;
+  industry?: string;
+  service_areas?: string[];
+  specializations?: string[];
+}
+
 export interface CandidateProfile extends UserProfile {
   skills?: string[];
   education?: Array<{
