@@ -1,8 +1,9 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
+import type { UserProfile } from '../../types/auth';
 
 interface DashboardProps {
-  profile: any;
+  profile: UserProfile;
 }
 
 const Dashboard: React.FC<DashboardProps> = ({ profile }) => {
@@ -11,7 +12,7 @@ const Dashboard: React.FC<DashboardProps> = ({ profile }) => {
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
           <h1 className="text-3xl font-bold text-gray-900">
-            Welcome, {profile.full_name}
+            Welcome, {profile.full_name ?? 'Guest'}
           </h1>
         </div>
       </header>

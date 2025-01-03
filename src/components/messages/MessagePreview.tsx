@@ -1,20 +1,27 @@
-import { Link } from "react-router-dom";
 import { formatDistanceToNow } from "../../utils/dateUtils";
 import type { Conversation } from "../../types/messages";
 
 interface MessagePreviewProps {
   conversation: Conversation;
+  onSelect?: () => void;
 }
 
-export function MessagePreview({ conversation }: MessagePreviewProps) {
+export function MessagePreview({ conversation, onSelect }: MessagePreviewProps) {
   const lastMessage = conversation.lastMessage;
   if (!lastMessage) return null;
 
   return (
-    <Link
-      to={`/messages/${conversation.id}`}
-      className="block hover:bg-gray-50"
+    <div
+      onClick={onSelect}
+      className="block hover:bg-gray-50 cursor-pointer"
       aria-label={`Message from ${conversation.company}`}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          onSelect?.();
+        }
+      }}
     >
       <div className="px-4 py-4 sm:px-6">
         <div className="flex items-center justify-between">
@@ -48,6 +55,6 @@ export function MessagePreview({ conversation }: MessagePreviewProps) {
           </div>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }

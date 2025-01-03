@@ -7,6 +7,7 @@ import { QuickStats } from "../dashboard/QuickStats";
 import { useAnalytics } from "../../hooks/useAnalytics";
 import { LoadingState } from "../shared/LoadingState";
 import { ErrorMessage } from "../shared/ErrorMessage";
+import type { QuickStatsMetrics } from "../../types/dashboard";
 
 const DATE_RANGES = [
   { label: "Last 7 days", days: 7 },
@@ -33,6 +34,20 @@ export function AnalyticsDashboard() {
     return date >= cutoff;
   });
 
+  // Transform metrics to match QuickStatsMetrics type
+  const quickStatsMetrics: QuickStatsMetrics = {
+    activeJobs: metrics.jobs.active,
+    applications: metrics.applications.total,
+    interviews: metrics.interviews.scheduled,
+    responseRate: Math.round((metrics.applications.total / metrics.jobViews) * 100) || 0,
+    trends: {
+      jobs: metrics.activeJobsChange,
+      applications: metrics.applications.trend,
+      interviews: metrics.interviews.trend,
+      responseRate: metrics.placementRateChange,
+    },
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -53,20 +68,7 @@ export function AnalyticsDashboard() {
         </div>
       </div>
 
-      <QuickStats
-        metrics={{
-          activeJobs: metrics.jobs.active,
-          totalCandidates: metrics.totalCandidates,
-          scheduledInterviews: metrics.interviews.scheduled,
-          successfulHires: metrics.interviews.byOutcome.offered,
-          trends: {
-            jobs: metrics.activeJobsChange,
-            candidates: metrics.candidatesChange,
-            interviews: metrics.interviews.trend,
-            hires: metrics.placementRateChange,
-          },
-        }}
-      />
+      <QuickStats metrics={quickStatsMetrics} />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <ApplicationsChart data={filteredSnapshots} />

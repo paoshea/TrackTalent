@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import type { LucideIcon } from 'lucide-react';
 
 interface User {
   id: string;
@@ -12,7 +13,17 @@ interface AuthContextType {
   signOut: () => void;
 }
 
-export const Navigation: React.FC = () => {
+interface NavigationItem {
+  href: string;
+  label: string;
+  icon: LucideIcon;
+}
+
+interface NavigationProps {
+  items?: NavigationItem[];
+}
+
+export const Navigation: React.FC<NavigationProps> = ({ items }) => {
   const { user, signOut } = useAuth() as AuthContextType;
   const location = useLocation();
 
@@ -33,53 +44,69 @@ export const Navigation: React.FC = () => {
             </div>
             {user && (
               <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-                {/* Navigation links based on user role */}
-                {user.role === 'candidate' && (
+                {items ? (
+                  // Use provided navigation items if available
+                  items.map(({ href, label, icon: Icon }) => (
+                    <Link
+                      key={href}
+                      to={href}
+                      className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                    >
+                      <Icon className="h-5 w-5 mr-2" />
+                      {label}
+                    </Link>
+                  ))
+                ) : (
+                  // Default navigation based on user role
                   <>
-                    <Link
-                      to="/candidate/jobs"
-                      className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                    >
-                      Find Jobs
-                    </Link>
-                    <Link
-                      to="/candidate/applications"
-                      className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                    >
-                      Applications
-                    </Link>
-                  </>
-                )}
-                {user.role === 'employer' && (
-                  <>
-                    <Link
-                      to="/employer/jobs"
-                      className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                    >
-                      Manage Jobs
-                    </Link>
-                    <Link
-                      to="/employer/candidates"
-                      className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                    >
-                      Candidates
-                    </Link>
-                  </>
-                )}
-                {user.role === 'partner' && (
-                  <>
-                    <Link
-                      to="/partner/dashboard"
-                      className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                    >
-                      Dashboard
-                    </Link>
-                    <Link
-                      to="/partner/clients"
-                      className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                    >
-                      Clients
-                    </Link>
+                    {user.role === 'candidate' && (
+                      <>
+                        <Link
+                          to="/candidate/jobs"
+                          className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                        >
+                          Find Jobs
+                        </Link>
+                        <Link
+                          to="/candidate/applications"
+                          className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                        >
+                          Applications
+                        </Link>
+                      </>
+                    )}
+                    {user.role === 'employer' && (
+                      <>
+                        <Link
+                          to="/employer/jobs"
+                          className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                        >
+                          Manage Jobs
+                        </Link>
+                        <Link
+                          to="/employer/candidates"
+                          className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                        >
+                          Candidates
+                        </Link>
+                      </>
+                    )}
+                    {user.role === 'partner' && (
+                      <>
+                        <Link
+                          to="/partner/dashboard"
+                          className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                        >
+                          Dashboard
+                        </Link>
+                        <Link
+                          to="/partner/clients"
+                          className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                        >
+                          Clients
+                        </Link>
+                      </>
+                    )}
                   </>
                 )}
               </div>

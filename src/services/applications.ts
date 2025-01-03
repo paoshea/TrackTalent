@@ -1,5 +1,8 @@
 import { supabase } from "../lib/supabase";
 import type { Application, ApplicationStatus } from "../types/applications";
+import type { Database } from "../types/database";
+
+type ApplicationInsert = Database['public']['Tables']['applications']['Insert'];
 
 export const applications = {
   async getById(id: string) {
@@ -31,7 +34,7 @@ export const applications = {
     `);
 
     if (filters?.userId) {
-      query = query.eq("user_id", filters.userId);
+      query = query.eq("candidate_id", filters.userId);
     }
     if (filters?.jobId) {
       query = query.eq("job_id", filters.jobId);
@@ -46,14 +49,32 @@ export const applications = {
   },
 
   async submit(jobId: string, data: Partial<Application>) {
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    if (userError) throw userError;
+    if (!user) throw new Error('Not authenticated');
+
+    const applicationData: ApplicationInsert = {
+      job_id: jobId,
+      candidate_id: user.id,
+      status: "submitted",
+      submitted_at: new Date().toISOString(),
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      cover_letter: data.metadata?.cover_letter || null,
+      resume_url: data.metadata?.resume_url || null,
+      answers: data.metadata?.answers || null,
+      timeline: [],
+      feedback: null,
+      metadata: {
+        skills: data.metadata?.skills || [],
+        experience: data.metadata?.experience || [],
+        education: data.metadata?.education || []
+      }
+    };
+
     const { data: application, error } = await supabase
       .from("applications")
-      .insert({
-        job_id: jobId,
-        user_id: (await supabase.auth.getUser()).data.user?.id,
-        status: "pending",
-        ...data,
-      })
+      .insert(applicationData)
       .select()
       .single();
 
@@ -62,11 +83,28 @@ export const applications = {
   },
 
   async updateStatus(id: string, status: string) {
+    // First get the current application to access its timeline
+    const { data: currentApp, error: fetchError } = await supabase
+      .from("applications")
+      .select("timeline")
+      .eq("id", id)
+      .single();
+
+    if (fetchError) throw fetchError;
+
+    const timestamp = new Date().toISOString();
+    const newEvent = {
+      type: 'status_change',
+      description: `Status changed to ${status}`,
+      timestamp
+    };
+
     const { data, error } = await supabase
       .from("applications")
       .update({
         status,
-        updated_at: new Date().toISOString(),
+        updated_at: timestamp,
+        timeline: [...(currentApp.timeline || []), newEvent]
       })
       .eq("id", id)
       .select()
@@ -77,24 +115,32 @@ export const applications = {
   },
 
   async addNote(id: string, note: string) {
-    const { data: currentApp } = await supabase
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    if (userError) throw userError;
+    if (!user) throw new Error('Not authenticated');
+
+    // First get the current application to access its timeline
+    const { data: currentApp, error: fetchError } = await supabase
       .from("applications")
-      .select("notes")
+      .select("timeline")
       .eq("id", id)
       .single();
 
-    const notes = currentApp?.notes || [];
-    notes.push({
-      text: note,
-      createdAt: new Date().toISOString(),
-      createdBy: (await supabase.auth.getUser()).data.user?.id,
-    });
+    if (fetchError) throw fetchError;
+
+    const timestamp = new Date().toISOString();
+    const newEvent = {
+      type: 'note',
+      description: note,
+      timestamp,
+      user_id: user.id
+    };
 
     const { data, error } = await supabase
       .from("applications")
       .update({
-        notes,
-        updated_at: new Date().toISOString(),
+        updated_at: timestamp,
+        timeline: [...(currentApp.timeline || []), newEvent]
       })
       .eq("id", id)
       .select()
@@ -105,12 +151,31 @@ export const applications = {
   },
 
   async scheduleInterview(id: string, date: Date) {
+    // First get the current application to access its timeline
+    const { data: currentApp, error: fetchError } = await supabase
+      .from("applications")
+      .select("timeline")
+      .eq("id", id)
+      .single();
+
+    if (fetchError) throw fetchError;
+
+    const timestamp = new Date().toISOString();
+    const newEvent = {
+      type: 'interview_scheduled',
+      description: `Interview scheduled for ${date.toLocaleString()}`,
+      timestamp,
+      interview_date: date.toISOString()
+    };
+
     const { data, error } = await supabase
       .from("applications")
       .update({
-        interview_date: date.toISOString(),
+        next_step: 'interview',
+        next_step_date: date.toISOString(),
         status: "interview_scheduled",
-        updated_at: new Date().toISOString(),
+        updated_at: timestamp,
+        timeline: [...(currentApp.timeline || []), newEvent]
       })
       .eq("id", id)
       .select()

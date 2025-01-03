@@ -1,8 +1,8 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import type { UserRole } from "../../types/auth";
 import type { LucideIcon } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { LogOut } from "lucide-react";
 
 export interface NavigationItem {
   name: string;
@@ -20,17 +20,6 @@ export function Navigation({ items }: NavigationProps) {
   const navigate = useNavigate();
 
   if (!user || !user.role) return null;
-
-  const getBaseRoute = (role: UserRole) => {
-    switch (role) {
-      case 'employer':
-        return '/employer';
-      case 'candidate':
-        return '/candidate';
-      default:
-        return '/';
-    }
-  };
 
   const baseRoute = user.role === 'employer' ? '/employer' : '/candidate';
   const filteredItems = items.filter(
@@ -66,7 +55,7 @@ export function Navigation({ items }: NavigationProps) {
               aria-hidden="true"
               className="mr-3 flex-shrink-0 h-6 w-6 text-gray-400 group-hover:text-gray-500"
             />
-            {translate(item.name)} {/* Apply translation here */}
+            {translate(item.name)}
           </Link>
         );
       })}

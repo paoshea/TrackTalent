@@ -1,13 +1,22 @@
-
-import React from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Logo } from '../../components/branding/Logo';
 import { MainLayout } from '../../components/layout/MainLayout';
 import { MessageList } from '../../components/messages/MessageList';
 import { MessageThread } from '../../components/messages/MessageThread';
 
+interface Conversation {
+  id: string;
+  recipientId: string;
+}
+
 export default function Messages() {
   const navigate = useNavigate();
+  const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
+
+  const handleConversationSelect = (conversation: Conversation) => {
+    setSelectedConversation(conversation);
+  };
 
   return (
     <MainLayout>
@@ -28,10 +37,19 @@ export default function Messages() {
         </div>
         <div className="grid grid-cols-3 gap-6">
           <div className="col-span-1">
-            <MessageList />
+            <MessageList onConversationSelect={handleConversationSelect} />
           </div>
           <div className="col-span-2">
-            <MessageThread />
+            {selectedConversation ? (
+              <MessageThread
+                conversationId={selectedConversation.id}
+                recipientId={selectedConversation.recipientId}
+              />
+            ) : (
+              <div className="h-full flex items-center justify-center text-gray-500">
+                Select a conversation to start messaging
+              </div>
+            )}
           </div>
         </div>
       </div>

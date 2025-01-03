@@ -1,8 +1,9 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
+import type { EmployerProfile } from '../../types/auth';
 
 interface DashboardProps {
-  profile: any;
+  profile: EmployerProfile;
 }
 
 const Dashboard: React.FC<DashboardProps> = ({ profile }) => {
@@ -15,7 +16,7 @@ const Dashboard: React.FC<DashboardProps> = ({ profile }) => {
               {profile.company_name}
             </h1>
             <div className="text-sm text-gray-600">
-              {profile.full_name} - {profile.title}
+              {profile.full_name ?? 'Guest'} - {profile.title}
             </div>
           </div>
         </div>

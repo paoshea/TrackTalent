@@ -17,11 +17,11 @@ export interface User {
   app_metadata: {
     provider?: string;
     role?: UserRole;
-    [key: string]: any;
+    [key: string]: unknown;
   };
   user_metadata: {
     full_name?: string;
-    [key: string]: any;
+    [key: string]: unknown;
   };
   aud: string;
   profile?: UserProfile;
@@ -36,6 +36,36 @@ export interface UserProfile {
   role: UserRole;
   email: string;
   created_at: string;
+  title?: string;
+  location?: string;
+  bio?: string;
+  experience_years?: number;
+}
+
+export interface EmployerProfile extends UserProfile {
+  company_name: string;
+  company_size?: string;
+  industry?: string;
+}
+
+export interface CandidateProfile extends UserProfile {
+  skills?: string[];
+  education?: Array<{
+    institution: string;
+    degree: string;
+    field: string;
+    startDate: string;
+    endDate?: string;
+    current: boolean;
+  }>;
+  experience?: Array<{
+    title: string;
+    company: string;
+    startDate: string;
+    endDate?: string;
+    current: boolean;
+    description: string;
+  }>;
 }
 
 export interface AuthContextValue {

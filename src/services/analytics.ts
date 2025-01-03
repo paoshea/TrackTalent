@@ -1,5 +1,12 @@
 import { supabase } from "../lib/supabase";
 import type { StatusMetrics } from "../types/status";
+import type { DashboardMetrics } from "../types/dashboard";
+
+interface MetricSnapshot {
+  id: string;
+  snapshotDate: string;
+  metrics: Partial<DashboardMetrics>;
+}
 
 export async function getStatusEngagementMetrics(statusId: string): Promise<StatusMetrics> {
   try {
@@ -38,6 +45,38 @@ export async function getStatusEngagementMetrics(statusId: string): Promise<Stat
     };
   } catch (error) {
     console.error('Error fetching status metrics:', error);
+    throw error;
+  }
+}
+
+export async function getMetricSnapshots(
+  startDate?: string,
+  endDate?: string
+): Promise<MetricSnapshot[]> {
+  try {
+    let query = supabase
+      .from('metric_snapshots')
+      .select('*')
+      .order('snapshot_date', { ascending: true });
+
+    if (startDate) {
+      query = query.gte('snapshot_date', startDate);
+    }
+    if (endDate) {
+      query = query.lte('snapshot_date', endDate);
+    }
+
+    const { data, error } = await query;
+
+    if (error) throw error;
+
+    return data.map(snapshot => ({
+      id: snapshot.id,
+      snapshotDate: snapshot.snapshot_date,
+      metrics: snapshot.metrics
+    }));
+  } catch (error) {
+    console.error('Error fetching metric snapshots:', error);
     throw error;
   }
 }

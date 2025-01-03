@@ -12,6 +12,7 @@ export interface Message {
 export interface Conversation {
   id: string;
   participants: string[];
+  recipientId: string; // Added for direct access to recipient
   messages: Message[];
   lastMessage?: Message;
   unreadCount: number;

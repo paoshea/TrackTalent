@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
 import { getMockApplications } from "../services/mockApplications";
-import type { Application, ApplicationStatus, ApplicationMetadata, TimelineEvent } from "../types/applications";
+import type { Application, ApplicationStatus, TimelineEvent } from "../types/applications";
+import type { ApplicationMetadata } from "../types/applications";
 import type { Json } from "../types/supabase";
 
 interface SupabaseCompany {
@@ -95,11 +96,8 @@ function validateAndMapApplication(data: unknown): Application | null {
       metadata.cover_letter = response.cover_letter;
     }
 
-    // Handle timeline
+    // Parse timeline events
     const timelineEvents = parseTimelineEvents(response.timeline);
-    if (timelineEvents.length > 0) {
-      metadata.timeline = timelineEvents;
-    }
 
     // Handle answers
     if (response.answers && typeof response.answers === 'object') {
@@ -145,7 +143,8 @@ function validateAndMapApplication(data: unknown): Application | null {
       feedback: typeof response.feedback === 'object' && response.feedback 
         ? (response.feedback as { message?: string }).message || null 
         : null,
-      metadata
+      metadata,
+      timeline: timelineEvents
     };
   } catch (error) {
     console.error('Error mapping application:', error);

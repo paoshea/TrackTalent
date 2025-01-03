@@ -31,6 +31,11 @@
       "config/*": ["config/*"]
     }
   },
-  "include": ["src"],
+  "include": [
+    "src",
+    "Storyboard/**/*.tsx",
+    "Storyboard/**/*.ts",
+    "postcss.config.js"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

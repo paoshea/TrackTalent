@@ -60,13 +60,14 @@ export function getRelativeDate(date: string | Date | undefined, defaultValue = 
   }
 }
 
-export function isValidDate(date: any): boolean {
+export function isValidDate(date: string | Date | number | null | undefined): boolean {
   if (!date) {
     return false;
   }
 
   try {
-    const dateObj = typeof date === 'string' ? parseISO(date) : date;
+    const dateObj = typeof date === 'string' ? parseISO(date) : 
+                    typeof date === 'number' ? new Date(date) : date;
     return dateObj instanceof Date && !isNaN(dateObj.getTime());
   } catch {
     return false;

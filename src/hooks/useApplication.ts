@@ -45,6 +45,8 @@ interface ApiApplication {
   created_at: string;
   updated_at: string;
   submitted_at: string | null;
+  next_step: string | null;
+  next_step_date: string | null;
   job: ApiJob[];
 }
 
@@ -152,8 +154,8 @@ function validateAndMapApplication(data: unknown): Application | null {
           logo: company.logo_url
         }
       },
-      nextStep: null,
-      nextStepDate: null,
+      nextStep: apiApp.next_step || null,
+      nextStepDate: apiApp.next_step_date || null,
       feedback: typeof apiApp.feedback === 'object' && apiApp.feedback 
         ? (apiApp.feedback as { message?: string }).message || null 
         : null,

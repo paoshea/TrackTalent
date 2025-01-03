@@ -3,7 +3,11 @@ import type { Conversation } from "../../types/messages";
 import { MessagePreview } from "./MessagePreview";
 import { LoadingSpinner } from "../shared/LoadingSpinner";
 
-export function MessageList() {
+interface MessageListProps {
+  onConversationSelect?: (conversation: { id: string; recipientId: string }) => void;
+}
+
+export function MessageList({ onConversationSelect }: MessageListProps) {
   const { conversations, isLoading, error } = useConversations();
 
   if (error) {
@@ -36,7 +40,13 @@ export function MessageList() {
         >
           {conversations.map((conversation: Conversation) => (
             <li key={conversation.id}>
-              <MessagePreview conversation={conversation} />
+              <MessagePreview 
+                conversation={conversation} 
+                onSelect={() => onConversationSelect?.({
+                  id: conversation.id,
+                  recipientId: conversation.recipientId
+                })}
+              />
             </li>
           ))}
         </ul>

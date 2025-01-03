@@ -1,6 +1,5 @@
 import React from "react";
 import { useBranding } from "../../hooks/useBranding";
-import { BrandingContext } from "../../contexts/BrandingContext";
 
 interface CSSVariables extends React.CSSProperties {
   "--primary-color": string;
@@ -14,7 +13,7 @@ interface CSSVariables extends React.CSSProperties {
   "--button-font-weight"?: string;
 }
 
-export function BrandingProvider({ children }: { children: React.ReactNode }) {
+export function BrandingWrapper({ children }: { children: React.ReactNode }) {
   const { theme, isLoading, error } = useBranding();
 
   if (error) {
@@ -42,10 +41,11 @@ export function BrandingProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <BrandingContext.Provider value={theme}>
-      <div className="min-h-screen" style={cssVariables}>
-        {children}
-      </div>
-    </BrandingContext.Provider>
+    <div className="min-h-screen" style={cssVariables}>
+      {children}
+    </div>
   );
 }
+
+// Re-export BrandingProvider from the context
+export { BrandingProvider } from "../../contexts/BrandingContext";

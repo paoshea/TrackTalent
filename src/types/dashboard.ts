@@ -5,11 +5,13 @@ export interface QuickStatsMetrics {
   applications: number;
   interviews: number;
   responseRate: number;
+  connections: number;
   trends: {
     jobs: number;
     applications: number;
     interviews: number;
     responseRate: number;
+    connections: number;
   };
 }
 

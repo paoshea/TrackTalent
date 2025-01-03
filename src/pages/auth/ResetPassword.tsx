@@ -32,7 +32,7 @@ const ResetPassword: React.FC = () => {
             Check your email
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            We've sent password reset instructions to {email}
+            We have sent password reset instructions to {email}
           </p>
           <div className="mt-4 text-center">
             <Link

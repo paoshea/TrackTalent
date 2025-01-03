@@ -1,3 +1,39 @@
+export interface Job {
+  id: string;
+  title: string;
+  company: string;
+  location: string;
+  status: string;
+  created_at: string;
+  description?: string;
+  salary_range?: string;
+  requirements?: string[];
+}
+
+export interface ActivityMetadata {
+  jobTitle?: string;
+  companyName?: string;
+  interviewDate?: string;
+  interviewType?: string;
+  offerDetails?: {
+    salary?: string;
+    startDate?: string;
+    position?: string;
+  };
+  statusFrom?: string;
+  statusTo?: string;
+}
+
+export interface Activity {
+  id: string;
+  type: 'application' | 'interview' | 'offer' | 'status_change';
+  message: string;
+  created_at: string;
+  user_id?: string;
+  job_id?: string;
+  metadata?: ActivityMetadata;
+}
+
 export interface UseCustomerJobsOptions {
   customerId: string;
   status?: string[];
@@ -5,7 +41,7 @@ export interface UseCustomerJobsOptions {
 }
 
 export interface UseCustomerJobsResult {
-  jobs: any[];
+  jobs: Job[];
   isLoading: boolean;
   error: Error | null;
   hasMore: boolean;
@@ -25,7 +61,7 @@ export interface UseDashboardMetricsResult {
 }
 
 export interface UseRecentActivityResult {
-  activities: any[];
+  activities: Activity[];
   isLoading: boolean;
   error: Error | null;
   hasMore: boolean;

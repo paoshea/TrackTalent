@@ -10,9 +10,10 @@ interface OnboardingStep {
   fields: {
     name: string;
     label: string;
-    type: "text" | "email" | "tel" | "url";
+    type: "text" | "email" | "tel" | "url" | "select";
     required?: boolean;
     placeholder?: string;
+    options?: { value: string; label: string }[];
   }[];
 }
 
@@ -35,6 +36,32 @@ const steps: OnboardingStep[] = [
         type: "url",
         required: true,
         placeholder: "https://example.com",
+      },
+      {
+        name: "industry",
+        label: "Industry",
+        type: "select",
+        required: true,
+        options: [
+          { value: "technology", label: "Technology" },
+          { value: "healthcare", label: "Healthcare" },
+          { value: "finance", label: "Finance" },
+          { value: "education", label: "Education" },
+          { value: "other", label: "Other" },
+        ],
+      },
+      {
+        name: "size",
+        label: "Company Size",
+        type: "select",
+        required: true,
+        options: [
+          { value: "1-10", label: "1-10 employees" },
+          { value: "11-50", label: "11-50 employees" },
+          { value: "51-200", label: "51-200 employees" },
+          { value: "201-500", label: "201-500 employees" },
+          { value: "501+", label: "501+ employees" },
+        ],
       },
     ],
   },
@@ -68,8 +95,11 @@ export default function CustomerOnboarding() {
   const [formData, setFormData] = useState<Record<string, string>>({});
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -92,6 +122,10 @@ export default function CustomerOnboarding() {
         .insert({
           name: formData.companyName,
           website: formData.website,
+          industry: formData.industry,
+          size: formData.size,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
         })
         .select()
         .single();
@@ -114,15 +148,18 @@ export default function CustomerOnboarding() {
       const { error: profileError } = await supabase
         .from("customer_profiles")
         .insert({
-          userId: user?.id,
-          companyId: company.id,
+          user_id: user?.id,
+          company_id: company.id,
           phone: formData.phone,
-          contactEmail: formData.contactEmail,
+          contact_email: formData.contactEmail,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
         });
 
       if (profileError) throw profileError;
 
-      navigate("/", { replace: true });
+      setIsComplete(true);
+      setTimeout(() => navigate("/dashboard", { replace: true }), 1500);
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Failed to complete onboarding",
@@ -164,21 +201,43 @@ export default function CustomerOnboarding() {
                   {field.label}
                 </label>
                 <div className="mt-1">
-                  <input
-                    type={field.type}
-                    name={field.name}
-                    id={field.name}
-                    required={field.required}
-                    placeholder={field.placeholder}
-                    value={formData[field.name] || ""}
-                    onChange={handleInputChange}
-                    className="
-                      appearance-none block w-full px-3 py-2 border
-                      border-gray-300 rounded-md shadow-sm placeholder-gray-400
-                      focus:outline-none focus:ring-indigo-500
-                      focus:border-indigo-500 sm:text-sm
-                    "
-                  />
+                  {field.type === "select" ? (
+                    <select
+                      name={field.name}
+                      id={field.name}
+                      required={field.required}
+                      value={formData[field.name] || ""}
+                      onChange={handleInputChange}
+                      className="
+                        mt-1 block w-full pl-3 pr-10 py-2 text-base
+                        border-gray-300 focus:outline-none focus:ring-indigo-500
+                        focus:border-indigo-500 sm:text-sm rounded-md
+                      "
+                    >
+                      <option value="">Select {field.label}</option>
+                      {field.options?.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <input
+                      type={field.type}
+                      name={field.name}
+                      id={field.name}
+                      required={field.required}
+                      placeholder={field.placeholder}
+                      value={formData[field.name] || ""}
+                      onChange={handleInputChange}
+                      className="
+                        appearance-none block w-full px-3 py-2 border
+                        border-gray-300 rounded-md shadow-sm placeholder-gray-400
+                        focus:outline-none focus:ring-indigo-500
+                        focus:border-indigo-500 sm:text-sm
+                      "
+                    />
+                  )}
                 </div>
               </div>
             ))}
@@ -201,8 +260,13 @@ export default function CustomerOnboarding() {
                     ? "Complete Setup"
                     : "Next Step"}
               </button>
-              {success && setTimeout(() => navigate('/dashboard'), 1500)}
             </div>
+
+            {isComplete && (
+              <div className="mt-4 text-sm text-green-600 text-center">
+                Setup complete! Redirecting to dashboard...
+              </div>
+            )}
           </form>
         </div>
       </div>

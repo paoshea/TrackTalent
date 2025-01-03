@@ -50,12 +50,69 @@ export interface Database {
           environment?: string | null;
         };
       };
+      applications: {
+        Row: {
+          id: string;
+          job_id: string;
+          candidate_id: string;
+          status: string;
+          cover_letter: string | null;
+          resume_url: string | null;
+          answers: Record<string, unknown> | null;
+          timeline: Record<string, unknown>[];
+          feedback: Record<string, unknown> | null;
+          metadata: Record<string, unknown> | null;
+          created_at: string;
+          updated_at: string;
+          submitted_at: string | null;
+          next_step: string | null;
+          next_step_date: string | null;
+        };
+        Insert: {
+          job_id: string;
+          candidate_id: string;
+          status: string;
+          cover_letter?: string | null;
+          resume_url?: string | null;
+          answers?: Record<string, unknown> | null;
+          timeline?: Record<string, unknown>[];
+          feedback?: Record<string, unknown> | null;
+          metadata?: Record<string, unknown> | null;
+          created_at?: string;
+          updated_at?: string;
+          submitted_at?: string | null;
+          next_step?: string | null;
+          next_step_date?: string | null;
+        };
+        Update: {
+          job_id?: string;
+          candidate_id?: string;
+          status?: string;
+          cover_letter?: string | null;
+          resume_url?: string | null;
+          answers?: Record<string, unknown> | null;
+          timeline?: Record<string, unknown>[];
+          feedback?: Record<string, unknown> | null;
+          metadata?: Record<string, unknown> | null;
+          created_at?: string;
+          updated_at?: string;
+          submitted_at?: string | null;
+          next_step?: string | null;
+          next_step_date?: string | null;
+        };
+      };
     };
     Views: {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      append_to_array: {
+        Args: {
+          arr: string;
+          item: Record<string, unknown>;
+        };
+        Returns: Record<string, unknown>[];
+      };
     };
     Enums: {
       [_ in never]: never;

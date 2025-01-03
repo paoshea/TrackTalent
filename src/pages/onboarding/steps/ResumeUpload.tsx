@@ -1,8 +1,7 @@
-
 import { ResumeUploader } from "../../../components/profile/ResumeUploader";
 import type { OnboardingStepProps } from "../../../types/onboarding";
 
-export function ResumeUpload({ data, onUpdate, onNext, onBack }: OnboardingStepProps) {
+export function ResumeUpload({ onNext, onBack }: Pick<OnboardingStepProps, 'onNext' | 'onBack'>) {
   return (
     <div className="space-y-6">
       <div>

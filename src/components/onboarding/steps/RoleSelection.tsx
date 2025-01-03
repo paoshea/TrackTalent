@@ -23,10 +23,10 @@ const roles: Array<{
     description: "Hiring talent for your company",
   },
   {
-    id: "admin",
-    label: "Administrator",
+    id: "partner",
+    label: "Partner",
     icon: Briefcase,
-    description: "Managing the platform",
+    description: "Managing recruitment services",
   },
 ];
 
@@ -37,21 +37,18 @@ export function RoleSelection({
 }: RoleSelectionProps) {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSelect = async (id: UserRole) => {
     try {
-      setLoading(true);
-      await onSelect(id); // Assuming onSelect handles backend interaction
+      setError('');
+      await onSelect(id);
       setSuccess(true);
       setTimeout(() => {
         navigate('/onboarding/profile-setup');
       }, 1500);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to select role');
     }
   };
 

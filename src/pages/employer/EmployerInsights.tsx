@@ -1,8 +1,7 @@
-
-import React from 'react';
+// import React from 'react';
 import { Link } from 'react-router-dom';
 import { MainLayout } from '../../components/layout/MainLayout';
-import { BarChart, TrendingUp, PieChart } from 'lucide-react';
+import { BarChart, TrendingUp } from 'lucide-react';
 
 export default function EmployerInsights() {
   return (

@@ -1,8 +1,7 @@
-
-import React from 'react';
+// import React from 'react';
 import { Link } from 'react-router-dom';
 import { MainLayout } from '../../components/layout/MainLayout';
-import { Briefcase, Users, Search, BarChart } from 'lucide-react';
+import { Briefcase, Users, BarChart } from 'lucide-react';
 
 export default function EmployerFeatures() {
   return (

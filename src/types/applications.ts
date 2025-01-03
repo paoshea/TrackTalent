@@ -74,9 +74,12 @@ export interface Application {
   appliedAt: string;
   updatedAt: string;
   job: Job;
+  jobTitle?: string; // For backward compatibility
+  company?: Company; // For backward compatibility
   nextStep: string | null;
   nextStepDate: string | null;
   feedback: string | null;
+  timeline: TimelineEvent[];
   metadata?: ApplicationMetadata;
 }
 

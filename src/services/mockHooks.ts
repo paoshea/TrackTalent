@@ -18,6 +18,20 @@ interface Job {
   requirements?: string[];
 }
 
+interface ActivityMetadata {
+  jobTitle?: string;
+  companyName?: string;
+  interviewDate?: string;
+  interviewType?: string;
+  offerDetails?: {
+    salary?: string;
+    startDate?: string;
+    position?: string;
+  };
+  statusFrom?: string;
+  statusTo?: string;
+}
+
 interface Activity {
   id: string;
   type: 'application' | 'interview' | 'offer' | 'status_change';
@@ -25,7 +39,7 @@ interface Activity {
   created_at: string;
   user_id?: string;
   job_id?: string;
-  metadata?: Record<string, any>;
+  metadata?: ActivityMetadata;
 }
 
 // Sample mock data
@@ -71,21 +85,40 @@ const mockActivities: Activity[] = [
     type: 'application',
     message: 'Applied to Senior Software Engineer position at Tech Corp',
     created_at: new Date().toISOString(),
-    job_id: '1'
+    job_id: '1',
+    metadata: {
+      jobTitle: 'Senior Software Engineer',
+      companyName: 'Tech Corp'
+    }
   },
   {
     id: '2',
     type: 'interview',
     message: 'Interview scheduled with Product Manager at Innovation Inc',
     created_at: new Date().toISOString(),
-    job_id: '2'
+    job_id: '2',
+    metadata: {
+      jobTitle: 'Product Manager',
+      companyName: 'Innovation Inc',
+      interviewDate: new Date().toISOString(),
+      interviewType: 'Technical'
+    }
   },
   {
     id: '3',
     type: 'offer',
     message: 'Received offer for UX Designer position at Design Studio',
     created_at: new Date().toISOString(),
-    job_id: '3'
+    job_id: '3',
+    metadata: {
+      jobTitle: 'UX Designer',
+      companyName: 'Design Studio',
+      offerDetails: {
+        salary: '$90k - $140k',
+        startDate: new Date().toISOString(),
+        position: 'Senior UX Designer'
+      }
+    }
   }
 ];
 

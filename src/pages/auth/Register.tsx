@@ -1,27 +1,28 @@
 import React, { useState, FormEvent } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
-import type { UserRole } from '../../types/auth';
+import type { UserRole, SignUpData } from '../../types/auth';
+
+interface RegisterFormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: string;
+  title: string;
+  location: string;
+  company_name: string;
+  company_size: string;
+  password: string;
+  confirmPassword: string;
+  terms: boolean;
+  submitted?: boolean;
+}
 
 const Register: React.FC = () => {
   const [searchParams] = useSearchParams();
   const { signUp } = useAuth();
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  interface RegisterFormData {
-    firstName: string;
-    lastName: string;
-    email: string;
-    role: string;
-    title: string;
-    location: string;
-    company_name: string;
-    company_size: string;
-    password: string;
-    confirmPassword: string;
-    terms: boolean;
-    submitted?: boolean;
-  }
 
   const [formData, setFormData] = useState<RegisterFormData>({
     firstName: '',
@@ -59,17 +60,17 @@ const Register: React.FC = () => {
     e.preventDefault();
     
     if (formData.password !== formData.confirmPassword) {
-      setError("Passwords don't match");
+      setError('Passwords do not match');
       return;
     }
 
     if (!formData.terms) {
-      setError("Please accept the terms and conditions");
+      setError('Please accept the terms and conditions');
       return;
     }
 
     if (!formData.role) {
-      setError("Please select your role");
+      setError('Please select your role');
       return;
     }
 
@@ -77,27 +78,23 @@ const Register: React.FC = () => {
       setError(null);
       setIsLoading(true);
 
-      const signupData = {
+      const signupData: SignUpData = {
         email: formData.email,
         password: formData.password,
         role: formData.role as UserRole,
-        full_name: `${formData.firstName} ${formData.lastName}`.trim(),
+        full_name: `${formData.firstName} ${formData.lastName}`.trim()
+      };
+
+      const metadata = {
         title: formData.title,
         location: formData.location,
         company_name: formData.company_name,
         company_size: formData.company_size
       };
 
-      // Store signup data for email verification
-      localStorage.setItem('signupData', JSON.stringify(signupData));
-
-      // Attempt signup
+      localStorage.setItem('signupData', JSON.stringify({ ...signupData, metadata }));
       await signUp(signupData);
-
-      // Store role for later use
       localStorage.setItem('userRole', formData.role);
-      
-      // Show verification message and prevent further interaction
       setFormData(prev => ({ ...prev, submitted: true }));
       setIsLoading(false);
     } catch (err) {
@@ -113,7 +110,6 @@ const Register: React.FC = () => {
 
   const showCompanyFields = formData.role === 'employer' || formData.role === 'partner';
 
-  // Show verification message if form was submitted
   if (formData.submitted) {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -127,25 +123,22 @@ const Register: React.FC = () => {
                 </div>
               ) : (
                 <p className="text-gray-600 mb-4">
-                  We've sent a verification link to <span className="font-medium">{formData.email}</span>.
+                  We have sent a verification link to <span className="font-medium">{formData.email}</span>.
                   Please check your email and click the link to verify your account.
                 </p>
               )}
               <p className="text-sm text-gray-500">
-                Didn't receive the email? Check your spam folder or{' '}
+                Did not receive the email? Check your spam folder or{' '}
                 <button
                   onClick={(e) => {
                     e.preventDefault();
-                    signUp({
+                    const signupData: SignUpData = {
                       email: formData.email,
                       password: formData.password,
                       role: formData.role as UserRole,
-                      full_name: `${formData.firstName} ${formData.lastName}`.trim(),
-                      title: formData.title,
-                      location: formData.location,
-                      company_name: formData.company_name,
-                      company_size: formData.company_size
-                    }).catch(err => {
+                      full_name: `${formData.firstName} ${formData.lastName}`.trim()
+                    };
+                    signUp(signupData).catch(err => {
                       console.error('Resend verification error:', err);
                       setError(err instanceof Error ? err.message : 'Failed to resend verification email');
                     });

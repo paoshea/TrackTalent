@@ -1,5 +1,4 @@
-
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useOnboarding } from "../../hooks/useOnboarding";
 import { OnboardingProgress } from "../../components/onboarding/OnboardingProgress";
@@ -8,30 +7,42 @@ import { ProfileSetup } from "./steps/ProfileSetup";
 import { PreferencesSetup } from "./steps/PreferencesSetup";
 import { TeamSetup } from "./steps/TeamSetup";
 import { CompanyInfo } from "./steps/CompanyInfo";
-import { ResumeUpload } from "./steps/ResumeUpload";
-import { JobPreferences } from "./steps/JobPreferences";
-import { EmailVerification } from "../../components/auth/EmailVerification";
 import type { OnboardingStepType, OnboardingData, OnboardingStepProps } from "../../types/onboarding";
-import type { User } from "../../types/auth";
 
 const CANDIDATE_STEPS: OnboardingStepType[] = [
   "role-selection",
-  "email-verification",
   "profile-setup",
-  "resume-upload",
-  "job-preferences",
+  "preferences-setup",
+  "profile",
+  "preferences",
 ];
 
 const EMPLOYER_STEPS: OnboardingStepType[] = [
   "role-selection",
-  "email-verification",
   "profile-setup",
   "company-info",
   "team-setup",
+  "team",
 ];
 
-export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
+type StepComponentType = React.ComponentType<OnboardingStepProps>;
+
+const StepComponents: Record<OnboardingStepType, StepComponentType> = {
+  "role-selection": RoleSelection,
+  "profile-setup": ProfileSetup,
+  "preferences-setup": PreferencesSetup,
+  "company-info": CompanyInfo,
+  "team-setup": TeamSetup,
+  "profile": ProfileSetup,
+  "company": CompanyInfo,
+  "preferences": PreferencesSetup,
+  "team": TeamSetup,
+};
+
+export function OnboardingFlow() {
   const navigate = useNavigate();
+  const [steps, setSteps] = useState<OnboardingStepType[]>(CANDIDATE_STEPS);
+
   const {
     data,
     currentStep,
@@ -43,7 +54,7 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
     goToPreviousStep,
     completeOnboarding,
   } = useOnboarding({
-    steps: data.role === 'employer' ? EMPLOYER_STEPS : CANDIDATE_STEPS,
+    steps,
     initialData: {
       currentStep: "role-selection",
       completedSteps: [],
@@ -54,21 +65,19 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
     },
   });
 
-  const StepComponents = {
-    "role-selection": RoleSelection,
-    "email-verification": EmailVerification,
-    "profile-setup": ProfileSetup,
-    "resume-upload": ResumeUpload,
-    "job-preferences": JobPreferences,
-    "company-info": CompanyInfo,
-    "team-setup": TeamSetup,
-  };
+  useEffect(() => {
+    if (data?.role === 'employer') {
+      setSteps(EMPLOYER_STEPS);
+    } else {
+      setSteps(CANDIDATE_STEPS);
+    }
+  }, [data?.role]);
 
   useEffect(() => {
-    if (!data.role && currentStep !== "role-selection") {
+    if (!data?.role && currentStep !== "role-selection") {
       navigate("/onboarding");
     }
-  }, [data.role, currentStep, navigate]);
+  }, [data?.role, currentStep, navigate]);
 
   const CurrentStepComponent = StepComponents[currentStep];
   if (!CurrentStepComponent) return null;
@@ -79,7 +88,7 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
         <OnboardingProgress
           currentStep={currentStep}
           completedSteps={completedSteps}
-          totalSteps={data.role === 'employer' ? EMPLOYER_STEPS.length : CANDIDATE_STEPS.length}
+          totalSteps={steps.length}
         />
         <div className="mt-10">
           <CurrentStepComponent

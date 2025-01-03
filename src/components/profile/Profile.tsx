@@ -1,9 +1,9 @@
 import React from 'react';
-import type { User } from '../../types/auth';
+import type { User, CandidateProfile, EmployerProfile } from '../../types/auth';
 
 interface ProfileProps {
   user: User;
-  profile: any;
+  profile: CandidateProfile | EmployerProfile;
 }
 
 const Profile: React.FC<ProfileProps> = ({ user, profile }) => {
@@ -22,7 +22,7 @@ const Profile: React.FC<ProfileProps> = ({ user, profile }) => {
             <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
               <dt className="text-sm font-medium text-gray-500">Full name</dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                {profile.full_name}
+                {profile.full_name ?? 'Not specified'}
               </dd>
             </div>
 

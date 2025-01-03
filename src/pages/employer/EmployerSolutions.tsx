@@ -1,8 +1,8 @@
 
-import React from 'react';
+// import React from 'react';
 import { Link } from 'react-router-dom';
 import { MainLayout } from '../../components/layout/MainLayout';
-import { Users, Clock, CheckCircle } from 'lucide-react';
+import { Users, Clock } from 'lucide-react';
 
 export default function EmployerSolutions() {
   return (
