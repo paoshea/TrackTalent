@@ -3,18 +3,19 @@ import { getProfile, updateProfile, uploadAvatar } from "../services/profile";
 import { useAuth } from "./useAuth";
 import type { Profile, ProfileUpdateData } from "../types/profile";
 
-export function useProfile() {
+export function useProfile(userId?: string) {
   const { user } = useAuth();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!user) return;
+    const targetUserId = userId || user?.id;
+    if (!targetUserId) return;
 
     const loadProfile = async () => {
       try {
-        const data = await getProfile(user.id);
+        const data = await getProfile(targetUserId);
         setProfile(data);
       } catch (err) {
         setError("Failed to load profile");
@@ -25,7 +26,7 @@ export function useProfile() {
     };
 
     loadProfile();
-  }, [user]);
+  }, [user, userId]);
 
   const update = async (updates: ProfileUpdateData) => {
     if (!user) return;

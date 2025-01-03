@@ -18,6 +18,22 @@ TrackTalent is a comprehensive platform offering role-specific features for cand
 - Enhanced demo experience
 - Consistent component structure
 
+Clarification on RichTextEditor implementations:
+
+status/RichTextEditor.tsx:
+
+Purpose: Social media style editor
+Features: Mentions, hashtags, suggestions
+Use case: Status updates, comments, social interactions
+Implementation: Custom contentEditable with specialized features
+shared/RichTextEditor.tsx:
+
+Purpose: General rich text editing
+Features: Formatting, lists, links
+Use case: Content creation, descriptions, long-form text
+Implementation: ReactQuill-based with standard rich text features
+These components serve different purposes and should both be maintained. They are not redundant but rather specialized for their specific use cases in the application.
+
 ## User Journeys
 
 ### 1. Candidate Experience

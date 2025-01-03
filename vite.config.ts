@@ -7,7 +7,14 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@': resolve(__dirname, 'src'),
+      '~': resolve(__dirname, 'src'),
+      'components': resolve(__dirname, 'src/components'),
+      'utils': resolve(__dirname, 'src/utils'),
+      'hooks': resolve(__dirname, 'src/hooks'),
+      'types': resolve(__dirname, 'src/types'),
+      'services': resolve(__dirname, 'src/services'),
+      'contexts': resolve(__dirname, 'src/contexts'),
+      'config': resolve(__dirname, 'src/config')
     },
   },
   server: {
