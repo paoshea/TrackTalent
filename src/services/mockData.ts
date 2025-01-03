@@ -81,3 +81,64 @@ export const mockPartnerStats = {
     topIndustries: ["Tech", "Finance", "Healthcare"]
   }
 };
+
+export interface Application {
+  id: string;
+  candidate: {
+    name: string;
+    email: string;
+    avatar?: string;
+  };
+  job: {
+    title: string;
+    company: string;
+  };
+  status: 'pending' | 'reviewing' | 'interviewed' | 'offered' | 'rejected';
+  appliedDate: string;
+  lastActivity: string;
+}
+
+export const mockApplications: Application[] = [
+  {
+    id: "1",
+    candidate: {
+      name: "John Smith",
+      email: "john.smith@example.com"
+    },
+    job: {
+      title: "Senior Software Engineer",
+      company: "TechCorp"
+    },
+    status: "reviewing",
+    appliedDate: "2024-01-15T10:00:00Z",
+    lastActivity: "2024-01-16T14:30:00Z"
+  },
+  {
+    id: "2",
+    candidate: {
+      name: "Emily Brown",
+      email: "emily.brown@example.com"
+    },
+    job: {
+      title: "Product Manager",
+      company: "Innovation Inc"
+    },
+    status: "interviewed",
+    appliedDate: "2024-01-14T09:15:00Z",
+    lastActivity: "2024-01-16T11:45:00Z"
+  },
+  {
+    id: "3",
+    candidate: {
+      name: "David Wilson",
+      email: "david.wilson@example.com"
+    },
+    job: {
+      title: "Senior Software Engineer",
+      company: "TechCorp"
+    },
+    status: "pending",
+    appliedDate: "2024-01-16T08:30:00Z",
+    lastActivity: "2024-01-16T08:30:00Z"
+  }
+];

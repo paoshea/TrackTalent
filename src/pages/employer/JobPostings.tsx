@@ -1,17 +1,60 @@
-import React from 'react';
+// import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Logo } from '../../components/branding/Logo';
 import { Briefcase, Plus, Search } from 'lucide-react';
 import { JobList } from '../../components/jobs/JobList';
 import { JobForm } from '../../components/jobs/JobForm';
+import { mockJobs } from '../../services/mockData';
+import { Job, JobRemote, JobSalary } from '../../types/jobs';
 
-import { MainLayout } from '../../components/layout/MainLayout';
+// Transform mock data to match component expectations
+const formattedJobs: Job[] = mockJobs.map(job => {
+  const salary: JobSalary = {
+    min: parseInt(job.salary.split(" - ")[0].replace("$", "").replace(",", "")),
+    max: parseInt(job.salary.split(" - ")[1].replace("$", "").replace(",", "")),
+    currency: "USD",
+    period: "yearly"
+  };
+  
+  const remote: JobRemote = {
+    allowed: true,
+    type: "fully"
+  };
+
+  return {
+    id: job.id.toString(),
+    title: job.title,
+    description: job.description,
+    type: "full-time",
+    location: job.location,
+    companyId: job.id.toString(),
+    company: {
+      id: job.id.toString(),
+      name: job.company,
+      logo: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%234F46E5"/><text x="50" y="50" font-size="40" fill="white" text-anchor="middle" dy=".3em">${job.company.charAt(0)}</text></svg>`
+    },
+    compensation: {
+      salary
+    },
+    skills: job.requirements,
+    status: "published",
+    applicantCount: Math.floor(Math.random() * 50),
+    createdAt: job.postedDate + "T00:00:00Z",
+    updatedAt: job.postedDate + "T00:00:00Z",
+    publishedAt: job.postedDate + "T00:00:00Z",
+    requirements: job.requirements,
+    benefits: ["Health insurance", "401k", "Remote work"],
+    department: "Engineering",
+    experienceLevel: "senior",
+    remote,
+    salaryRange: salary
+  };
+});
 
 export default function JobPostings() {
   const navigate = useNavigate();
   return (
-    <MainLayout>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative">
       <button
         onClick={() => navigate('/')}
         className="absolute top-4 left-4 inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
@@ -45,8 +88,12 @@ export default function JobPostings() {
         </div>
       </div>
 
-      <JobList jobs={[]} />
+      <JobList 
+        jobs={formattedJobs}
+        isLoading={false}
+        hasMore={false}
+        onLoadMore={() => {}}
+      />
     </div>
-    </MainLayout>
   );
 }

@@ -10,6 +10,9 @@ import Landing from "../pages/Landing";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
 import EmployerLanding from "../pages/employer/Landing";
+import JobPostings from "../pages/employer/JobPostings";
+import EmployerApplications from "../pages/employer/Applications";
+import EmployerAnalytics from "../pages/employer/Analytics";
 import { Features, CandidateFeatures, EmployerFeatures, PartnerFeatures } from "../pages/features";
 import FeaturesLayout from "../components/layout/FeaturesLayout";
 
@@ -26,6 +29,7 @@ const guestRoutes: RouteObject[] = [
     path: "auth/register",
     element: <Register />,
   },
+  // Candidate Routes
   {
     path: "jobs",
     element: <Jobs />,
@@ -38,6 +42,7 @@ const guestRoutes: RouteObject[] = [
     path: "success-stories",
     element: <SuccessStories />,
   },
+  // Partner Routes
   {
     path: "partners/analytics",
     element: <Analytics />,
@@ -50,6 +55,7 @@ const guestRoutes: RouteObject[] = [
     path: "partners/mentorship",
     element: <Mentorship />,
   },
+  // Employer Routes
   {
     path: "employer",
     children: [
@@ -60,9 +66,22 @@ const guestRoutes: RouteObject[] = [
       {
         path: "landing",
         element: <EmployerLanding />,
+      },
+      {
+        path: "job-postings",
+        element: <JobPostings />,
+      },
+      {
+        path: "applications",
+        element: <EmployerApplications />,
+      },
+      {
+        path: "analytics",
+        element: <EmployerAnalytics />,
       }
     ]
   },
+  // Feature Pages
   {
     path: "features",
     element: <FeaturesLayout />,

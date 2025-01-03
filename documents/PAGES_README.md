@@ -1,104 +1,252 @@
-[Previous content up to "Landing and Feature Pages" section]
+# TrackTalent Pages Documentation
 
-### Landing and Feature Pages
-- `Landing.tsx`: Main landing page for all users
-- `NotFound.tsx`: 404 error page
-- `features/Features.tsx`: Main features overview page with role selection
-- `features/CandidateFeatures.tsx`: Interactive candidate features showcase
-  * Feature cards with role-specific capabilities
-  * Interactive dashboard preview
-  * Mock data visualization
-  * One-click demo access
-- `features/EmployerFeatures.tsx`: Comprehensive employer features demo
-  * Recruitment tools showcase
-  * Pipeline management preview
-  * Analytics demonstration
-  * Interactive hiring workflow
-- `features/PartnerFeatures.tsx`: Partner platform capabilities preview
-  * Revenue tracking demonstration
-  * Client management interface
-  * Performance analytics
-  * Growth metrics visualization
+## Overview
 
-[Previous content from "Authentication Pages" through "Resource Pages" remains unchanged]
+TrackTalent is a comprehensive platform offering role-specific features for candidates, employers, and partners. The platform provides interactive demonstrations of all features using mock data, allowing users to explore functionality directly.
 
-## Enhanced Demo System
+### Key Features
+- Job search and application management
+- Learning resources and skill development
+- Success stories and career insights
+- Employer recruitment tools
+- Partner program management
+- Analytics and reporting
 
-### Demo Components
-Located in `/components/features/`:
-- `CandidatePreview.tsx`: Interactive candidate dashboard preview
-  * Skills assessment visualization
-  * Career progress tracking
-  * Job matching metrics
-  * Application statistics
+### Recent Updates (2024)
+- Direct feature access with mock data
+- Improved navigation and layout
+- Enhanced demo experience
+- Consistent component structure
 
-- `EmployerPreview.tsx`: Employer platform demonstration
-  * Applicant pipeline visualization
-  * Active job listings management
-  * Recruitment metrics dashboard
-  * Interview scheduling preview
+## User Journeys
 
-- `PartnerPreview.tsx`: Partner tools showcase
-  * Client management interface
-  * Revenue analytics visualization
-  * Performance metrics display
-  * Growth tracking tools
+### 1. Candidate Experience
+Start at `/features/candidate` to explore:
+- Job search and filtering (`/jobs`)
+- Learning resources (`/resources`)
+- Success stories (`/success-stories`)
 
-### Mock Data Integration
-Located in `/services/mockHooks.ts`:
-- Role-specific mock data hooks:
-  * `useCustomerJobs`: Sample job listings
-  * `useDashboardMetrics`: Role-based analytics
-  * `useRecentActivity`: Activity feed simulation
-  * `useSkillAssessments`: Skills evaluation demo
-  * `useCareerProgress`: Career tracking preview
-  * `useApplicantTracking`: Recruitment pipeline demo
-  * `useClientManagement`: Client relationship tools
-  * `useRevenueAnalytics`: Financial metrics simulation
+### 2. Employer Platform
+Access via `/features/employer` to discover:
+- Job posting management (`/employer/job-postings`)
+- Application tracking (`/employer/applications`)
+- Analytics dashboard (`/employer/analytics`)
 
-### Guest Onboarding Experience
-Enhanced with interactive previews and demos:
+### 3. Partner Tools
+Visit `/features/partner` to preview:
+- Apprenticeship programs (`/partners/apprenticeships`)
+- Mentorship network (`/partners/mentorship`)
+- Analytics platform (`/partners/analytics`)
 
-1. Landing Page Flow:
-   - Role-specific feature exploration
-   - Interactive dashboard previews
-   - Sample data visualization
-   - One-click demo access
+## Page Structure
 
-2. Feature Exploration:
-   - Guided feature tours
-   - Live metric demonstrations
-   - Interactive tool previews
-   - Role-specific workflows
+### Layout Components
+1. GuestLayout
+   - Main site header with logo
+   - Navigation links
+   - Language selection
+   - Consistent footer
 
-3. Demo Routes (`/demo/`):
-   - `/demo/candidate`: Candidate experience preview
-   - `/demo/employer`: Employer platform demo
-   - `/demo/partner`: Partner tools showcase
+2. FeaturesLayout
+   - Conditional back navigation
+   - Content wrapper
+   - Consistent padding and spacing
 
-4. Preview Features:
-   - Real-time metric updates
-   - Interactive dashboards
-   - Sample data visualization
-   - Tool functionality demos
+### Component Organization
+```
+src/
+├── pages/
+│   ├── features/
+│   │   ├── CandidateFeatures.tsx
+│   │   ├── EmployerFeatures.tsx
+│   │   └── PartnerFeatures.tsx
+│   ├── jobs/
+│   │   └── Jobs.tsx
+│   ├── resources/
+│   │   └── Resources.tsx
+│   ├── success-stories/
+│   │   └── SuccessStories.tsx
+│   └── employer/
+│       ├── JobPostings.tsx
+│       ├── Applications.tsx
+│       └── Analytics.tsx
+└── components/
+    ├── layout/
+    │   ├── GuestLayout.tsx
+    │   └── FeaturesLayout.tsx
+    └── features/
+        ├── CandidatePreview.tsx
+        ├── EmployerPreview.tsx
+        └── PartnerPreview.tsx
+```
 
-### Mock Data Features
-1. Candidate Mock Data:
-   - Skill assessments and verifications
-   - Career goals and progress
-   - Application statistics
-   - Job matching scores
+## Route Configuration
 
-2. Employer Mock Data:
-   - Active job listings
-   - Applicant pipeline stages
-   - Interview schedules
-   - Recruitment metrics
+### Main Routes
+Located in `src/router/guestRoutes.tsx`:
+```typescript
+const guestRoutes: RouteObject[] = [
+  {
+    path: "",
+    element: <Landing />,
+  },
+  // Feature showcase
+  {
+    path: "features",
+    element: <FeaturesLayout />,
+    children: [
+      {
+        path: "candidate",
+        element: <CandidateFeatures />
+      },
+      {
+        path: "employer",
+        element: <EmployerFeatures />
+      },
+      {
+        path: "partner",
+        element: <PartnerFeatures />
+      }
+    ]
+  },
+  // Demo features
+  {
+    path: "jobs",
+    element: <Jobs />,
+  },
+  {
+    path: "resources",
+    element: <Resources />,
+  },
+  {
+    path: "success-stories",
+    element: <SuccessStories />,
+  },
+  // Role-specific features
+  {
+    path: "employer",
+    children: [
+      {
+        path: "job-postings",
+        element: <JobPostings />,
+      },
+      {
+        path: "applications",
+        element: <Applications />,
+      },
+      {
+        path: "analytics",
+        element: <Analytics />,
+      }
+    ]
+  }
+];
+```
 
-3. Partner Mock Data:
-   - Client portfolios
-   - Revenue streams
-   - Performance analytics
-   - Growth indicators
+## Mock Data Integration
 
-[Previous content from "User Types and Access Flows" through the end remains unchanged]
+### Data Structure
+Located in `/services/mockData.ts`:
+```typescript
+// Job Listings
+export const mockJobs = [
+  {
+    id: 1,
+    title: "Senior Software Engineer",
+    company: "TechCorp",
+    location: "Remote",
+    salary: "$120,000 - $150,000",
+    description: "...",
+    requirements: ["5+ years experience", "React", "Node.js", "TypeScript"],
+    postedDate: "2024-01-15"
+  }
+];
+
+// Application Tracking
+export interface Application {
+  id: string;
+  candidate: {
+    name: string;
+    email: string;
+    avatar?: string;
+  };
+  job: {
+    title: string;
+    company: string;
+  };
+  status: 'pending' | 'reviewing' | 'interviewed' | 'offered' | 'rejected';
+  appliedDate: string;
+  lastActivity: string;
+}
+
+export const mockApplications: Application[] = [
+  // Application data...
+];
+```
+
+### Usage Examples
+1. Job Listings:
+```typescript
+import { mockJobs } from '../../services/mockData';
+
+export default function Jobs() {
+  return (
+    <JobList 
+      jobs={mockJobs}
+      isLoading={false}
+      hasMore={false}
+      onLoadMore={() => {}}
+    />
+  );
+}
+```
+
+2. Application Tracking:
+```typescript
+import { mockApplications } from '../../services/mockData';
+
+export default function Applications() {
+  return (
+    <div className="grid gap-6">
+      {mockApplications.map((application) => (
+        <ApplicationCard 
+          key={application.id} 
+          application={application} 
+        />
+      ))}
+    </div>
+  );
+}
+```
+
+## Development Guidelines
+
+### Current Focus
+1. ✅ Mock data integration
+2. ✅ Direct feature access
+3. ✅ Component consistency
+4. ✅ Navigation flow
+5. ✅ Layout responsiveness
+
+### Next Steps
+1. ⏳ Enhanced mock data
+2. ⏳ Interactive demos
+3. ⏳ Performance optimization
+4. ⏳ Error handling
+5. ⏳ Accessibility improvements
+
+## Maintenance
+
+### Regular Updates
+- Keep mock data current and relevant
+- Ensure component consistency
+- Maintain navigation patterns
+- Update documentation
+
+### Performance Monitoring
+- Track page load times
+- Monitor component rendering
+- Optimize data flow
+- Improve user experience
+
+This documentation provides a comprehensive overview of the TrackTalent platform's pages and features, focusing on helping new developers understand and navigate the codebase effectively.
