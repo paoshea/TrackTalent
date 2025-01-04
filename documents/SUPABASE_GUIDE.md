@@ -138,6 +138,110 @@ docker volume rm $(docker volume ls -q --filter name=supabase)
 
 ## Production Setup
 
+Supabase and Netlify Setup Instructions:
+
+Local Supabase Development:
+
+# Start Supabase locally
+supabase start
+
+# Apply migrations
+supabase db reset
+
+# Generate types from database schema
+supabase gen types typescript --local > src/types/database.ts
+
+Supabase Production Deployment:
+
+# Link to your Supabase project
+supabase link --project-ref your-project-ref
+
+# Push migrations to production
+supabase db push
+
+# Generate types from production database
+supabase gen types typescript > src/types/database.ts
+Netlify Deployment:
+
+# Build the project
+npm run build
+
+# Deploy to Netlify
+netlify deploy --prod
+Environment Variables:
+
+Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in Netlify's environment settings
+These should point to your production Supabase project
+The project is now properly configured with:
+
+Clean migration files (removed duplicates)
+Type-safe database schema
+Production-ready deployment setup
+
+
+Follow these steps to fix the Supabase setup and deploy:
+
+First, run the setup script: ./scripts/setup-supabase.sh (using chmod +x scripts/setup-supabase.sh scripts/find-ports.sh)
+
+Fix migration history: supabase db pull # Pull remote database state
+
+Reset local database to match remote: supabase db reset
+
+Repair migration history: supabase migration repair
+Verify local development:
+Start Supabase services: supabase start
+
+# Run the development server
+npm run dev
+Deploy to production:
+# Link to your Supabase project
+supabase link --project-ref your-project-ref
+
+# Push migrations
+supabase db push
+
+# Build and deploy to Netlify
+npm run build
+netlify deploy --prod
+Key Points:
+
+The setup script handles port allocation and initial setup
+Migration files are in supabase/migrations/ following the date-based naming convention
+Local development uses dynamic ports to avoid conflicts
+Always test migrations locally before pushing to production
+
+Now let me provide the sequence of commands to run the repair script and complete the Supabase setup.
+
+
+Task Completed
+Run these commands in order from the project root (/Users/philiposhea/Downloads/TrackTalent):
+
+Make the repair script executable:
+chmod +x scripts/repair-migrations.sh
+Run the repair script:
+./scripts/repair-migrations.sh
+After repair completes, sync with remote:
+# Pull the remote database state
+supabase db pull
+
+# Push local migrations
+supabase db push
+Verify the setup:
+# Start Supabase services
+supabase start
+
+# Run the development server
+npm run dev
+The repair script will:
+
+Revert old numbered migrations (0001-0014)
+Apply the new date-based migrations
+Sync the migration history with the remote database
+This will resolve the migration history mismatch and allow you to proceed with development and deployment.
+
+
+
+
 ### Environment Variables
 
 Production requires different environment variables:
