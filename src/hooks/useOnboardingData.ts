@@ -3,13 +3,13 @@ import { supabase } from "../lib/supabase";
 import type { ProfileData } from "../types/onboarding";
 import type { UserRole } from "../types/auth";
 import type { Database } from "../types/database";
-
-const STORAGE_BUCKET = import.meta.env.VITE_STORAGE_BUCKET;
-const MAX_UPLOAD_SIZE = Number(import.meta.env.VITE_MAX_UPLOAD_SIZE) || 5242880;
-const APP_ENVIRONMENT = import.meta.env.VITE_APP_ENVIRONMENT || 'development';
+import { mapProfileDataToDatabase } from "../utils/profileMapper";
 
 type Tables = Database['public']['Tables'];
 type Profile = Tables['profiles'];
+
+const STORAGE_BUCKET = import.meta.env.VITE_STORAGE_BUCKET;
+const MAX_UPLOAD_SIZE = Number(import.meta.env.VITE_MAX_UPLOAD_SIZE) || 5242880;
 
 export function useOnboardingData() {
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
@@ -32,18 +32,8 @@ export function useOnboardingData() {
         throw new Error(`File size exceeds maximum limit of ${MAX_UPLOAD_SIZE / 1024 / 1024}MB`);
       }
 
-      // Prepare profile data
-      const profile = {
-        id: user.id,
-        email: data.email,
-        full_name: `${data.firstName} ${data.lastName}`,
-        avatar_url: data.avatar || null,
-        updated_at: new Date().toISOString(),
-        environment: APP_ENVIRONMENT,
-        skills: data.skills || null,
-        experience: data.experience as Record<string, unknown>[] || null,
-        education: data.education as Record<string, unknown>[] || null
-      } satisfies Profile['Insert'];
+      // Map profile data to database format
+      const profile = mapProfileDataToDatabase(data, user.id);
 
       // Update profile
       const { error: updateError } = await supabase
@@ -68,18 +58,18 @@ export function useOnboardingData() {
           .from(STORAGE_BUCKET)
           .getPublicUrl(filePath);
 
-        // Update profile with resume URL
-        const resumeUpdate = {
-          resume_url: publicUrl,
-          updated_at: new Date().toISOString()
-        } satisfies Profile['Update'];
+        // Create an application record to store the resume URL
+        const { error: applicationError } = await supabase
+          .from("applications")
+          .insert({
+            candidate_id: user.id,
+            resume_url: publicUrl,
+            status: "draft",
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          });
 
-        const { error: resumeUpdateError } = await supabase
-          .from("profiles")
-          .update(resumeUpdate)
-          .eq("id", user.id);
-
-        if (resumeUpdateError) throw resumeUpdateError;
+        if (applicationError) throw applicationError;
       }
 
       setProfileData(data);
@@ -99,11 +89,10 @@ export function useOnboardingData() {
       if (userError) throw userError;
       if (!user) throw new Error('Not authenticated');
 
-      const update = {
-        role: role as Profile['Row']['role'],
-        environment: APP_ENVIRONMENT,
+      const update: Profile['Update'] = {
+        role,
         updated_at: new Date().toISOString()
-      } satisfies Profile['Update'];
+      };
 
       const { error: updateError } = await supabase
         .from("profiles")
@@ -132,11 +121,9 @@ export function useOnboardingData() {
         ? selectedPreferences.filter((p) => p !== preference)
         : [...selectedPreferences, preference];
 
-      const update = {
-        preferences: newPreferences,
-        environment: APP_ENVIRONMENT,
+      const update: Profile['Update'] = {
         updated_at: new Date().toISOString()
-      } satisfies Profile['Update'];
+      };
 
       const { error: updateError } = await supabase
         .from("profiles")

@@ -62,15 +62,24 @@ type ProfileDataInput = Partial<{
   experience_years: number;
 }>;
 
+function isValidUserRole(role: string | null): role is UserRole {
+  return role === 'candidate' || role === 'employer' || role === 'partner';
+}
+
 export function validateProfile(data: ProfileDataInput): UserProfile {
   if (!data.id || !data.email) {
     throw new Error('Invalid profile data');
   }
 
+  const role = data.role ?? 'candidate';
+  if (!isValidUserRole(role)) {
+    throw new Error(`Invalid role: ${role}`);
+  }
+
   return {
     id: data.id,
     email: data.email,
-    role: data.role ?? 'candidate',
+    role,
     username: data.username ?? null,
     full_name: data.full_name ?? null,
     avatar_url: data.avatar_url ?? null,

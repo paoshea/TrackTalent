@@ -6,7 +6,7 @@ import {
   ReactNode,
 } from "react";
 import { supabase, getTypedSession, validateProfile } from "../lib/supabase";
-import type { User as AuthUser, SignUpData, UserProfile, AuthContextValue } from "../types/auth";
+import type { User as AuthUser, SignUpData, UserProfile, AuthContextValue, UserRole } from "../types/auth";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 
 // Convert Supabase user to our User type
@@ -132,7 +132,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
         throw new Error('Profile not found');
       }
 
-      return validateProfile(data);
+      // Validate role before passing to validateProfile
+      const role = data.role as UserRole | null;
+      if (role !== null && role !== 'candidate' && role !== 'employer' && role !== 'partner') {
+        throw new Error(`Invalid role: ${role}`);
+      }
+      
+      return validateProfile({
+        ...data,
+        role
+      });
     } catch (error) {
       console.error('Error fetching profile:', error);
       throw error;
