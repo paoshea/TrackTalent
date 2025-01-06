@@ -78,6 +78,15 @@
         "react/prop-types": "off",
         "react/display-name": "off"
       }
+    },
+    {
+      "files": ["netlify/functions/**/*.ts"],
+      "parserOptions": {
+        "project": "./netlify/functions/tsconfig.json"
+      },
+      "rules": {
+        "@typescript-eslint/no-explicit-any": "off"
+      }
     }
   ]
 }

@@ -1,7 +1,6 @@
 # TrackTalent Pages Documentation
 
 ## Overview
-
 TrackTalent is a comprehensive platform offering role-specific features for candidates, employers, and partners. The platform provides interactive demonstrations of all features using mock data, allowing users to explore functionality directly.
 
 ### Key Features
@@ -17,22 +16,6 @@ TrackTalent is a comprehensive platform offering role-specific features for cand
 - Improved navigation and layout
 - Enhanced demo experience
 - Consistent component structure
-
-Clarification on RichTextEditor implementations:
-
-status/RichTextEditor.tsx:
-
-Purpose: Social media style editor
-Features: Mentions, hashtags, suggestions
-Use case: Status updates, comments, social interactions
-Implementation: Custom contentEditable with specialized features
-shared/RichTextEditor.tsx:
-
-Purpose: General rich text editing
-Features: Formatting, lists, links
-Use case: Content creation, descriptions, long-form text
-Implementation: ReactQuill-based with standard rich text features
-These components serve different purposes and should both be maintained. They are not redundant but rather specialized for their specific use cases in the application.
 
 ## User Journeys
 
@@ -266,3 +249,19 @@ export default function Applications() {
 - Improve user experience
 
 This documentation provides a comprehensive overview of the TrackTalent platform's pages and features, focusing on helping new developers understand and navigate the codebase effectively.
+
+Clarification on RichTextEditor implementations:
+
+status/RichTextEditor.tsx:
+Purpose: Social media style editor
+Features: Mentions, hashtags, suggestions
+Use case: Status updates, comments, social interactions
+Implementation: Custom contentEditable with specialized features
+
+shared/RichTextEditor.tsx:
+Purpose: General rich text editing
+Features: Formatting, lists, links
+Use case: Content creation, descriptions, long-form text
+Implementation: ReactQuill-based with standard rich text features
+
+These components serve different purposes and should both be maintained. They are not redundant but rather specialized for their specific use cases in the application.

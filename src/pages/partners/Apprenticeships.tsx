@@ -1,4 +1,3 @@
-// import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Logo } from "../../components/branding/Logo";
 import { mockPartnerStats } from "../../services/mockData";
@@ -25,15 +24,15 @@ export default function Apprenticeships() {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           <div className="bg-white rounded-lg shadow p-6">
             <h3 className="text-lg font-medium text-gray-900 mb-2">Active Programs</h3>
-            <p className="text-3xl font-bold text-blue-600">{stats.activePrograms}</p>
+            <p className="text-3xl font-bold text-blue-600">{stats.programs.active}</p>
           </div>
           <div className="bg-white rounded-lg shadow p-6">
             <h3 className="text-lg font-medium text-gray-900 mb-2">Partner Companies</h3>
-            <p className="text-3xl font-bold text-green-600">{stats.partneredCompanies}</p>
+            <p className="text-3xl font-bold text-green-600">{stats.programs.companies}</p>
           </div>
           <div className="bg-white rounded-lg shadow p-6">
             <h3 className="text-lg font-medium text-gray-900 mb-2">Success Rate</h3>
-            <p className="text-3xl font-bold text-purple-600">{stats.successRate}</p>
+            <p className="text-3xl font-bold text-purple-600">{stats.outcomes.completionRate}</p>
           </div>
         </div>
 
@@ -69,19 +68,19 @@ export default function Apprenticeships() {
                 <div className="flex-shrink-0 h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center mr-3">
                   <span className="text-blue-600 font-medium">1</span>
                 </div>
-                <p className="text-gray-600">12-week intensive training</p>
+                <p className="text-gray-600">Initial training ({stats.programs.averageDuration})</p>
               </div>
               <div className="flex items-start">
                 <div className="flex-shrink-0 h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center mr-3">
                   <span className="text-blue-600 font-medium">2</span>
                 </div>
-                <p className="text-gray-600">6-month apprenticeship placement</p>
+                <p className="text-gray-600">Apprenticeship placement ({stats.outcomes.averageTimeToPromotion} avg. to promotion)</p>
               </div>
               <div className="flex items-start">
                 <div className="flex-shrink-0 h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center mr-3">
                   <span className="text-blue-600 font-medium">3</span>
                 </div>
-                <p className="text-gray-600">Full-time employment opportunity</p>
+                <p className="text-gray-600">Full-time employment ({stats.outcomes.hireRate} hire rate)</p>
               </div>
             </div>
           </div>

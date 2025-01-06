@@ -1,56 +1,70 @@
-import { lazy } from 'react';
-import { Navigate, RouteObject } from 'react-router-dom';
-import { mockAuth } from '../services/mockAuth';
+import { Route, Routes } from 'react-router-dom';
+import { ProtectedRoute } from '../components/shared/ProtectedRoute';
 
-// Lazy load dashboard components
-const CandidateDashboard = lazy(() => import('../pages/candidate/Dashboard'));
-const EmployerDashboard = lazy(() => import('../pages/employer/Dashboard'));
-const PartnerDashboard = lazy(() => import('../pages/partner/Dashboard'));
+// Employer Demo Routes
+import JobPostings from '../pages/employer/demo/JobPostings';
+import Applications from '../pages/employer/demo/Applications';
+import EmployerAnalytics from '../pages/employer/demo/Analytics';
 
-// Demo route wrapper that sets up mock auth
-interface DemoRouteProps {
-  role: 'candidate' | 'employer' | 'partner';
-  children: React.ReactNode;
+// Partner Demo Routes
+import PartnerAnalytics from '../pages/partner/demo/Analytics';
+import Apprenticeships from '../pages/partner/demo/Apprenticeships';
+import Mentorship from '../pages/partner/demo/Mentorship';
+
+export function DemoRoutes() {
+  return (
+    <Routes>
+      {/* Employer Demo Routes */}
+      <Route
+        path="/employer/job-postings"
+        element={
+          <ProtectedRoute allowedRoles={['employer']}>
+            <JobPostings />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/employer/applications"
+        element={
+          <ProtectedRoute allowedRoles={['employer']}>
+            <Applications />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/employer/analytics"
+        element={
+          <ProtectedRoute allowedRoles={['employer']}>
+            <EmployerAnalytics />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Partner Demo Routes */}
+      <Route
+        path="/partner/analytics"
+        element={
+          <ProtectedRoute allowedRoles={['partner']}>
+            <PartnerAnalytics />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/partner/apprenticeships"
+        element={
+          <ProtectedRoute allowedRoles={['partner']}>
+            <Apprenticeships />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/partner/mentorship"
+        element={
+          <ProtectedRoute allowedRoles={['partner']}>
+            <Mentorship />
+          </ProtectedRoute>
+        }
+      />
+    </Routes>
+  );
 }
-
-const DemoRoute = ({ role, children }: DemoRouteProps) => {
-  // Set up mock auth data
-  const { user } = mockAuth.getMockData(role);
-  if (!user) {
-    return <Navigate to="/features" replace />;
-  }
-
-  return <>{children}</>;
-};
-
-export const demoRoutes: RouteObject[] = [
-  {
-    path: "demo",
-    children: [
-      {
-        path: "candidate",
-        element: (
-          <DemoRoute role="candidate">
-            <CandidateDashboard />
-          </DemoRoute>
-        ),
-      },
-      {
-        path: "employer",
-        element: (
-          <DemoRoute role="employer">
-            <EmployerDashboard />
-          </DemoRoute>
-        ),
-      },
-      {
-        path: "partner",
-        element: (
-          <DemoRoute role="partner">
-            <PartnerDashboard />
-          </DemoRoute>
-        ),
-      }
-    ]
-  }
-];

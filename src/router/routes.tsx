@@ -1,21 +1,8 @@
-import { RouteObject } from "react-router-dom";
-import GuestLayout from "../components/layout/GuestLayout";
-import guestRoutes from "./guestRoutes";
-import authenticatedRoutes from "./authenticatedRoutes";
-import NotFound from "../pages/NotFound";
+import { GuestRoutes } from './guestRoutes';
+import { AuthenticatedRoutes } from './authenticatedRoutes';
+import { useAuth } from '../hooks/useAuth';
 
-const routes: RouteObject[] = [
-  {
-    element: <GuestLayout />,
-    children: [
-      ...guestRoutes,
-      {
-        path: "*",
-        element: <NotFound />,
-      },
-    ],
-  },
-  ...authenticatedRoutes,
-];
-
-export default routes;
+export function AppRoutes() {
+  const { user } = useAuth();
+  return user ? <AuthenticatedRoutes /> : <GuestRoutes />;
+}

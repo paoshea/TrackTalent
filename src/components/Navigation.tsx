@@ -1,152 +1,95 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { MobileMenu, MenuButton } from './mobile/Menu';
 import { useAuth } from '../hooks/useAuth';
-import type { LucideIcon } from 'lucide-react';
 
-interface User {
-  id: string;
-  role: 'candidate' | 'employer' | 'partner';
-}
+export const Navigation: React.FC = () => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user } = useAuth();
 
-interface AuthContextType {
-  user: User | null;
-  signOut: () => void;
-}
-
-interface NavigationItem {
-  href: string;
-  label: string;
-  icon: LucideIcon;
-}
-
-interface NavigationProps {
-  items?: NavigationItem[];
-}
-
-export const Navigation: React.FC<NavigationProps> = ({ items }) => {
-  const { user, signOut } = useAuth() as AuthContextType;
-  const location = useLocation();
-
-  // Don't show navigation on landing page
-  if (location.pathname === '/') {
-    return null;
-  }
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
 
   return (
-    <nav className="bg-white shadow">
+    <nav className="bg-white shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          <div className="flex">
-            <div className="flex-shrink-0 flex items-center">
-              <Link to="/" className="text-xl font-bold text-indigo-600">
-                TrackTalent
-              </Link>
-            </div>
-            {user && (
-              <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-                {items ? (
-                  // Use provided navigation items if available
-                  items.map(({ href, label, icon: Icon }) => (
-                    <Link
-                      key={href}
-                      to={href}
-                      className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                    >
-                      <Icon className="h-5 w-5 mr-2" />
-                      {label}
-                    </Link>
-                  ))
-                ) : (
-                  // Default navigation based on user role
-                  <>
-                    {user.role === 'candidate' && (
-                      <>
-                        <Link
-                          to="/candidate/jobs"
-                          className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                        >
-                          Find Jobs
-                        </Link>
-                        <Link
-                          to="/candidate/applications"
-                          className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                        >
-                          Applications
-                        </Link>
-                      </>
-                    )}
-                    {user.role === 'employer' && (
-                      <>
-                        <Link
-                          to="/employer/jobs"
-                          className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                        >
-                          Manage Jobs
-                        </Link>
-                        <Link
-                          to="/employer/candidates"
-                          className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                        >
-                          Candidates
-                        </Link>
-                      </>
-                    )}
-                    {user.role === 'partner' && (
-                      <>
-                        <Link
-                          to="/partner/dashboard"
-                          className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                        >
-                          Dashboard
-                        </Link>
-                        <Link
-                          to="/partner/clients"
-                          className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                        >
-                          Clients
-                        </Link>
-                      </>
-                    )}
-                  </>
-                )}
-              </div>
-            )}
+          {/* Logo and Brand */}
+          <div className="flex-shrink-0 flex items-center">
+            <Link to="/" className="text-xl font-bold text-gray-900">
+              TrackTalent
+            </Link>
           </div>
-          <div className="flex items-center">
-            {user ? (
-              <div className="flex items-center space-x-4">
-                <Link
-                  to={`/${user.role}/profile`}
-                  className="text-gray-500 hover:text-gray-700"
-                >
-                  Profile
-                </Link>
-                <button
-                  onClick={() => signOut()}
-                  className="text-gray-500 hover:text-gray-700"
-                >
-                  Sign Out
-                </button>
-              </div>
-            ) : (
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex md:items-center md:space-x-8">
+            <Link
+              to="/jobs"
+              className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+            >
+              Jobs
+            </Link>
+            <Link
+              to="/features"
+              className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+            >
+              Features
+            </Link>
+            <Link
+              to="/resources"
+              className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+            >
+              Resources
+            </Link>
+
+            {!user && (
               <div className="flex items-center space-x-4">
                 <Link
                   to="/auth/login"
-                  className="text-gray-500 hover:text-gray-700 px-4 py-2 text-sm font-medium"
+                  className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
                 >
                   Sign In
                 </Link>
                 <Link
                   to="/auth/register"
-                  className="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700"
+                  className="bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-md text-sm font-medium"
                 >
                   Sign Up
                 </Link>
               </div>
             )}
+
+            {user && (
+              <div className="flex items-center space-x-4">
+                <Link
+                  to="/dashboard"
+                  className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                >
+                  Dashboard
+                </Link>
+                <button
+                  onClick={() => {/* Add sign out handler */}}
+                  className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                >
+                  Sign Out
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Mobile Menu Button */}
+          <div className="md:hidden flex items-center">
+            <MenuButton onClick={toggleMobileMenu} />
           </div>
         </div>
       </div>
+
+      {/* Mobile Menu */}
+      <MobileMenu
+        isOpen={isMobileMenuOpen}
+        onClose={() => setIsMobileMenuOpen(false)}
+      />
     </nav>
   );
 };

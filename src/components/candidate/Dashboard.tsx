@@ -1,51 +1,71 @@
-import React from 'react';
-import { Outlet } from 'react-router-dom';
-import type { UserProfile } from '../../types/auth';
+// import React from 'react';
+import { useAuth } from '../../hooks/useAuth';
+import type { User } from '../../types/auth';
 
 interface DashboardProps {
-  profile: UserProfile;
+  user: User;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ profile }) => {
+function DashboardContent({ user }: DashboardProps) {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold text-gray-900">
-            Welcome, {profile.full_name ?? 'Guest'}
-          </h1>
-        </div>
-      </header>
-      <main>
-        <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-          {/* Dashboard content */}
-          <div className="px-4 py-6 sm:px-0">
-            <div className="border-4 border-dashed border-gray-200 rounded-lg h-96 p-4">
-              <h2 className="text-xl font-semibold mb-4">Candidate Dashboard</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-white p-4 rounded shadow">
-                  <h3 className="text-lg font-medium mb-2">Profile Views</h3>
-                  <p className="text-3xl font-bold text-indigo-600">12</p>
-                </div>
-                <div className="bg-white p-4 rounded shadow">
-                  <h3 className="text-lg font-medium mb-2">Applications</h3>
-                  <p className="text-3xl font-bold text-indigo-600">3</p>
-                </div>
-                <div className="bg-white p-4 rounded shadow">
-                  <h3 className="text-lg font-medium mb-2">Saved Jobs</h3>
-                  <p className="text-3xl font-bold text-indigo-600">8</p>
+    <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+      <div className="px-4 py-6 sm:px-0">
+        <div className="border-4 border-dashed border-gray-200 rounded-lg p-4">
+          <div className="text-lg font-medium text-gray-900">
+            Welcome back, {user.user_metadata.full_name ?? 'Guest'}
+          </div>
+          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {/* Add dashboard widgets here */}
+            <div className="bg-white overflow-hidden shadow rounded-lg">
+              <div className="p-5">
+                <h3 className="text-lg leading-6 font-medium text-gray-900">
+                  Job Applications
+                </h3>
+                <div className="mt-2">
+                  <p className="text-3xl font-semibold text-gray-900">0</p>
+                  <p className="mt-1 text-sm text-gray-500">Active applications</p>
                 </div>
               </div>
-              <p className="text-gray-600 mt-4">
-                This is a demo dashboard with mock data for guest users.
-              </p>
+            </div>
+            <div className="bg-white overflow-hidden shadow rounded-lg">
+              <div className="p-5">
+                <h3 className="text-lg leading-6 font-medium text-gray-900">
+                  Skills
+                </h3>
+                <div className="mt-2">
+                  <p className="text-3xl font-semibold text-gray-900">0</p>
+                  <p className="mt-1 text-sm text-gray-500">Verified skills</p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white overflow-hidden shadow rounded-lg">
+              <div className="p-5">
+                <h3 className="text-lg leading-6 font-medium text-gray-900">
+                  Profile
+                </h3>
+                <div className="mt-2">
+                  <p className="text-3xl font-semibold text-gray-900">50%</p>
+                  <p className="mt-1 text-sm text-gray-500">Profile completion</p>
+                </div>
+              </div>
             </div>
           </div>
-          <Outlet />
         </div>
-      </main>
+      </div>
     </div>
   );
-};
+}
 
-export default Dashboard;
+export default function Dashboard() {
+  const { user } = useAuth();
+
+  if (!user) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-gray-500">Please sign in to view your dashboard.</p>
+      </div>
+    );
+  }
+
+  return <DashboardContent user={user} />;
+}

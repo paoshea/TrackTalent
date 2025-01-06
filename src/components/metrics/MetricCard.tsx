@@ -1,4 +1,3 @@
-// import React from "react";
 import type { LucideIcon } from "lucide-react";
 import { cn } from "../../utils/cn";
 
@@ -6,6 +5,7 @@ export interface MetricCardProps {
   label: string;
   value: number;
   icon: LucideIcon;
+  description?: string;
   suffix?: string;
   className?: string;
   trend?: {
@@ -18,6 +18,7 @@ export function MetricCard({
   label,
   value,
   icon: Icon,
+  description,
   suffix,
   className,
   trend,
@@ -55,6 +56,11 @@ export function MetricCard({
                   </div>
                 )}
               </dd>
+              {description && (
+                <dd className="mt-2 text-sm text-gray-500">
+                  {description}
+                </dd>
+              )}
             </dl>
           </div>
         </div>

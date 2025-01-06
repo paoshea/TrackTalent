@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import { Navigation } from "../Navigation";
+import { NavigationMenu } from "./NavigationMenu";
 import { LayoutDashboard, FileText, MessageSquare, User } from "lucide-react";
 
 export function CandidateLayout() {
@@ -12,7 +12,7 @@ export function CandidateLayout() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <Navigation items={navItems} />
+      <NavigationMenu items={navItems} />
       <main className="py-10">
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
           <Outlet />

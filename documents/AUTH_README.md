@@ -51,32 +51,58 @@ export class MockAuthService {
 
 ## Authentication Flows
 
-### Registration Flow - Current state
-Development environment has been updated with streamlined authentication:
+### Current Authentication State
 
-Authentication Flow:
-Email verification requirement removed
-Immediate sign-in after registration
-Profile creation handled by database trigger
-Session management simplified
-Development Setup:
+#### Database Schema
+The profiles table in Supabase has the following structure:
+```sql
+create table public.profiles (
+  id uuid references auth.users primary key,
+  email text not null,
+  full_name text,
+  avatar_url text,
+  role text,
+  username text,
+  created_at timestamp with time zone default timezone('utc'::text, now()),
+  updated_at timestamp with time zone
+);
+```
 
+#### Authentication Flow
+1. Registration:
+   - User signs up with email, password, and role
+   - Profile is automatically created via database trigger
+   - Email verification is currently disabled for development
+   - Immediate access granted after registration
+
+2. Sign In:
+   - Direct password-based authentication
+   - Profile data fetched automatically
+   - Session managed through Supabase client
+
+3. Auth Callback:
+   - Dedicated `/auth/callback` route handles auth redirects
+   - Manages session state after authentication
+   - Redirects to appropriate pages based on auth status
+
+#### Development Setup
+```bash
 # Start development environment
 ./scripts/setup-supabase.sh
 npm run dev
-Available Demo Accounts:
+```
 
-Candidate: candidate@demo.com
-Employer: employer@demo.com
-Partner: partner@demo.com
-Local Services:
+#### Local Services
+- Frontend: http://localhost:5173
+- Supabase Studio: http://localhost:54323
+- API: http://localhost:54321
 
-Frontend: http://localhost:3001
-Supabase Studio: http://localhost:54323
-API: http://localhost:54321
-Note: Email verification functionality is in place but disabled for development. The code remains ready for future implementation when email service is configured.
+#### Future Implementations
+- Email verification will be added later
+- Additional profile fields may be added to the schema
+- Enhanced security measures planned
 
-### Registration Flow - Future state
+### Registration Flow
 1. User Input Collection:
    ```typescript
    interface SignUpData {
@@ -84,37 +110,41 @@ Note: Email verification functionality is in place but disabled for development.
      password: string;
      role: UserRole;
      full_name: string;
-     // Optional fields
-     title?: string;
-     location?: string;
-     company_name?: string;
-     company_size?: string;
    }
    ```
 
 2. Account Creation:
    ```typescript
-   const { data: authData, error } = await supabase.auth.signUp({
+   const { data: authData, error: signUpError } = await supabase.auth.signUp({
      email: data.email,
      password: data.password,
      options: {
-       data: { role: data.role, full_name: data.full_name },
+       data: {
+         role: data.role,
+         full_name: data.full_name,
+         username: data.email.split('@')[0]
+       },
        emailRedirectTo: `${window.location.origin}/auth/callback`
      }
    });
    ```
 
-3. Profile Creation:
-   ```typescript
-   const profileData = {
-     id: authData.user.id,
-     user_id: authData.user.id,
-     full_name: data.full_name,
-     email: data.email,
-     role: data.role,
-     // ... other profile fields
-   };
-   await supabase.from('profiles').insert(profileData);
+3. Profile Creation (via Database Trigger):
+   ```sql
+   create function public.handle_new_user()
+   returns trigger as $$
+   begin
+     insert into public.profiles (id, email, role, full_name, username)
+     values (
+       new.id,
+       new.email,
+       new.raw_user_meta_data->>'role',
+       new.raw_user_meta_data->>'full_name',
+       new.raw_user_meta_data->>'username'
+     );
+     return new;
+   end;
+   $$ language plpgsql security definer;
    ```
 
 ### Login Flow
@@ -162,7 +192,6 @@ Note: Email verification functionality is in place but disabled for development.
 
 ### Custom Error Types
 ```typescript
-// Custom error types for specific failures
 export class TokenRefreshError extends Error {
   constructor(message: string, public readonly status: number = 401) {
     super(message);
@@ -195,58 +224,115 @@ function isValidProfile(data: unknown): data is UserProfile {
   if (!data || typeof data !== 'object') return false;
   return (
     typeof data.id === 'string' &&
-    typeof data.user_id === 'string' &&
+    typeof data.email === 'string' &&
     // ... other field validations
   );
 }
 ```
 
-### Token Refresh Mechanism
+## Session Management
+
+### Auth Callback Handling
+The auth callback system handles authentication redirects and session management:
+
 ```typescript
-async function refreshToken(): Promise<boolean> {
-  try {
-    const { data: { session }, error } = await supabase.auth.refreshSession();
-    if (error) throw error;
-    return !!session;
-  } catch (error) {
-    if (isAuthError(error)) {
-      throw new TokenRefreshError(error.message, error.status);
-    }
-    throw error;
-  }
+// Auth Callback Component
+export default function AuthCallback() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleAuthCallback = async () => {
+      try {
+        const { error } = await supabase.auth.getSession();
+        if (error) throw error;
+        navigate('/', { replace: true });
+      } catch (error) {
+        console.error('Error handling auth callback:', error);
+        navigate('/auth/signin', { replace: true });
+      }
+    };
+
+    handleAuthCallback();
+  }, [navigate]);
+
+  return (
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="text-center">
+        <h2 className="text-2xl font-semibold mb-4">Completing authentication...</h2>
+        <p className="text-gray-600">Please wait while we verify your credentials.</p>
+      </div>
+    </div>
+  );
 }
 ```
 
-### Error Recovery
+### Session Configuration
+The Supabase client is configured with session management settings:
+
 ```typescript
-// Automatic retry with token refresh
-if (response.status === 401) {
-  if (retries < MAX_RETRIES) {
-    try {
-      const refreshed = await refreshToken();
-      if (refreshed) {
-        return attemptFetch(); // Retry request
-      }
-    } catch (refreshError) {
-      if (refreshError instanceof TokenRefreshError) {
-        await supabase.auth.signOut();
-        throw refreshError;
-      }
+export const supabase = createClient<Database>(
+  supabaseUrl,
+  supabaseAnonKey,
+  {
+    auth: {
+      autoRefreshToken: true,
+      persistSession: true,
+      detectSessionInUrl: true,
+      storage: window.localStorage,
+      storageKey: 'supabase.auth.token'
+    },
+    db: {
+      schema: 'public'
     }
   }
-}
+);
 ```
 
-### Validation Helpers
+### Session Persistence
+- Supabase handles session persistence using localStorage
+- Session automatically refreshes in the background
+- Auth state syncs across tabs/windows
+- Automatic session recovery on page load
+- Handles page refreshes and browser restarts
+
+### Session Monitoring
+Auth state changes are monitored via subscription:
+
 ```typescript
-// Helper for profile validation
-export const validateProfile = (data: unknown): UserProfile => {
-  if (!isValidProfile(data)) {
-    throw new ProfileValidationError('Invalid profile data structure');
+useEffect(() => {
+  const { subscription } = supabase.auth.onAuthStateChange(
+    async (_event, session) => {
+      if (session?.user) {
+        const user = mapSupabaseUser(session.user);
+        const profile = await fetchProfile(user.id);
+        setState({ user, profile, isLoading: false });
+      } else {
+        setState({ user: null, profile: null, isLoading: false });
+      }
+    }
+  );
+  return () => subscription.unsubscribe();
+}, []);
+```
+
+### Session Recovery
+Automatic session recovery is implemented for page loads and refreshes:
+
+```typescript
+const initializeAuth = async () => {
+  const { data: { session }, error } = await supabase.auth.getSession();
+  if (error) throw error;
+  
+  if (session?.user) {
+    const user = mapSupabaseUser(session.user);
+    const profile = await fetchProfile(user.id);
+    return { user, profile };
   }
-  return data;
+  
+  return { user: null, profile: null };
 };
 ```
+
 
 ## Mock vs Real Backend
 
@@ -319,50 +405,7 @@ if (!isValidRole(data.role)) {
 }
 ```
 
-## Session Management
 
-### Session Persistence
-- Supabase handles session persistence using localStorage
-- Session automatically refreshes in the background
-- Auth state syncs across tabs/windows
-```typescript
-// Session configuration in AuthContext
-const supabase = createClient(supabaseUrl, supabaseKey, {
-  auth: {
-    autoRefreshToken: true,
-    persistSession: true,
-    storage: localStorage
-  }
-});
-```
-
-### Session Monitoring
-- Auth state changes monitored via subscription
-- Components automatically update when auth state changes
-- Handles token refresh and expiry
-```typescript
-useEffect(() => {
-  const { subscription } = supabase.auth.onAuthStateChange(
-    async (_event, session) => {
-      // Update auth state based on session
-    }
-  );
-  return () => subscription.unsubscribe();
-}, []);
-```
-
-### Session Recovery
-- Automatic session recovery on page load
-- Handles page refreshes and browser restarts
-- Maintains user state across sessions
-```typescript
-// Initial session check
-supabase.auth.getSession().then(({ data: { session } }) => {
-  if (session?.user) {
-    // Restore user session
-  }
-});
-```
 
 ## Best Practices
 

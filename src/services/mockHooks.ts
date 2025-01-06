@@ -172,35 +172,232 @@ export const useRecentActivity = (): UseRecentActivityResult => ({
 // Additional mock data for specific features
 export const useSkillAssessments = () => ({
   skills: [
-    { name: 'React', level: 'Expert', verified: true },
-    { name: 'Node.js', level: 'Advanced', verified: true },
-    { name: 'TypeScript', level: 'Intermediate', verified: false }
+    {
+      name: 'JavaScript',
+      level: 'intermediate',
+      verified: true,
+      verifiedDate: '2023-12-15',
+      verifiedBy: 'TechCorp Academy',
+      nextLevel: {
+        name: 'advanced',
+        requiredHours: 120,
+        completedHours: 85
+      }
+    },
+    {
+      name: 'React',
+      level: 'beginner',
+      verified: true,
+      verifiedDate: '2024-01-10',
+      verifiedBy: 'TechCorp Academy',
+      nextLevel: {
+        name: 'intermediate',
+        requiredHours: 80,
+        completedHours: 45
+      }
+    },
+    {
+      name: 'Node.js',
+      level: 'beginner',
+      verified: true,
+      verifiedDate: '2024-01-05',
+      verifiedBy: 'TechCorp Academy',
+      nextLevel: {
+        name: 'intermediate',
+        requiredHours: 80,
+        completedHours: 30
+      }
+    }
+  ],
+  assessmentProgress: {
+    completed: 3,
+    inProgress: 2,
+    upcoming: 1
+  },
+  certifications: [
+    {
+      name: 'Frontend Development',
+      provider: 'TechCorp Academy',
+      status: 'in-progress',
+      progress: 65,
+      estimatedCompletion: '2024-03-15'
+    }
   ]
 });
 
 export const useCareerProgress = () => ({
+  currentPath: {
+    role: 'Apprentice Developer',
+    company: 'TechCorp',
+    startDate: '2024-01-01',
+    mentor: 'Sarah Johnson',
+    nextMilestone: 'Junior Developer'
+  },
+  progression: {
+    current: {
+      role: 'Apprentice Developer',
+      requiredSkills: ['JavaScript', 'React', 'Git'],
+      completedSkills: ['JavaScript', 'Git'],
+      timeInRole: '3 months'
+    },
+    next: {
+      role: 'Junior Developer',
+      requiredSkills: ['React', 'Node.js', 'TypeScript'],
+      timeline: '9 months',
+      salary: '$65,000 - $80,000'
+    },
+    future: {
+      role: 'Mid-level Developer',
+      timeline: '24 months',
+      salary: '$85,000 - $110,000'
+    }
+  },
   goals: [
-    { title: 'Learn GraphQL', progress: 75, deadline: '2024-06-01' },
-    { title: 'Complete AWS Certification', progress: 40, deadline: '2024-08-01' },
-    { title: 'Contribute to Open Source', progress: 60, deadline: '2024-07-01' }
-  ]
+    {
+      title: 'Complete React Certification',
+      type: 'certification',
+      progress: 65,
+      deadline: '2024-06-01',
+      mentor: 'Sarah Johnson',
+      nextMeeting: '2024-02-20'
+    },
+    {
+      title: 'Build Portfolio Project',
+      type: 'project',
+      progress: 40,
+      deadline: '2024-08-01',
+      mentor: 'David Wilson',
+      nextMeeting: '2024-02-22'
+    },
+    {
+      title: 'Node.js Fundamentals',
+      type: 'skill',
+      progress: 60,
+      deadline: '2024-07-01',
+      mentor: 'Michael Chen',
+      nextMeeting: '2024-02-25'
+    }
+  ],
+  mentorship: {
+    mentor: {
+      name: 'Sarah Johnson',
+      role: 'Tech Lead',
+      company: 'TechCorp',
+      expertise: ['React', 'System Design', 'Career Development']
+    },
+    nextSession: {
+      date: '2024-02-20',
+      topic: 'React Advanced Patterns',
+      preparation: ['Complete practice exercises', 'Review documentation']
+    },
+    recentFeedback: {
+      date: '2024-02-10',
+      strengths: ['Quick learner', 'Strong problem-solving'],
+      areasForImprovement: ['Code organization', 'Testing practices']
+    }
+  }
 });
 
 export const useApplicantTracking = () => ({
   stages: [
-    { name: 'Applied', count: 45 },
-    { name: 'Screening', count: 30 },
-    { name: 'Interview', count: 15 },
-    { name: 'Offer', count: 5 }
-  ]
+    { 
+      name: 'Applied',
+      count: 45,
+      verifiedCount: 38,
+      averageScore: 85,
+      topSkills: ['JavaScript', 'React', 'Node.js']
+    },
+    { 
+      name: 'Screening',
+      count: 30,
+      verifiedCount: 28,
+      averageScore: 88,
+      topSkills: ['System Design', 'API Development', 'TypeScript']
+    },
+    { 
+      name: 'Interview',
+      count: 15,
+      verifiedCount: 15,
+      averageScore: 92,
+      topSkills: ['Problem Solving', 'Communication', 'Team Leadership']
+    },
+    { 
+      name: 'Offer',
+      count: 5,
+      verifiedCount: 5,
+      averageScore: 95,
+      topSkills: ['Full Stack Development', 'Project Management', 'Architecture']
+    }
+  ],
+  verificationMetrics: {
+    totalCandidates: 95,
+    verifiedCandidates: 86,
+    verificationRate: 90,
+    averageVerificationScore: 88,
+    skillMatchRate: 92,
+    retentionRate: 95
+  },
+  talentPool: {
+    total: 250,
+    verified: 225,
+    byLevel: {
+      entry: 80,
+      intermediate: 120,
+      senior: 50
+    },
+    bySkill: [
+      { name: 'JavaScript', count: 150, verifiedCount: 135 },
+      { name: 'React', count: 100, verifiedCount: 90 },
+      { name: 'Node.js', count: 80, verifiedCount: 72 }
+    ],
+    growth: {
+      monthly: 15,
+      verifiedGrowth: 12
+    }
+  }
 });
 
 export const useClientManagement = () => ({
   clients: [
-    { name: 'Tech Corp', activeJobs: 8, totalHires: 12 },
-    { name: 'Innovation Inc', activeJobs: 5, totalHires: 7 },
-    { name: 'Design Studio', activeJobs: 3, totalHires: 4 }
-  ]
+    { 
+      name: 'Tech Corp',
+      activeJobs: 8,
+      totalHires: 12,
+      verifiedHires: 11,
+      retentionRate: 95,
+      averageTimeToHire: 15,
+      skillMatchRate: 92,
+      satisfactionScore: 4.8
+    },
+    { 
+      name: 'Innovation Inc',
+      activeJobs: 5,
+      totalHires: 7,
+      verifiedHires: 7,
+      retentionRate: 92,
+      averageTimeToHire: 12,
+      skillMatchRate: 94,
+      satisfactionScore: 4.9
+    },
+    { 
+      name: 'Design Studio',
+      activeJobs: 3,
+      totalHires: 4,
+      verifiedHires: 4,
+      retentionRate: 100,
+      averageTimeToHire: 10,
+      skillMatchRate: 96,
+      satisfactionScore: 5.0
+    }
+  ],
+  verificationStats: {
+    totalPlacements: 23,
+    verifiedPlacements: 22,
+    averageRetention: 94,
+    averageTimeToHire: 14,
+    averageSkillMatch: 93,
+    averageSatisfaction: 4.9
+  }
 });
 
 export const useRevenueAnalytics = () => ({

@@ -1,4 +1,3 @@
-// import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Logo } from "../../components/branding/Logo";
 import { mockSuccessStories } from "../../services/mockData";
@@ -42,13 +41,30 @@ export default function SuccessStories() {
                 <h4 className="text-lg font-medium mb-3 text-blue-600">{story.title}</h4>
                 <p className="text-gray-600 mb-4">{story.story}</p>
                 <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                  <div className="flex items-center">
+                  <div className="flex items-center mb-2">
                     <svg className="h-5 w-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                     </svg>
-                    <span className="text-green-700 font-medium">Outcome:</span>
+                    <span className="text-green-700 font-medium">Key Achievements:</span>
                   </div>
-                  <p className="text-green-600 mt-1">{story.outcome}</p>
+                  <div className="space-y-2">
+                    <p className="text-green-600 flex items-center">
+                      <span className="w-32">Salary Growth:</span>
+                      <span className="font-medium">{story.outcome.salaryIncrease}</span>
+                    </p>
+                    <p className="text-green-600 flex items-center">
+                      <span className="w-32">Time to Promotion:</span>
+                      <span className="font-medium">{story.outcome.timeToPromotion}</span>
+                    </p>
+                    <p className="text-green-600">
+                      <span className="font-medium">Certifications:</span>
+                      <span className="ml-2">{story.outcome.certifications.join(', ')}</span>
+                    </p>
+                    <p className="text-green-600">
+                      <span className="font-medium">Current Role:</span>
+                      <span className="ml-2">{story.outcome.mentorship}</span>
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>

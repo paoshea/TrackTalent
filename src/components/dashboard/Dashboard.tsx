@@ -1,56 +1,43 @@
-import React from 'react';
-import { Outlet } from 'react-router-dom';
-import type { EmployerProfile } from '../../types/auth';
+// import React from 'react';
+import { useAuth } from '../../hooks/useAuth';
+import type { User } from '../../types/auth';
 
 interface DashboardProps {
-  profile: EmployerProfile;
+  user: User;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ profile }) => {
+function DashboardContent({ user }: DashboardProps) {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center">
-            <h1 className="text-3xl font-bold text-gray-900">
-              {profile.company_name}
-            </h1>
-            <div className="text-sm text-gray-600">
-              {profile.full_name ?? 'Guest'} - {profile.title}
+    <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+      <div className="px-4 py-6 sm:px-0">
+        <div className="border-4 border-dashed border-gray-200 rounded-lg p-4">
+          <div className="text-lg font-medium text-gray-900">
+            Welcome back, {user.user_metadata.full_name ?? 'Guest'}
+          </div>
+          {user.company && (
+            <div className="mt-1 text-sm text-gray-500">
+              {user.company}
             </div>
+          )}
+          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {/* Add dashboard widgets here */}
           </div>
         </div>
-      </header>
-      <main>
-        <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-          {/* Dashboard content */}
-          <div className="px-4 py-6 sm:px-0">
-            <div className="border-4 border-dashed border-gray-200 rounded-lg h-96 p-4">
-              <h2 className="text-xl font-semibold mb-4">Employer Dashboard</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-white p-4 rounded shadow">
-                  <h3 className="text-lg font-medium mb-2">Active Jobs</h3>
-                  <p className="text-3xl font-bold text-indigo-600">5</p>
-                </div>
-                <div className="bg-white p-4 rounded shadow">
-                  <h3 className="text-lg font-medium mb-2">Total Applications</h3>
-                  <p className="text-3xl font-bold text-indigo-600">27</p>
-                </div>
-                <div className="bg-white p-4 rounded shadow">
-                  <h3 className="text-lg font-medium mb-2">Candidates Shortlisted</h3>
-                  <p className="text-3xl font-bold text-indigo-600">12</p>
-                </div>
-              </div>
-              <p className="text-gray-600 mt-4">
-                This is a demo dashboard with mock data for guest users.
-              </p>
-            </div>
-          </div>
-          <Outlet />
-        </div>
-      </main>
+      </div>
     </div>
   );
-};
+}
 
-export default Dashboard;
+export default function Dashboard() {
+  const { user } = useAuth();
+
+  if (!user) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-gray-500">Please sign in to view your dashboard.</p>
+      </div>
+    );
+  }
+
+  return <DashboardContent user={user} />;
+}

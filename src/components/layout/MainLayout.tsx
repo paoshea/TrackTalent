@@ -4,7 +4,7 @@ import { LogOut, Menu, X } from "lucide-react";
 import { Button } from "../shared/Button";
 import { useAuth } from "../../contexts/AuthContext";
 import { useTranslation } from "../../contexts/TranslationContext";
-import { Footer } from "./Footer";
+import Footer from "./Footer";
 import { cn } from "../../utils/cn";
 import { Logo } from "../branding/Logo";
 import { LanguageToggle } from "../shared/LanguageToggle";
@@ -14,7 +14,7 @@ interface MainLayoutProps {
   children: React.ReactNode;
 }
 
-export function MainLayout({ children }: MainLayoutProps) {
+export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
@@ -123,4 +123,4 @@ export function MainLayout({ children }: MainLayoutProps) {
       </div>
     </div>
   );
-}
+};

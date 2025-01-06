@@ -1,354 +1,179 @@
-import {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  ReactNode,
-} from "react";
-import { supabase, getTypedSession, validateProfile } from "../lib/supabase";
-import type { User as AuthUser, SignUpData, UserProfile, AuthContextValue, UserRole } from "../types/auth";
-import type { User as SupabaseUser } from "@supabase/supabase-js";
+import { createContext, useContext, useState, useCallback } from 'react';
+import { User, AuthContextType, SignUpData, AuthCredentials } from '../types/auth';
 
-// Convert Supabase user to our User type
-export function mapSupabaseUser(user: SupabaseUser): AuthUser {
-  return {
-    id: user.id,
-    email: user.email || '',
-    role: (user.user_metadata?.role || 'candidate') as AuthUser['role'],
-    created_at: user.created_at,
-    updated_at: user.last_sign_in_at || user.created_at,
-    email_confirmed_at: user.email_confirmed_at || undefined,
-    app_metadata: user.app_metadata,
-    user_metadata: user.user_metadata,
-    aud: user.aud
-  };
-}
+const AuthContext = createContext<AuthContextType | null>(null);
 
-export interface AuthState {
-  user: AuthUser | null;
-  profile: UserProfile | null;
-  isLoading: boolean;
-  error: Error | null;
-}
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<User | null>(() => {
+    // Check if we have a saved user in localStorage
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) {
+      return JSON.parse(savedUser);
+    }
 
-export const AuthContext = createContext<AuthContextValue | null>(null);
+    // For demo purposes, create a mock user
+    if (process.env.NODE_ENV === 'development') {
+      const mockUser: User = {
+        id: '1',
+        email: 'demo@example.com',
+        role: 'candidate',
+        name: 'Demo User',
+        created_at: new Date().toISOString(),
+        user_metadata: {
+          full_name: 'Demo User',
+          avatar_url: null,
+          role: 'candidate',
+        },
+        app_metadata: {
+          provider: 'email',
+          role: 'candidate',
+        },
+      };
+      localStorage.setItem('user', JSON.stringify(mockUser));
+      return mockUser;
+    }
 
-interface AuthProviderProps {
-  children: ReactNode;
-}
-
-export function AuthProvider({ children }: AuthProviderProps) {
-  const [state, setState] = useState<AuthState>({
-    user: null,
-    profile: null,
-    isLoading: true,
-    error: null,
+    return null;
   });
 
-  useEffect(() => {
-    // Check active sessions and sets the user
-    const initializeAuth = async () => {
-      try {
-        const { user } = await getTypedSession();
-        if (user) {
-          const profile = await fetchProfile(user.id);
-          setState(prev => ({
-            ...prev,
-            user,
-            profile,
-            isLoading: false,
-          }));
-        } else {
-          setState(prev => ({
-            ...prev,
-            user: null,
-            profile: null,
-            isLoading: false,
-          }));
-        }
-      } catch (error) {
-        setState(prev => ({
-          ...prev,
-          error: error instanceof Error ? error : new Error('Failed to initialize auth'),
-          isLoading: false,
-        }));
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const signIn = useCallback(async (credentials: AuthCredentials) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      // For demo purposes, create a mock user
+      const mockUser: User = {
+        id: Math.random().toString(),
+        email: credentials.email,
+        role: 'candidate',
+        name: 'Demo User',
+        created_at: new Date().toISOString(),
+        user_metadata: {
+          full_name: 'Demo User',
+          avatar_url: null,
+          role: 'candidate',
+        },
+        app_metadata: {
+          provider: 'email',
+          role: 'candidate',
+        },
+      };
+
+      localStorage.setItem('user', JSON.stringify(mockUser));
+      setUser(mockUser);
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An unexpected error occurred');
       }
-    };
-
-    initializeAuth();
-
-    // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      try {
-        if (session?.user) {
-          const user = mapSupabaseUser(session.user);
-          const profile = await fetchProfile(user.id);
-          setState(prev => ({
-            ...prev,
-            user,
-            profile,
-            isLoading: false,
-            error: null, // Clear any previous errors
-          }));
-        } else {
-          setState(prev => ({
-            ...prev,
-            user: null,
-            profile: null,
-            isLoading: false,
-            error: null, // Clear any previous errors
-          }));
-        }
-      } catch (error) {
-        setState(prev => ({
-          ...prev,
-          error: error instanceof Error ? error : new Error('Auth state change failed'),
-          isLoading: false,
-        }));
-      }
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
+      throw err;
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  const fetchProfile = async (userId: string): Promise<UserProfile | null> => {
+  const signUp = useCallback(async (data: SignUpData) => {
+    setLoading(true);
+    setError(null);
+
     try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .single();
-
-      if (error) {
-        console.error('Error fetching profile:', error);
-        throw error;
+      // For demo purposes, just store the data
+      localStorage.setItem('signupData', JSON.stringify(data));
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An unexpected error occurred');
       }
-
-      if (!data) {
-        throw new Error('Profile not found');
-      }
-
-      // Validate role before passing to validateProfile
-      const role = data.role as UserRole | null;
-      if (role !== null && role !== 'candidate' && role !== 'employer' && role !== 'partner') {
-        throw new Error(`Invalid role: ${role}`);
-      }
-      
-      return validateProfile({
-        ...data,
-        role
-      });
-    } catch (error) {
-      console.error('Error fetching profile:', error);
-      throw error;
-    }
-  };
-
-  const signIn = async (email: string, password: string): Promise<{ user: AuthUser }> => {
-    try {
-      setState(prev => ({ ...prev, isLoading: true, error: null }));
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-      if (error) throw error;
-      if (!data.user) throw new Error("No user returned from sign in");
-      
-      const profile = await fetchProfile(data.user.id);
-      const mappedUser = mapSupabaseUser(data.user);
-      setState(prev => ({
-        ...prev,
-        user: mappedUser,
-        profile,
-        isLoading: false,
-      }));
-      
-      return { user: mappedUser };
-    } catch (error) {
-      setState(prev => ({
-        ...prev,
-        error: error instanceof Error ? error : new Error("Failed to sign in"),
-        isLoading: false,
-      }));
-      throw error;
-    }
-  };
-
-  const signUp = async (data: SignUpData) => {
-    try {
-      setState(prev => ({ ...prev, isLoading: true, error: null }));
-
-      // Sign up with email and password
-      const { data: authData, error: signUpError } = await supabase.auth.signUp({
-        email: data.email,
-        password: data.password,
-        options: {
-          data: {
-            role: data.role,
-            full_name: data.full_name,
-            username: data.email.split('@')[0] // Generate username from email
-          }
-        }
-      });
-
-      if (signUpError) {
-        console.error('Signup error:', signUpError);
-        throw signUpError;
-      }
-      
-      if (!authData?.user) {
-        throw new Error('Failed to create user account');
-      }
-
-      // Profile is created automatically by the trigger
-      const profile = await fetchProfile(authData.user.id);
-      const mappedUser = mapSupabaseUser(authData.user);
-      setState(prev => ({
-        ...prev,
-        user: mappedUser,
-        profile,
-        isLoading: false,
-      }));
-
-    } catch (error) {
-      setState(prev => ({
-        ...prev,
-        error: error instanceof Error ? error : new Error("Failed to sign up"),
-        isLoading: false,
-      }));
-      throw error;
-    }
-  };
-
-  const signOut = async () => {
-    try {
-      setState(prev => ({ ...prev, isLoading: true, error: null }));
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
-      setState(prev => ({
-        ...prev,
-        user: null,
-        profile: null,
-        isLoading: false,
-      }));
-    } catch (error) {
-      setState(prev => ({
-        ...prev,
-        error: error instanceof Error ? error : new Error("Failed to sign out"),
-        isLoading: false,
-      }));
-      throw error;
-    }
-  };
-
-  const resetPassword = async (email: string) => {
-    try {
-      setState(prev => ({ ...prev, isLoading: true, error: null }));
-      const { error } = await supabase.auth.resetPasswordForEmail(email);
-      if (error) throw error;
-    } catch (error) {
-      setState(prev => ({
-        ...prev,
-        error: error instanceof Error ? error : new Error("Failed to reset password"),
-      }));
-      throw error;
+      throw err;
     } finally {
-      setState(prev => ({ ...prev, isLoading: false }));
+      setLoading(false);
     }
-  };
+  }, []);
 
-  const updatePassword = async (password: string) => {
+  const signOut = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+
     try {
-      setState(prev => ({ ...prev, isLoading: true, error: null }));
-      const { error } = await supabase.auth.updateUser({
-        password,
-      });
-      if (error) throw error;
-    } catch (error) {
-      setState(prev => ({
-        ...prev,
-        error: error instanceof Error ? error : new Error("Failed to update password"),
-      }));
-      throw error;
+      localStorage.removeItem('user');
+      setUser(null);
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An unexpected error occurred');
+      }
+      throw err;
     } finally {
-      setState(prev => ({ ...prev, isLoading: false }));
+      setLoading(false);
     }
-  };
+  }, []);
 
-  const updateProfile = async (data: Partial<UserProfile>) => {
+  const resetPassword = useCallback(async (email: string) => {
+    setLoading(true);
+    setError(null);
+
     try {
-      setState(prev => ({ ...prev, isLoading: true, error: null }));
-      if (!state.user) throw new Error("No authenticated user");
-
-      const { error } = await supabase
-        .from("profiles")
-        .update({
-          ...data,
-          updated_at: new Date().toISOString()
-        })
-        .eq("id", state.user.id);
-
-      if (error) throw error;
-
-      const updatedProfile = await fetchProfile(state.user.id);
-      setState(prev => ({
-        ...prev,
-        profile: updatedProfile,
-        isLoading: false,
-      }));
-    } catch (error) {
-      setState(prev => ({
-        ...prev,
-        error: error instanceof Error ? error : new Error("Failed to update profile"),
-        isLoading: false,
-      }));
-      throw error;
-    }
-  };
-
-  const verifyEmail = async (token: string) => {
-    try {
-      setState(prev => ({ ...prev, isLoading: true, error: null }));
-      const { error } = await supabase.auth.verifyOtp({
-        token_hash: token,
-        type: "email",
-      });
-      if (error) throw error;
-    } catch (error) {
-      setState(prev => ({
-        ...prev,
-        error: error instanceof Error ? error : new Error("Failed to verify email"),
-      }));
-      throw error;
+      // For demo purposes, just log the email
+      console.log('Reset password requested for:', email);
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An unexpected error occurred');
+      }
+      throw err;
     } finally {
-      setState(prev => ({ ...prev, isLoading: false }));
+      setLoading(false);
     }
-  };
+  }, []);
 
-  const value: AuthContextValue = {
-    ...state,
-    signIn,
-    signUp,
-    signOut,
-    resetPassword,
-    updatePassword,
-    updateProfile,
-    verifyEmail,
-  };
+  const verifyEmail = useCallback(async (token: string) => {
+    setLoading(true);
+    setError(null);
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+    try {
+      // For demo purposes, just log the token
+      console.log('Email verification requested with token:', token);
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An unexpected error occurred');
+      }
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        error,
+        signIn,
+        signUp,
+        signOut,
+        resetPassword,
+        verifyEmail,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
-export function useAuth(): AuthContextValue {
+export function useAuth() {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 }
-
-export type { AuthContextValue };

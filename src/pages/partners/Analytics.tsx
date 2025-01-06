@@ -1,11 +1,10 @@
-//import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Logo } from "../../components/branding/Logo";
 import { mockPartnerStats } from "../../services/mockData";
 
 export default function Analytics() {
   const navigate = useNavigate();
-  const stats = mockPartnerStats.analytics;
+  const stats = mockPartnerStats;
 
   return (
     <div>
@@ -25,22 +24,22 @@ export default function Analytics() {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           <div className="bg-white rounded-lg shadow p-6">
             <h3 className="text-lg font-medium text-gray-900 mb-2">Total Placements</h3>
-            <p className="text-3xl font-bold text-blue-600">{stats.totalPlacements}</p>
+            <p className="text-3xl font-bold text-blue-600">{stats.analytics.placements.total}</p>
           </div>
           <div className="bg-white rounded-lg shadow p-6">
             <h3 className="text-lg font-medium text-gray-900 mb-2">Average Salary Increase</h3>
-            <p className="text-3xl font-bold text-green-600">{stats.averageSalaryIncrease}</p>
+            <p className="text-3xl font-bold text-green-600">{stats.analytics.placements.averageSalaryIncrease}</p>
           </div>
           <div className="bg-white rounded-lg shadow p-6">
             <h3 className="text-lg font-medium text-gray-900 mb-2">Satisfaction Rate</h3>
-            <p className="text-3xl font-bold text-purple-600">{stats.satisfactionRate}</p>
+            <p className="text-3xl font-bold text-purple-600">{stats.mentorship.effectiveness.satisfactionRate}</p>
           </div>
         </div>
 
         <div className="bg-white rounded-lg shadow p-6 mb-8">
           <h3 className="text-xl font-medium text-gray-900 mb-4">Top Skills in Demand</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {stats.topSkills.map((skill, index) => (
+            {stats.analytics.skills.top.map((skill, index) => (
               <div 
                 key={index}
                 className="bg-blue-50 rounded-lg p-3 text-center"

@@ -19,10 +19,10 @@ const NotFound: React.FC = () => {
               Go Home
             </Link>
             <Link
-              to="/guest/candidate"
+              to="/auth/sign-up"
               className="inline-flex items-center px-4 py-2 border border-gray-300 text-base font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50"
             >
-              Try Demo
+              Sign Up
             </Link>
           </div>
         </div>

@@ -1,147 +1,108 @@
-import { lazy } from "react";
-import { Navigate, Outlet, RouteObject } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
-import type { UserRole } from "../types/auth";
-import { CandidateLayout } from "../components/layout/CandidateLayout";
-import { EmployerLayout } from "../components/layout/EmployerLayout";
-import { PartnerLayout } from "../components/layout/PartnerLayout";
+// import React from 'react';
+import { Route, Routes } from 'react-router-dom';
+import { ProtectedRoute } from '../components/shared/ProtectedRoute';
+import Dashboard from '../components/dashboard/Dashboard';
+import Settings from '../pages/Settings';
+import { DemoRoutes } from './demoRoutes';
 
-// Lazy load page components
-const EmployerDashboard = lazy(() => import("../pages/employer/Dashboard"));
-const CandidateDashboard = lazy(() => import("../pages/candidate/Dashboard"));
-const Applications = lazy(() => import("../pages/candidate/Applications"));
-const Messages = lazy(() => import("../pages/messages/Messages").then(m => ({ default: m.MessagesPage })));
-const Profile = lazy(() => import("../pages/candidate/Profile"));
-const JobPostings = lazy(() => import("../pages/employer/JobPostings"));
-const EmployerApplications = lazy(() => import("../pages/employer/Applications"));
-const Analytics = lazy(() => import("../pages/employer/Analytics"));
-const Apprenticeships = lazy(() => import("../pages/partners/Apprenticeships"));
-const Mentorship = lazy(() => import("../pages/partners/Mentorship"));
-const PartnerAnalytics = lazy(() => import("../pages/partners/Analytics"));
-const OnboardingFlow = lazy(() => import("../pages/onboarding/OnboardingFlow").then(m => ({ default: m.OnboardingFlow })));
+// Candidate Routes
+import CandidateJobs from '../pages/candidate/Jobs';
+import CandidateResources from '../pages/candidate/Resources';
+import CandidateSuccessStories from '../pages/candidate/SuccessStories';
 
-interface ProtectedRouteProps {
-  allowedRoles?: UserRole[];
-  children?: React.ReactNode;
+// Demo Routes
+import JobPostings from '../pages/employer/demo/JobPostings';
+import Applications from '../pages/employer/demo/Applications';
+import EmployerAnalytics from '../pages/employer/demo/Analytics';
+import PartnerAnalytics from '../pages/partner/demo/Analytics';
+import Apprenticeships from '../pages/partner/demo/Apprenticeships';
+import Mentorship from '../pages/partner/demo/Mentorship';
+
+export function AuthenticatedRoutes() {
+  return (
+    <Routes>
+      {/* Common Routes */}
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/settings" element={<Settings />} />
+      <Route path="/demo/*" element={<DemoRoutes />} />
+
+      {/* Candidate Routes */}
+      <Route
+        path="/candidate/jobs"
+        element={
+          <ProtectedRoute allowedRoles={['candidate']}>
+            <CandidateJobs />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/candidate/resources"
+        element={
+          <ProtectedRoute allowedRoles={['candidate']}>
+            <CandidateResources />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/candidate/success-stories"
+        element={
+          <ProtectedRoute allowedRoles={['candidate']}>
+            <CandidateSuccessStories />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Employer Demo Routes */}
+      <Route
+        path="/employer/demo/job-postings"
+        element={
+          <ProtectedRoute allowedRoles={['employer']}>
+            <JobPostings />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/employer/demo/applications"
+        element={
+          <ProtectedRoute allowedRoles={['employer']}>
+            <Applications />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/employer/demo/analytics"
+        element={
+          <ProtectedRoute allowedRoles={['employer']}>
+            <EmployerAnalytics />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Partner Demo Routes */}
+      <Route
+        path="/partner/demo/analytics"
+        element={
+          <ProtectedRoute allowedRoles={['partner']}>
+            <PartnerAnalytics />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/partner/demo/apprenticeships"
+        element={
+          <ProtectedRoute allowedRoles={['partner']}>
+            <Apprenticeships />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/partner/demo/mentorship"
+        element={
+          <ProtectedRoute allowedRoles={['partner']}>
+            <Mentorship />
+          </ProtectedRoute>
+        }
+      />
+    </Routes>
+  );
 }
-
-function ProtectedRoute({ allowedRoles, children }: ProtectedRouteProps) {
-  const { user, isLoading } = useAuth();
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (!user) {
-    return <Navigate to="/auth/login" replace />;
-  }
-
-  const userRole = user.user_metadata?.role as UserRole;
-
-  if (allowedRoles && !allowedRoles.includes(userRole)) {
-    return <Navigate to="/" replace />;
-  }
-
-  return children ? <>{children}</> : <Outlet />;
-}
-
-const authenticatedRoutes: RouteObject[] = [
-  {
-    path: "/employer",
-    element: (
-      <ProtectedRoute allowedRoles={["employer"]}>
-        <EmployerLayout />
-      </ProtectedRoute>
-    ),
-    children: [
-      {
-        path: "",
-        element: <EmployerDashboard />,
-      },
-      {
-        path: "messages",
-        element: <Messages />,
-      },
-      {
-        path: "job-postings",
-        element: <JobPostings />,
-      },
-      {
-        path: "applications",
-        element: <EmployerApplications />,
-      },
-      {
-        path: "analytics",
-        element: <Analytics />,
-      }
-    ],
-  },
-  {
-    path: "/candidate",
-    element: (
-      <ProtectedRoute allowedRoles={["candidate"]}>
-        <CandidateLayout />
-      </ProtectedRoute>
-    ),
-    children: [
-      {
-        path: "",
-        element: <CandidateDashboard />,
-      },
-      {
-        path: "applications",
-        element: <Applications />,
-      },
-      {
-        path: "messages",
-        element: <Messages />,
-      },
-      {
-        path: "profile",
-        element: <Profile />,
-      }
-    ],
-  },
-  {
-    path: "/partner",
-    element: (
-      <ProtectedRoute allowedRoles={["partner"]}>
-        <PartnerLayout />
-      </ProtectedRoute>
-    ),
-    children: [
-      {
-        path: "",
-        element: <div>Partner Dashboard</div>,
-      },
-      {
-        path: "apprenticeships",
-        element: <Apprenticeships />,
-      },
-      {
-        path: "mentorship",
-        element: <Mentorship />,
-      },
-      {
-        path: "analytics",
-        element: <PartnerAnalytics />,
-      },
-      {
-        path: "messages",
-        element: <Messages />,
-      }
-    ],
-  },
-  {
-    path: "/onboarding",
-    element: <ProtectedRoute />,
-    children: [
-      {
-        path: "",
-        element: <OnboardingFlow />,
-      }
-    ],
-  }
-];
-
-export default authenticatedRoutes;

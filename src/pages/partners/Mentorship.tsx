@@ -1,4 +1,3 @@
-// import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Logo } from "../../components/branding/Logo";
 import { mockPartnerStats } from "../../services/mockData";
@@ -25,15 +24,15 @@ export default function Mentorship() {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           <div className="bg-white rounded-lg shadow p-6">
             <h3 className="text-lg font-medium text-gray-900 mb-2">Active Mentors</h3>
-            <p className="text-3xl font-bold text-blue-600">{stats.activeMentors}</p>
+            <p className="text-3xl font-bold text-blue-600">{stats.network.activeMentors}</p>
           </div>
           <div className="bg-white rounded-lg shadow p-6">
             <h3 className="text-lg font-medium text-gray-900 mb-2">Mentorship Hours</h3>
-            <p className="text-3xl font-bold text-green-600">{stats.mentorshipHours}+</p>
+            <p className="text-3xl font-bold text-green-600">{stats.network.mentorshipHours}+</p>
           </div>
           <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Success Stories</h3>
-            <p className="text-3xl font-bold text-purple-600">{stats.successStories}</p>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Success Rate</h3>
+            <p className="text-3xl font-bold text-purple-600">{stats.effectiveness.satisfactionRate}</p>
           </div>
         </div>
 
@@ -41,7 +40,7 @@ export default function Mentorship() {
           <div className="bg-white rounded-lg shadow p-6">
             <h3 className="text-xl font-medium text-gray-900 mb-4">Top Industries</h3>
             <div className="grid grid-cols-2 gap-4">
-              {stats.topIndustries.map((industry, index) => (
+              {stats.industries.primary.map((industry, index) => (
                 <div 
                   key={index}
                   className="bg-blue-50 rounded-lg p-3 text-center"
@@ -65,13 +64,13 @@ export default function Mentorship() {
                 <svg className="h-6 w-6 text-green-500 mt-1 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <p className="text-gray-600">Career path development</p>
+                <p className="text-gray-600">Career advancement ({stats.effectiveness.careerAdvancement} success rate)</p>
               </div>
               <div className="flex items-start">
                 <svg className="h-6 w-6 text-green-500 mt-1 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <p className="text-gray-600">Network building opportunities</p>
+                <p className="text-gray-600">Network growth ({stats.effectiveness.networkGrowth} expansion)</p>
               </div>
             </div>
           </div>

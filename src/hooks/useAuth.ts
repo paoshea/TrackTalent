@@ -1,1 +1,2 @@
-export { useAuth, type AuthContextValue } from "../contexts/AuthContext";
+export { useAuth } from '../contexts/AuthContext';
+export type { AuthContextType } from '../types/auth';
