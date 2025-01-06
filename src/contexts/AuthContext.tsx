@@ -1,69 +1,71 @@
-import { createContext, useContext, useState, useCallback } from 'react';
-import { User, AuthContextType, SignUpData, AuthCredentials } from '../types/auth';
+import { createContext, useContext, useState, type ReactNode } from 'react';
+import type { User, AuthContextType, AuthCredentials, SignUpData } from '../types/auth';
 
-const AuthContext = createContext<AuthContextType | null>(null);
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(() => {
-    // Check if we have a saved user in localStorage
-    const savedUser = localStorage.getItem('user');
-    if (savedUser) {
-      return JSON.parse(savedUser);
-    }
+interface AuthProviderProps {
+  children: ReactNode;
+}
 
-    // For demo purposes, create a mock user
-    if (process.env.NODE_ENV === 'development') {
-      const mockUser: User = {
-        id: '1',
-        email: 'demo@example.com',
-        role: 'candidate',
-        name: 'Demo User',
-        created_at: new Date().toISOString(),
-        user_metadata: {
-          full_name: 'Demo User',
-          avatar_url: null,
-          role: 'candidate',
-        },
-        app_metadata: {
-          provider: 'email',
-          role: 'candidate',
-        },
-      };
-      localStorage.setItem('user', JSON.stringify(mockUser));
-      return mockUser;
-    }
-
-    return null;
-  });
-
+export function AuthProvider({ children }: AuthProviderProps) {
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const signIn = useCallback(async (credentials: AuthCredentials) => {
+  const signIn = async (credentials: AuthCredentials) => {
     setLoading(true);
     setError(null);
-
     try {
-      // For demo purposes, create a mock user
-      const mockUser: User = {
-        id: Math.random().toString(),
-        email: credentials.email,
+      // TODO: Implement actual authentication
+      setUser({
+        id: '1',
         role: 'candidate',
-        name: 'Demo User',
+        email: credentials.email,
         created_at: new Date().toISOString(),
         user_metadata: {
-          full_name: 'Demo User',
+          full_name: 'Test User',
           avatar_url: null,
-          role: 'candidate',
+          role: 'candidate'
         },
         app_metadata: {
           provider: 'email',
-          role: 'candidate',
+          role: 'candidate'
+        }
+      });
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An unexpected error occurred');
+      }
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const signUp = async (data: SignUpData) => {
+    setLoading(true);
+    setError(null);
+    try {
+      // TODO: Implement actual registration
+      setUser({
+        id: Math.random().toString(36).substr(2, 9),
+        role: data.role,
+        email: data.email,
+        name: data.full_name,
+        company: data.company,
+        created_at: new Date().toISOString(),
+        user_metadata: {
+          full_name: data.full_name,
+          avatar_url: null,
+          role: data.role
         },
-      };
-
-      localStorage.setItem('user', JSON.stringify(mockUser));
-      setUser(mockUser);
+        app_metadata: {
+          provider: 'email',
+          role: data.role
+        }
+      });
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -74,33 +76,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setLoading(false);
     }
-  }, []);
+  };
 
-  const signUp = useCallback(async (data: SignUpData) => {
+  const signOut = async () => {
     setLoading(true);
     setError(null);
-
     try {
-      // For demo purposes, just store the data
-      localStorage.setItem('signupData', JSON.stringify(data));
-    } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError('An unexpected error occurred');
-      }
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  const signOut = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      localStorage.removeItem('user');
+      // TODO: Implement actual sign out
       setUser(null);
     } catch (err) {
       if (err instanceof Error) {
@@ -112,15 +94,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setLoading(false);
     }
-  }, []);
+  };
 
-  const resetPassword = useCallback(async (email: string) => {
+  const resetPassword = async (email: string) => {
     setLoading(true);
     setError(null);
-
     try {
-      // For demo purposes, just log the email
-      console.log('Reset password requested for:', email);
+      // TODO: Implement actual password reset
+      console.log('Password reset email sent to:', email);
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -131,15 +112,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setLoading(false);
     }
-  }, []);
+  };
 
-  const verifyEmail = useCallback(async (token: string) => {
+  const verifyEmail = async (token: string) => {
     setLoading(true);
     setError(null);
-
     try {
-      // For demo purposes, just log the token
-      console.log('Email verification requested with token:', token);
+      // TODO: Implement actual email verification
+      console.log('Email verified with token:', token);
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -150,7 +130,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setLoading(false);
     }
-  }, []);
+  };
 
   return (
     <AuthContext.Provider
@@ -172,7 +152,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 export function useAuth() {
   const context = useContext(AuthContext);
-  if (!context) {
+  if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;

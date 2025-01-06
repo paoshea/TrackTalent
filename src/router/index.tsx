@@ -1,4 +1,4 @@
-import { createBrowserRouter, Outlet, isRouteErrorResponse, useRouteError } from 'react-router-dom';
+import { createBrowserRouter, Outlet, isRouteErrorResponse, useRouteError, useLocation } from 'react-router-dom';
 import { ProtectedRoute } from '../components/shared/ProtectedRoute';
 import { Header, Footer } from '../components/layout';
 
@@ -15,21 +15,28 @@ import About from '../pages/About';
 import Contact from '../pages/Contact';
 import Careers from '../pages/Careers';
 import NotFound from '../pages/NotFound';
+import SuccessStories from '../pages/success-stories/index';
+import Help from '../pages/help/index';
+import Blog from '../pages/blog/index';
+import { Privacy, Terms, Cookies } from '../pages/legal';
 
 // Candidate Pages
 import CandidateJobs from '../pages/candidate/Jobs';
 import CandidateResources from '../pages/candidate/Resources';
 import CandidateSuccessStories from '../pages/candidate/SuccessStories';
+import CandidateDashboard from '../pages/candidate/Dashboard';
 
-// Employer Demo Pages
+// Employer Pages
 import JobPostings from '../pages/employer/demo/JobPostings';
 import Applications from '../pages/employer/demo/Applications';
 import EmployerAnalytics from '../pages/employer/demo/Analytics';
+import EmployerDashboard from '../pages/employer/Dashboard';
 
-// Partner Demo Pages
+// Partner Pages
 import PartnerAnalytics from '../pages/partner/demo/Analytics';
 import Apprenticeships from '../pages/partner/demo/Apprenticeships';
 import Mentorship from '../pages/partner/demo/Mentorship';
+import PartnerDashboard from '../pages/partner/Dashboard';
 
 function RootErrorBoundary() {
   const error = useRouteError();
@@ -44,12 +51,20 @@ function RootErrorBoundary() {
 }
 
 function RootLayout() {
+  const location = useLocation();
+  const isLandingPage = location.pathname === '/';
+
   return (
-    <>
-      <Header />
-      <Outlet />
+    <div className="min-h-screen flex flex-col">
+      <Header 
+        transparent={isLandingPage}
+        sticky={true}
+      />
+      <main className="flex-grow">
+        <Outlet />
+      </main>
       <Footer />
-    </>
+    </div>
   );
 }
 
@@ -74,6 +89,30 @@ export const router = createBrowserRouter([
       {
         path: 'careers',
         element: <Careers />,
+      },
+      {
+        path: 'success-stories',
+        element: <SuccessStories />,
+      },
+      {
+        path: 'help',
+        element: <Help />,
+      },
+      {
+        path: 'blog',
+        element: <Blog />,
+      },
+      {
+        path: 'privacy',
+        element: <Privacy />,
+      },
+      {
+        path: 'terms',
+        element: <Terms />,
+      },
+      {
+        path: 'cookies',
+        element: <Cookies />,
       },
       // Auth Routes
       {
@@ -106,6 +145,14 @@ export const router = createBrowserRouter([
         path: 'candidate',
         children: [
           {
+            path: 'dashboard',
+            element: (
+              <ProtectedRoute allowedRoles={['candidate']}>
+                <CandidateDashboard />
+              </ProtectedRoute>
+            ),
+          },
+          {
             path: 'jobs',
             element: (
               <ProtectedRoute allowedRoles={['candidate']}>
@@ -131,12 +178,20 @@ export const router = createBrowserRouter([
           },
         ],
       },
-      // Employer Demo Routes
+      // Employer Routes
       {
-        path: 'employer/demo',
+        path: 'employer',
         children: [
           {
-            path: 'job-postings',
+            path: 'dashboard',
+            element: (
+              <ProtectedRoute allowedRoles={['employer']}>
+                <EmployerDashboard />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: 'demo/job-postings',
             element: (
               <ProtectedRoute allowedRoles={['employer']}>
                 <JobPostings />
@@ -144,7 +199,7 @@ export const router = createBrowserRouter([
             ),
           },
           {
-            path: 'applications',
+            path: 'demo/applications',
             element: (
               <ProtectedRoute allowedRoles={['employer']}>
                 <Applications />
@@ -152,7 +207,7 @@ export const router = createBrowserRouter([
             ),
           },
           {
-            path: 'analytics',
+            path: 'demo/analytics',
             element: (
               <ProtectedRoute allowedRoles={['employer']}>
                 <EmployerAnalytics />
@@ -161,12 +216,20 @@ export const router = createBrowserRouter([
           },
         ],
       },
-      // Partner Demo Routes
+      // Partner Routes
       {
-        path: 'partner/demo',
+        path: 'partner',
         children: [
           {
-            path: 'analytics',
+            path: 'dashboard',
+            element: (
+              <ProtectedRoute allowedRoles={['partner']}>
+                <PartnerDashboard />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: 'demo/analytics',
             element: (
               <ProtectedRoute allowedRoles={['partner']}>
                 <PartnerAnalytics />
@@ -174,7 +237,7 @@ export const router = createBrowserRouter([
             ),
           },
           {
-            path: 'apprenticeships',
+            path: 'demo/apprenticeships',
             element: (
               <ProtectedRoute allowedRoles={['partner']}>
                 <Apprenticeships />
@@ -182,7 +245,7 @@ export const router = createBrowserRouter([
             ),
           },
           {
-            path: 'mentorship',
+            path: 'demo/mentorship',
             element: (
               <ProtectedRoute allowedRoles={['partner']}>
                 <Mentorship />

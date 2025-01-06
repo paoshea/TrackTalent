@@ -1,21 +1,18 @@
 import { RouterProvider } from 'react-router-dom';
-import { AuthProvider } from './contexts/AuthContext';
-import { BrandingProvider } from './contexts/BrandingContext';
-import { LoadingProvider } from './contexts/LoadingContext';
-import { TranslationProvider } from './contexts/TranslationContext';
 import { router } from './router';
+import { AuthProvider } from './contexts/AuthContext';
+import { HeaderProvider } from './contexts/HeaderContext';
+import { TranslationProvider } from './contexts/TranslationContext';
 
 function App() {
   return (
-    <AuthProvider>
-      <BrandingProvider>
-        <LoadingProvider>
-          <TranslationProvider>
-            <RouterProvider router={router} />
-          </TranslationProvider>
-        </LoadingProvider>
-      </BrandingProvider>
-    </AuthProvider>
+    <TranslationProvider>
+      <AuthProvider>
+        <HeaderProvider>
+          <RouterProvider router={router} />
+        </HeaderProvider>
+      </AuthProvider>
+    </TranslationProvider>
   );
 }
 

@@ -1,18 +1,14 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
-
-interface SignInData {
-  email: string;
-  password: string;
-}
+import type { AuthCredentials } from '../../types/auth';
 
 export default function SignIn() {
   const navigate = useNavigate();
   const { signIn } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [formData, setFormData] = useState<SignInData>({
+  const [formData, setFormData] = useState<AuthCredentials>({
     email: '',
     password: '',
   });

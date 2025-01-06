@@ -1,6 +1,4 @@
-import React, { Suspense, useState, useRef, useEffect, useMemo } from 'react';
-import type { UserRole } from '../types/auth';
-import { Header, Footer } from '../components/layout';
+import React, { Suspense, useEffect, useCallback, useMemo } from 'react';
 import {
   CandidateHero,
   EmployerHero,
@@ -8,53 +6,53 @@ import {
   FeaturesNav,
   Features,
 } from '../components/landing';
+import { useHeader } from '../contexts/HeaderContext';
 
-interface Section {
-  id: string;
-  label: string;
-  ref: React.RefObject<HTMLDivElement>;
+interface HeaderState {
+  sections: Array<{ id: string; label: string }>;
+  activeSection: string;
+  onSectionChange?: (sectionId: string) => void;
 }
 
-const Landing: React.FC = () => {
-  const [activeRole, setActiveRole] = useState<UserRole>('candidate');
-  const [activeSection, setActiveSection] = useState<string>('hero');
-
-  // Section refs for smooth scrolling
-  const heroRef = useRef<HTMLDivElement>(null);
-  const transformationRef = useRef<HTMLDivElement>(null);
-  const featuresRef = useRef<HTMLDivElement>(null);
-  const metricsRef = useRef<HTMLDivElement>(null);
-
-  // Memoize sections array to prevent recreation on every render
-  const sections = useMemo<Section[]>(() => [
-    { id: 'hero', label: 'Overview', ref: heroRef },
-    { id: 'transformation', label: 'Transformation', ref: transformationRef },
-    { id: 'features', label: 'Features', ref: featuresRef },
-    { id: 'metrics', label: 'Success Metrics', ref: metricsRef },
+const LandingContent: React.FC = () => {
+  const { activeRole, onRoleChange, setHeaderState } = useHeader();
+  const sections = useMemo(() => [
+    { id: 'hero', label: 'Overview' },
+    { id: 'transformation', label: 'Transformation' },
+    { id: 'features', label: 'Features' },
+    { id: 'metrics', label: 'Success Metrics' },
   ], []);
 
-  // Handle smooth scrolling
-  const scrollToSection = (sectionId: string) => {
-    const section = sections.find(s => s.id === sectionId);
-    if (section?.ref.current) {
-      section.ref.current.scrollIntoView({ behavior: 'smooth' });
-      setActiveSection(sectionId);
+  const scrollToSection = useCallback((sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
     }
-  };
+  }, []);
 
-  // Update active section based on scroll position
   useEffect(() => {
+    setHeaderState({
+      sections,
+      onSectionChange: scrollToSection,
+      activeSection: 'hero',
+    });
+
+    // Update active section based on scroll position
     const handleScroll = () => {
       const currentPosition = window.scrollY + 100; // Offset for header
 
       for (const section of sections) {
-        if (section.ref.current) {
-          const element = section.ref.current;
+        const element = document.getElementById(section.id);
+        if (element) {
           const position = element.offsetTop;
           const height = element.offsetHeight;
 
           if (currentPosition >= position && currentPosition < position + height) {
-            setActiveSection(section.id);
+            setHeaderState((prev: HeaderState) => ({
+              sections: prev.sections,
+              activeSection: section.id,
+              onSectionChange: prev.onSectionChange,
+            }));
             break;
           }
         }
@@ -62,8 +60,16 @@ const Landing: React.FC = () => {
     };
 
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [sections]);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      setHeaderState({
+        sections: [],
+        activeSection: '',
+      });
+    };
+  }, [setHeaderState, scrollToSection, sections]);
 
   const renderHero = () => {
     switch (activeRole) {
@@ -76,31 +82,17 @@ const Landing: React.FC = () => {
     }
   };
 
-  const handleRoleChange = (role: UserRole) => {
-    setActiveRole(role);
-  };
-
   return (
     <div className="min-h-screen bg-white">
-      <Suspense fallback={<div>Loading header...</div>}>
-        <Header 
-          transparent 
-          sticky 
-          onSectionChange={scrollToSection}
-          sections={sections}
-          activeSection={activeSection}
-        />
-      </Suspense>
-
       <Suspense fallback={<div>Loading content...</div>}>
         <main>
           {/* Hero Section */}
-          <div ref={heroRef} className="relative min-h-screen flex items-center">
+          <div id="hero" className="relative min-h-screen flex items-center">
             {renderHero()}
           </div>
 
           {/* Transformation Section */}
-          <div ref={transformationRef} className="bg-gradient-to-b from-white to-gray-50 py-24">
+          <div id="transformation" className="bg-gradient-to-b from-white to-gray-50 py-24">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <h2 className="text-4xl font-bold text-gray-900 mb-6 text-center">
                 Transforming Career Development
@@ -182,18 +174,18 @@ const Landing: React.FC = () => {
           </div>
 
           {/* Features Section */}
-          <div ref={featuresRef} className="py-16">
+          <div id="features" className="py-16">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <FeaturesNav
                 activeRole={activeRole}
-                onRoleChange={handleRoleChange}
+                onRoleChange={onRoleChange}
               />
               <Features role={activeRole} />
             </div>
           </div>
 
           {/* Success Metrics Section */}
-          <div ref={metricsRef} className="bg-gray-50 py-24">
+          <div id="metrics" className="bg-gray-50 py-24">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <h2 className="text-4xl font-bold text-gray-900 mb-6 text-center">
                 Platform Success Metrics
@@ -240,12 +232,12 @@ const Landing: React.FC = () => {
           </div>
         </main>
       </Suspense>
-
-      <Suspense fallback={<div>Loading footer...</div>}>
-        <Footer />
-      </Suspense>
     </div>
   );
+};
+
+const Landing: React.FC = () => {
+  return <LandingContent />;
 };
 
 export default Landing;
